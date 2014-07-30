@@ -11,13 +11,19 @@ var Turtle = (function() {
 
     Phaser.Sprite.call(this, game, x * 32, y * 32, 'turtle');
 
+    this.walkVelocity = 200;
+    this.walkDrag = 800;
+    this.jumpVelocity = -400;
+    this.currentJumpCount = 0;
+    this.maximumJumpCount = 2;
+
     animations = [
-      'cheer',
+      // 'cheer',
       'walk-right',
-      'die',
-      'walk-left'
+      // 'die',
+      // 'walk-left'
     ];
-    framesPerAnimation = 8;
+    framesPerAnimation = 10;
 
     for (var i = 0, l = animations.length; i < l; i += 1) {
       firstFrame = framesPerAnimation * i;
@@ -33,11 +39,9 @@ var Turtle = (function() {
     game.add.existing(this);
 
     this.body.collideWorldBounds = true;
-
-    this.speed = 4;
-    this.jumpVelocity = -400;
-    this.currentJumpCount = 0;
-    this.maximumJumpCount = 2;
+    this.body.checkCollision.up = false;
+    // this.body.checkCollision.right = true;
+    this.body.drag.x = this.walkDrag;
   }
 
   Turtle.prototype = Object.create(Phaser.Sprite.prototype);
@@ -65,11 +69,11 @@ var Turtle = (function() {
   };
 
   Turtle.prototype.moveLeft = function() {
-    this.body.x -= this.speed;
+    this.body.velocity.x = -1 * this.walkVelocity;
   };
 
   Turtle.prototype.moveRight = function() {
-    this.body.x += this.speed;
+    this.body.velocity.x = this.walkVelocity;
   };
 
   Turtle.prototype.turnLeft = function() {
@@ -131,13 +135,15 @@ var MenuState = {
 
 var PlayState = {
   layer: null,
-  turtle: null,
   menuLabel: null,
+  turtle: null,
+  walls: null,
 
   preload: function() {
     this.load.image('forest-tiles', '/img/tiles/forest.png');
+    this.load.image('wall', '/img/images/wall.png');
 
-    this.load.spritesheet('turtle', '/img/sprites/turtle.png', 24, 24);
+    this.load.spritesheet('turtle', '/img/sprites/gehen-groesser.png', 32, 48);
 
     this.load.tilemap('forest-tilemap', '/img/tiles/forest.json', null, Phaser.Tilemap.TILED_JSON);
   },
@@ -164,6 +170,7 @@ var PlayState = {
 
     this.game.physics.startSystem(Phaser.Physics.ARCADE);
     this.game.physics.arcade.gravity.y = 1200;
+    this.game.physics.enable(this.turtle);
 
     this.game.camera.follow(this.turtle);
 
@@ -183,10 +190,20 @@ var PlayState = {
 
     cursorKeys.right.onDown.add(this.turtle.turnRight, this.turtle);
     cursorKeys.left.onDown.add(this.turtle.turnLeft, this.turtle);
+
+    this.walls = this.game.add.group();
+    this.walls.enableBody = true;
+    this.walls.physicsBodyType = Phaser.Physics.ARCADE;
+
+    var wall = this.walls.create(128, 256, 'wall');
+    wall.body.immovable = true;
+    wall.body.allowGravity = false;
   },
 
   update: function() {
     this.game.physics.arcade.collide(this.turtle, this.layer);
+    this.game.physics.arcade.collide(this.turtle, this.walls);
+
     this.checkKeys();
   },
 

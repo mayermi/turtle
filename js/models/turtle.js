@@ -8,13 +8,19 @@ var Turtle = (function() {
 
     Phaser.Sprite.call(this, game, x * 32, y * 32, 'turtle');
 
+    this.walkVelocity = 200;
+    this.walkDrag = 800;
+    this.jumpVelocity = -400;
+    this.currentJumpCount = 0;
+    this.maximumJumpCount = 2;
+
     animations = [
-      'cheer',
+      // 'cheer',
       'walk-right',
-      'die',
-      'walk-left'
+      // 'die',
+      // 'walk-left'
     ];
-    framesPerAnimation = 8;
+    framesPerAnimation = 10;
 
     for (var i = 0, l = animations.length; i < l; i += 1) {
       firstFrame = framesPerAnimation * i;
@@ -30,11 +36,9 @@ var Turtle = (function() {
     game.add.existing(this);
 
     this.body.collideWorldBounds = true;
-
-    this.speed = 4;
-    this.jumpVelocity = -400;
-    this.currentJumpCount = 0;
-    this.maximumJumpCount = 2;
+    this.body.checkCollision.up = false;
+    // this.body.checkCollision.right = true;
+    this.body.drag.x = this.walkDrag;
   }
 
   Turtle.prototype = Object.create(Phaser.Sprite.prototype);
@@ -62,11 +66,11 @@ var Turtle = (function() {
   };
 
   Turtle.prototype.moveLeft = function() {
-    this.body.x -= this.speed;
+    this.body.velocity.x = -1 * this.walkVelocity;
   };
 
   Turtle.prototype.moveRight = function() {
-    this.body.x += this.speed;
+    this.body.velocity.x = this.walkVelocity;
   };
 
   Turtle.prototype.turnLeft = function() {
