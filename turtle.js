@@ -13,7 +13,10 @@ var Turtle = (function() {
     game.physics.enable(this, Phaser.Physics.ARCADE);
     game.add.existing(this);
 
+    this.body.collideWorldBounds = true;
+
     this.speed = 4;
+    this.jumpVelocity = -400;
   }
 
   Turtle.prototype = Object.create(Phaser.Sprite.prototype);
@@ -23,7 +26,7 @@ var Turtle = (function() {
   };
 
   Turtle.prototype.jump = function() {
-    console.log('jump');
+    this.body.velocity.y = this.jumpVelocity;
   };
 
   Turtle.prototype.moveLeft = function() {
@@ -124,7 +127,8 @@ var PlayState = {
       game.state.start('menu');
     });
 
-    this.physics.startSystem(Phaser.Physics.ARCADE);
+    this.game.physics.startSystem(Phaser.Physics.ARCADE);
+    this.game.physics.arcade.gravity.y = 1200;
 
     cursorKeys = this.input.keyboard.createCursorKeys();
 
@@ -132,8 +136,13 @@ var PlayState = {
         cursorKeys.up,
         cursorKeys.down,
         cursorKeys.Left,
-        cursorKeys.right
+        cursorKeys.right,
+
+        Phaser.Keyboard.SPACEBAR
     ]);
+
+    var jumpButton = game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
+    jumpButton.onDown.add(this.turtle.jump, this.turtle);
 
     cursorKeys.right.onDown.add(this.turtle.turnRight, this.turtle);
     cursorKeys.left.onDown.add(this.turtle.turnLeft, this.turtle);

@@ -10,7 +10,10 @@ var Turtle = (function() {
     game.physics.enable(this, Phaser.Physics.ARCADE);
     game.add.existing(this);
 
+    this.body.collideWorldBounds = true;
+
     this.speed = 4;
+    this.jumpVelocity = -400;
   }
 
   Turtle.prototype = Object.create(Phaser.Sprite.prototype);
@@ -20,7 +23,7 @@ var Turtle = (function() {
   };
 
   Turtle.prototype.jump = function() {
-    console.log('jump');
+    this.body.velocity.y = this.jumpVelocity;
   };
 
   Turtle.prototype.moveLeft = function() {
