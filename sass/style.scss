@@ -37,7 +37,41 @@
   }
 }
 
+body {
+  @extend %responsive-container;
+
+  font-size: 62.5%;
+  margin-top: 2.4em;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  margin: 0;
+}
+
 h1 {
+  color: $color-brand;
+  display: none;
   font-size: 2.4em;
   line-height: 1.5em; // 36px
+  margin-bottom: 0.5em; // 12px
+}
+
+html {
+  background: $color-brand-darkest;
+}
+
+#turtle {
+  background: $red;
+  margin: 0 auto;
+  width: 100%;
+
+  > canvas {
+    margin: 0 auto;
+    width: 100%;
+  }
 }

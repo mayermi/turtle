@@ -3,7 +3,6 @@ $aqua:    #7fdbff;
 $blue:    #0074d9;
 $fuchsia: #f012be;
 $gray:    #bdbdbd;
-$green:   #2ecc40;
 $lime:    #01ff70;
 $maroon:  #85144b;
 $navy:    #001f3f;
@@ -14,10 +13,13 @@ $red:     #ff4136;
 $teal:    #39cccc;
 $yellow:  #ffdc00;
 
+// SNES-palette
+$green:   #00a800;
+
 // color proxies
 $color-action:       $yellow;
 $color-alert:        $yellow;
-$color-brand:        #3581fc;
+$color-brand:        $green;
 $color-debug:        rgba($red, 0.0625);
 $color-error:        $red;
 $color-highlight:    $yellow;

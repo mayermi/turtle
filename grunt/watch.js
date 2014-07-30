@@ -15,5 +15,9 @@ module.exports = {
   script: {
     files: ['.jshintrc', 'js/**/*.js', 'js/**/*.json', 'js/**/*.xml'],
     tasks: 'js'
+  },
+  stylesheets: {
+    files: 'sass/**/*.scss',
+    tasks: 'css'
   }
 };
