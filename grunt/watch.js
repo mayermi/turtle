@@ -6,6 +6,9 @@ module.exports = {
     files: ['Gruntfile.js', 'grunt/**/*', 'package.json'],
     tasks: 'compile'
   },
+  images: {
+    files: 'img/**/*'
+  },
   markup: {
     files: 'index.html'
   },
