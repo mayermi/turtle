@@ -85,7 +85,7 @@ var MenuState = {
 
 var PlayState = {
   link: null,
-  textLabel: null,
+  menuLabel: null,
 
   preload: function() {
     this.load.image('forest-tiles', '/img/tiles/forest.png');
@@ -108,8 +108,12 @@ var PlayState = {
 
     this.link = new Link(this.game, 9, 5, 0);
 
-    this.textLabel = this.add.text(10, 10, 'textLabel', { 'font': '24px Lato' });
-    this.textLabel.fixedToCamera = true;
+    this.menuLabel = this.add.text(10, 10, 'Menu', { 'font': '24px Lato' });
+    this.menuLabel.fixedToCamera = true;
+    this.menuLabel.inputEnabled = true;
+    this.menuLabel.events.onInputUp.add(function() {
+      game.state.start('menu');
+    });
 
     this.physics.startSystem(Phaser.Physics.ARCADE);
 
