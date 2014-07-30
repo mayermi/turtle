@@ -130,6 +130,7 @@ var MenuState = {
 };
 
 var PlayState = {
+  layer: null,
   turtle: null,
   menuLabel: null,
 
@@ -143,17 +144,16 @@ var PlayState = {
 
   create: function() {
     var cursorKeys,
-        layer,
         tilemap;
 
-    tilemap = this.add.tilemap('forest-tilemap');
+    tilemap = this.game.add.tilemap('forest-tilemap');
     tilemap.addTilesetImage('forest-tiles');
-    tilemap.setCollision([1, 2, 3, 4, 12, 13, 14, 15]);
+    tilemap.setCollision(2);
 
-    layer = tilemap.createLayer('layer-1');
-    layer.resizeWorld();
+    this.layer = tilemap.createLayer('layer-1');
+    this.layer.resizeWorld();
 
-    this.turtle = new Turtle(this.game, 1, 8, 0);
+    this.turtle = new Turtle(this.game, 1, 6, 0);
 
     this.menuLabel = this.add.text(10, 10, 'Menu', { 'font': '24px Lato' });
     this.menuLabel.fixedToCamera = true;
@@ -164,6 +164,8 @@ var PlayState = {
 
     this.game.physics.startSystem(Phaser.Physics.ARCADE);
     this.game.physics.arcade.gravity.y = 1200;
+
+    this.game.camera.follow(this.turtle);
 
     cursorKeys = this.input.keyboard.createCursorKeys();
 
@@ -184,6 +186,7 @@ var PlayState = {
   },
 
   update: function() {
+    this.game.physics.arcade.collide(this.turtle, this.layer);
     this.checkKeys();
   },
 
