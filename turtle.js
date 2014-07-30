@@ -37,21 +37,46 @@ var Link = (function() {
   return Link;
 })();
 
+var ImprintState = {
+  create: function() {
+    var textLabel,
+        menuLabel;
+
+    this.stage.backgroundColor = '#BFEFFF';
+
+    menuLabel = this.add.text(10, 10, 'Menu');
+    menuLabel.inputEnabled = true;
+    menuLabel.events.onInputUp.add(function() {
+      game.state.start('menu');
+    });
+
+    textLabel = this.add.text(10, 40, 'This game was created by:\nAstrid Wühr\nDominik Habersack\nJudith Steigemann\nMiriam Mayer');
+  }
+};
+
 var MenuState = {
   preload: function() {
   },
 
   create: function() {
     var game = this.game,
+        imprintLabel,
         playLabel;
 
-    this.stage.backgroundColor = '#779933';
+    this.stage.backgroundColor = '#BFEFFF';
 
     playLabel = this.add.text(10, 10, 'Play');
     playLabel.inputEnabled = true;
     playLabel.events.onInputUp.add(function() {
       game.state.start('play');
     });
+
+    imprintLabel = this.add.text(380, 10, 'Imprint');
+    imprintLabel.inputEnabled = true;
+    imprintLabel.events.onInputUp.add(function() {
+      game.state.start('imprint');
+    });
+
   },
 
   update: function() {
@@ -133,6 +158,7 @@ var game;
 
 game = new Phaser.Game(480, 320, Phaser.AUTO, 'turtle');
 
+game.state.add('imprint', ImprintState);
 game.state.add('menu', MenuState);
 game.state.add('play', PlayState);
 
