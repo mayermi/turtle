@@ -17,16 +17,24 @@ var Turtle = (function() {
 
     this.speed = 4;
     this.jumpVelocity = -400;
+    this.currentJumpCount = 0;
+    this.maximumJumpCount = 2;
   }
 
   Turtle.prototype = Object.create(Phaser.Sprite.prototype);
   Turtle.prototype.constructor = Turtle;
 
   Turtle.prototype.update = function() {
+    if (this.body.velocity.y === 0) {
+      this.currentJumpCount = 0;
+    }
   };
 
   Turtle.prototype.jump = function() {
-    this.body.velocity.y = this.jumpVelocity;
+    if (this.currentJumpCount < this.maximumJumpCount) {
+      this.currentJumpCount += 1;
+      this.body.velocity.y = this.jumpVelocity;
+    }
   };
 
   Turtle.prototype.moveLeft = function() {
