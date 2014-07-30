@@ -1,40 +1,48 @@
 ;(function() {
   'use strict';
 
-var Link = (function() {
-  function Link(game, x, y) {
-    Phaser.Sprite.call(this, game, x * 32, y * 32, 'link');
+var Turtle = (function() {
+  function Turtle(game, x, y) {
+    Phaser.Sprite.call(this, game, x * 32, y * 32, 'turtle');
 
-    this.animations.add('walk-north', [0, 1, 2, 3, 4, 5, 6, 7], 12.5, true);
-    this.animations.add('walk-east', [8, 9, 10, 11, 12, 13, 14, 15], 12.5, true);
-    this.animations.add('walk-south', [16, 17, 18, 19, 20, 21, 22, 23], 12.5, true);
-    this.animations.add('walk-west', [24, 25, 26, 27, 28, 29, 30, 31], 12.5, true);
+    this.animations.add('walk-right', [8, 9, 10, 11, 12, 13, 14, 15], 12.5, true);
+    this.animations.add('walk-left', [24, 25, 26, 27, 28, 29, 30, 31], 12.5, true);
 
-    this.animations.play('walk-east');
+    this.animations.play('walk-right');
 
+    game.physics.enable(this, Phaser.Physics.ARCADE);
     game.add.existing(this);
+
+    this.speed = 4;
   }
 
-  Link.prototype = Object.create(Phaser.Sprite.prototype);
-  Link.prototype.constructor = Link;
+  Turtle.prototype = Object.create(Phaser.Sprite.prototype);
+  Turtle.prototype.constructor = Turtle;
 
-  Link.prototype.turnNorth = function() {
-    this.animations.play('walk-north');
+  Turtle.prototype.update = function() {
   };
 
-  Link.prototype.turnEast = function() {
-    this.animations.play('walk-east');
+  Turtle.prototype.jump = function() {
+    console.log('jump');
   };
 
-  Link.prototype.turnSouth = function() {
-    this.animations.play('walk-south');
+  Turtle.prototype.moveLeft = function() {
+    this.body.x -= this.speed;
   };
 
-  Link.prototype.turnWest = function() {
-    this.animations.play('walk-west');
+  Turtle.prototype.moveRight = function() {
+    this.body.x += this.speed;
   };
 
-  return Link;
+  Turtle.prototype.turnLeft = function() {
+    this.animations.play('walk-left');
+  };
+
+  Turtle.prototype.turnRight = function() {
+    this.animations.play('walk-right');
+  };
+
+  return Turtle;
 })();
 
 var MenuState = {
@@ -59,19 +67,20 @@ var MenuState = {
 };
 
 var PlayState = {
-  link: null,
+  turtle: null,
   textLabel: null,
 
   preload: function() {
     this.load.image('forest-tiles', '/img/tiles/forest.png');
 
-    this.load.spritesheet('link', '/img/sprites/link.png', 24, 24);
+    this.load.spritesheet('turtle', '/img/sprites/turtle.png', 24, 24);
 
     this.load.tilemap('forest-tilemap', '/img/tiles/forest.json', null, Phaser.Tilemap.TILED_JSON);
   },
 
   create: function() {
-    var layer,
+    var cursorKeys,
+        layer,
         tilemap;
 
     tilemap = this.add.tilemap('forest-tilemap');
@@ -81,52 +90,43 @@ var PlayState = {
     layer = tilemap.createLayer('layer-1');
     layer.resizeWorld();
 
-    this.link = new Link(this.game, 9, 5, 0);
+    this.turtle = new Turtle(this.game, 1, 8, 0);
 
-    this.textLabel = this.add.text(10, 10, 'textLabel', { 'font': '24px Lato' });
+    this.textLabel = this.add.text(10, 10, 'textLabel');
     this.textLabel.fixedToCamera = true;
 
     this.physics.startSystem(Phaser.Physics.ARCADE);
 
+    cursorKeys = this.input.keyboard.createCursorKeys();
+
     this.input.keyboard.addKeyCapture([
-        Phaser.Keyboard.UP,
-        Phaser.Keyboard.DOWN,
-        Phaser.Keyboard.LEFT,
-        Phaser.Keyboard.RIGHT
+        cursorKeys.up,
+        cursorKeys.down,
+        cursorKeys.Left,
+        cursorKeys.right
     ]);
 
-    var upKey = this.game.input.keyboard.addKey(Phaser.Keyboard.UP);
-    upKey.onDown.add(this.link.turnNorth, this.link);
-
-    var downKey = this.game.input.keyboard.addKey(Phaser.Keyboard.DOWN);
-    downKey.onDown.add(this.link.turnSouth, this.link);
-
-    var rightKey = this.game.input.keyboard.addKey(Phaser.Keyboard.RIGHT);
-    rightKey.onDown.add(this.link.turnEast, this.link);
-
-    var leftKey = this.game.input.keyboard.addKey(Phaser.Keyboard.LEFT);
-    leftKey.onDown.add(this.link.turnWest, this.link);
+    cursorKeys.right.onDown.add(this.turtle.turnRight, this.turtle);
+    cursorKeys.left.onDown.add(this.turtle.turnLeft, this.turtle);
   },
 
   update: function() {
-    // this.checkKeys();
+    this.checkKeys();
   },
 
-  // checkKeys: function() {
-  //   var cursorKeys = this.input.keyboard.createCursorKeys();
+  checkKeys: function() {
+    var cursorKeys;
 
-  //   if (cursorKeys.up.isDown) {
-  //   }
+    cursorKeys = this.input.keyboard.createCursorKeys();
 
-  //   if (cursorKeys.down.isDown) {
-  //   }
+    if (cursorKeys.left.isDown) {
+      this.turtle.moveLeft();
+    }
 
-  //   if (cursorKeys.left.isDown) {
-  //   }
-
-  //   if (cursorKeys.right.isDown) {
-  //   }
-  // }
+    if (cursorKeys.right.isDown) {
+      this.turtle.moveRight();
+    }
+  }
 };
 
 var game;
@@ -136,5 +136,5 @@ game = new Phaser.Game(480, 320, Phaser.AUTO, 'turtle');
 game.state.add('menu', MenuState);
 game.state.add('play', PlayState);
 
-game.state.start('menu');
+game.state.start('play');
 }).call(this);
