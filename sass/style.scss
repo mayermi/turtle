@@ -1,0 +1,43 @@
+@import 'colors';
+@import 'css3';
+@import 'fonts';
+@import 'grid';
+@import 'media-queries';
+@import 'normalize';
+
+%responsive-container {
+  margin: {
+    left: auto;
+    right: auto;
+  }
+  width: 92%;
+}
+
+@media (#{ $query-small }) {
+  %responsive-container {
+    width: 90%;
+  }
+}
+
+@media (#{ $query-medium }) {
+  %responsive-container {
+    width: 86%;
+  }
+}
+
+@media (#{ $query-large }) {
+  %responsive-container {
+    width: 80%;
+  }
+}
+
+@media (#{ $query-extra-large }) {
+  %responsive-container {
+    width: 96em;
+  }
+}
+
+h1 {
+  font-size: 2.4em;
+  line-height: 1.5em; // 36px
+}

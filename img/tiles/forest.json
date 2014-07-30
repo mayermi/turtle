@@ -1,0 +1,47 @@
+{
+  "height": 10,
+  "width": 15,
+  "layers": [
+    {
+      "name": "layer-1",
+      "type": "tilelayer",
+      "height": 10,
+      "width": 15,
+      "x": 0,
+      "y": 0,
+      "data": [
+          16,  1, 12,  1, 14,  1,  1,  2,  1,  1, 15,  1,  3,  1,  1,
+           1,  2,  1,  1,  1,  5, 10, 11, 10, 10, 10, 10, 10,  6,  1,
+           1,  5, 10,  6,  1,  9,  1,  1,  2,  1,  1,  1,  1,  9,  4,
+           1,  9,  1,  9, 13,  7, 10, 10,  6,  1,  5, 10, 10,  8,  1,
+          14,  9,  2,  9,  1,  1,  2,  1,  9,  4,  9,  3,  2,  1,  1,
+           1,  9,  1,  7, 10, 10, 10, 10,  8,  3,  7, 10, 10,  6,  3,
+           1,  9,  1,  1,  4,  1,  1,  2,  1,  1,  1,  2,  1,  9,  1,
+           1,  7, 10,  6, 14, 14, 14,  5, 10, 10, 10, 10, 10,  8,  1,
+           1,  1,  1,  7, 10, 10, 10,  8,  1,  2,  1, 13,  1,  1, 12,
+           1,  3,  1,  1, 13,  1,  1,  1,  1,  1,  1,  1,  4,  1,  1
+      ],
+      "opacity": 1,
+      "visible": true
+    }
+  ],
+  "orientation": "orthogonal",
+  "properties": {},
+  "tileheight": 32,
+  "tilesets": [
+    {
+      "firstgid": 1,
+      "image": "/img/tiles/forest.png",
+      "imageheight": 128,
+      "imagewidth": 128,
+      "margin": 0,
+      "name": "forest-tiles",
+      "properties": {},
+      "spacing": 0,
+      "tileheight": 32,
+      "tilewidth": 32
+    }
+  ],
+  "tilewidth": 32,
+  "version": 1
+}

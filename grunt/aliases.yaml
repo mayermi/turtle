@@ -1,0 +1,16 @@
+compile:
+  - css
+  - js
+css:
+  - sass
+  - autoprefixer
+  - cmq
+  - cssmin
+js:
+  - concat
+  - jshint
+  # - uglify
+default:
+  - compile
+  - connect
+  - watch
