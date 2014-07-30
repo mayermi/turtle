@@ -1,9 +1,28 @@
 var Turtle = (function() {
   function Turtle(game, x, y) {
+    var animations,
+        firstFrame,
+        framesPerAnimation,
+        framesRange,
+        lastFrame;
+
     Phaser.Sprite.call(this, game, x * 32, y * 32, 'turtle');
 
-    this.animations.add('walk-right', [8, 9, 10, 11, 12, 13, 14, 15], 12.5, true);
-    this.animations.add('walk-left', [24, 25, 26, 27, 28, 29, 30, 31], 12.5, true);
+    animations = [
+      'cheer',
+      'walk-right',
+      'die',
+      'walk-left'
+    ];
+    framesPerAnimation = 8;
+
+    for (var i = 0, l = animations.length; i < l; i += 1) {
+      firstFrame = framesPerAnimation * i;
+      lastFrame = firstFrame + framesPerAnimation;
+      framesRange = _.range(firstFrame, lastFrame);
+
+      this.animations.add(animations[i], framesRange, 12.5, true);
+    }
 
     this.animations.play('walk-right');
 
@@ -25,6 +44,14 @@ var Turtle = (function() {
     if (this.body.velocity.y === 0) {
       this.currentJumpCount = 0;
     }
+  };
+
+  Turtle.prototype.cheer = function() {
+    this.animations.play('cheer');
+  };
+
+  Turtle.prototype.die = function() {
+    this.animations.play('die');
   };
 
   Turtle.prototype.jump = function() {

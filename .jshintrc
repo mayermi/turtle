@@ -9,6 +9,7 @@
   "forin": true,
   "freeze": true,
   "globals": {
+    "_": true,
     "Phaser": true
   },
   "immed": true,
