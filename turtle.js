@@ -162,5 +162,5 @@ game.state.add('imprint', ImprintState);
 game.state.add('menu', MenuState);
 game.state.add('play', PlayState);
 
-game.state.start('menu');
+game.state.start('play');
 }).call(this);
