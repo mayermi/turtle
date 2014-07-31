@@ -1,7 +1,6 @@
 var PlayState = {
   clouds: null,
   layer: null,
-  menuLabel: null,
   player: null,
 
   preload: function() {
@@ -14,16 +13,13 @@ var PlayState = {
   },
 
   create: function() {
-    var cursorKeys,
-        tilemap;
+    var tilemap;
 
     tilemap = this.game.add.tilemap('forest-tilemap');
     tilemap.addTilesetImage('forest-tiles');
 
     this.layer = tilemap.createLayer('layer-1');
     this.layer.resizeWorld();
-
-    this.initializeClouds();
 
     this.player = new Player(this.game, 1, 6, 0);
 
@@ -33,35 +29,7 @@ var PlayState = {
     //   return true;
     // });
 
-    this.menuLabel = this.add.text(10, 10, 'Menu', { 'font': '24px Lato' });
-    this.menuLabel.fixedToCamera = true;
-    this.menuLabel.inputEnabled = true;
-    this.menuLabel.events.onInputUp.add(function() {
-      game.state.start('menu');
-    });
-
-    this.game.physics.startSystem(Phaser.Physics.ARCADE);
-    this.game.physics.arcade.gravity.y = 1200;
-    this.game.physics.enable(this.player);
-
-    this.game.camera.follow(this.player);
-
-    cursorKeys = this.input.keyboard.createCursorKeys();
-
-    this.input.keyboard.addKeyCapture([
-        cursorKeys.up,
-        cursorKeys.down,
-        cursorKeys.Left,
-        cursorKeys.right,
-
-        Phaser.Keyboard.SPACEBAR
-    ]);
-
-    var jumpButton = game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
-    jumpButton.onDown.add(this.player.jump, this.player);
-
-    cursorKeys.right.onDown.add(this.player.turnRight, this.player);
-    cursorKeys.left.onDown.add(this.player.turnLeft, this.player);
+    this.initialize();
   },
 
   update: function() {
@@ -85,9 +53,19 @@ var PlayState = {
     }
   },
 
-  initializeClouds: function() {
-    console.log(this.world);
+  initialize: function() {
+    this.initializeCamera();
+    this.initializeClouds();
+    this.initializeKeyboard();
+    this.initializeLabels();
+    this.initializePhysics();
+  },
 
+  initializeCamera: function() {
+    this.game.camera.follow(this.player);
+  },
+
+  initializeClouds: function() {
     this.clouds = this.game.add.group();
     this.clouds.enableBody = true;
     this.clouds.physicsBodyType = Phaser.Physics.ARCADE;
@@ -95,6 +73,45 @@ var PlayState = {
     for (var i = 0, l = 8; i < l; i += 1) {
       this.addCloud(_.random(0, this.world.bounds.width / 32) * 32);
     }
+  },
+
+  initializeKeyboard: function() {
+    var cursorKeys;
+
+    cursorKeys = this.input.keyboard.createCursorKeys();
+
+    this.input.keyboard.addKeyCapture([
+        cursorKeys.up,
+        cursorKeys.down,
+        cursorKeys.Left,
+        cursorKeys.right,
+
+        Phaser.Keyboard.SPACEBAR
+    ]);
+
+    var jumpButton = game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
+    jumpButton.onDown.add(this.player.jump, this.player);
+
+    cursorKeys.right.onDown.add(this.player.turnRight, this.player);
+    cursorKeys.left.onDown.add(this.player.turnLeft, this.player);
+  },
+
+  initializeLabels: function() {
+    var menuLabel;
+
+    menuLabel = this.add.text(10, 10, 'Menu');
+    menuLabel.fixedToCamera = true;
+    menuLabel.inputEnabled = true;
+
+    menuLabel.events.onInputUp.add(function() {
+      game.state.start('menu');
+    });
+  },
+
+  initializePhysics: function() {
+    this.game.physics.startSystem(Phaser.Physics.ARCADE);
+    this.game.physics.arcade.gravity.y = 1200;
+    this.game.physics.enable(this.player);
   },
 
   addCloud: function(x) {
