@@ -1,15 +1,15 @@
 ;(function() {
   'use strict';
 
-var Turtle = (function() {
-  function Turtle(game, x, y) {
+var Player = (function() {
+  function Player(game, x, y) {
     var animations,
         firstFrame,
         framesPerAnimation,
         framesRange,
         lastFrame;
 
-    Phaser.Sprite.call(this, game, x * 32, y * 32, 'turtle');
+    Phaser.Sprite.call(this, game, x * 32, y * 32, 'player');
 
     this.walkVelocity = 200;
     this.walkDrag = 800;
@@ -44,47 +44,47 @@ var Turtle = (function() {
     this.body.drag.x = this.walkDrag;
   }
 
-  Turtle.prototype = Object.create(Phaser.Sprite.prototype);
-  Turtle.prototype.constructor = Turtle;
+  Player.prototype = Object.create(Phaser.Sprite.prototype);
+  Player.prototype.constructor = Player;
 
-  Turtle.prototype.update = function() {
+  Player.prototype.update = function() {
     if (this.body.velocity.y === 0) {
       this.currentJumpCount = 0;
     }
   };
 
-  Turtle.prototype.cheer = function() {
+  Player.prototype.cheer = function() {
     this.animations.play('cheer');
   };
 
-  Turtle.prototype.die = function() {
+  Player.prototype.die = function() {
     this.animations.play('die');
   };
 
-  Turtle.prototype.jump = function() {
+  Player.prototype.jump = function() {
     if (this.currentJumpCount < this.maximumJumpCount) {
       this.currentJumpCount += 1;
       this.body.velocity.y = this.jumpVelocity;
     }
   };
 
-  Turtle.prototype.moveLeft = function() {
+  Player.prototype.moveLeft = function() {
     this.body.velocity.x = -1 * this.walkVelocity;
   };
 
-  Turtle.prototype.moveRight = function() {
+  Player.prototype.moveRight = function() {
     this.body.velocity.x = this.walkVelocity;
   };
 
-  Turtle.prototype.turnLeft = function() {
+  Player.prototype.turnLeft = function() {
     this.animations.play('walk-left');
   };
 
-  Turtle.prototype.turnRight = function() {
+  Player.prototype.turnRight = function() {
     this.animations.play('walk-right');
   };
 
-  return Turtle;
+  return Player;
 })();
 
 var ImprintState = {
@@ -136,14 +136,14 @@ var MenuState = {
 var PlayState = {
   layer: null,
   menuLabel: null,
-  turtle: null,
+  player: null,
   walls: null,
 
   preload: function() {
     this.load.image('forest-tiles', '/img/tiles/forest.png');
     this.load.image('wall', '/img/images/wall.png');
 
-    this.load.spritesheet('turtle', '/img/sprites/gehen-groesser.png', 32, 48);
+    this.load.spritesheet('player', '/img/sprites/gehen-groesser.png', 32, 48);
 
     this.load.tilemap('forest-tilemap', '/img/tiles/forest.json', null, Phaser.Tilemap.TILED_JSON);
   },
@@ -159,7 +159,7 @@ var PlayState = {
     this.layer = tilemap.createLayer('layer-1');
     this.layer.resizeWorld();
 
-    this.turtle = new Turtle(this.game, 1, 6, 0);
+    this.player = new Player(this.game, 1, 6, 0);
 
     this.menuLabel = this.add.text(10, 10, 'Menu', { 'font': '24px Lato' });
     this.menuLabel.fixedToCamera = true;
@@ -170,9 +170,9 @@ var PlayState = {
 
     this.game.physics.startSystem(Phaser.Physics.ARCADE);
     this.game.physics.arcade.gravity.y = 1200;
-    this.game.physics.enable(this.turtle);
+    this.game.physics.enable(this.player);
 
-    this.game.camera.follow(this.turtle);
+    this.game.camera.follow(this.player);
 
     cursorKeys = this.input.keyboard.createCursorKeys();
 
@@ -186,10 +186,10 @@ var PlayState = {
     ]);
 
     var jumpButton = game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
-    jumpButton.onDown.add(this.turtle.jump, this.turtle);
+    jumpButton.onDown.add(this.player.jump, this.player);
 
-    cursorKeys.right.onDown.add(this.turtle.turnRight, this.turtle);
-    cursorKeys.left.onDown.add(this.turtle.turnLeft, this.turtle);
+    cursorKeys.right.onDown.add(this.player.turnRight, this.player);
+    cursorKeys.left.onDown.add(this.player.turnLeft, this.player);
 
     this.walls = this.game.add.group();
     this.walls.enableBody = true;
@@ -201,8 +201,8 @@ var PlayState = {
   },
 
   update: function() {
-    this.game.physics.arcade.collide(this.turtle, this.layer);
-    this.game.physics.arcade.collide(this.turtle, this.walls);
+    this.game.physics.arcade.collide(this.player, this.layer);
+    this.game.physics.arcade.collide(this.player, this.walls);
 
     this.checkKeys();
   },
@@ -213,11 +213,11 @@ var PlayState = {
     cursorKeys = this.input.keyboard.createCursorKeys();
 
     if (cursorKeys.left.isDown) {
-      this.turtle.moveLeft();
+      this.player.moveLeft();
     }
 
     if (cursorKeys.right.isDown) {
-      this.turtle.moveRight();
+      this.player.moveRight();
     }
   }
 };

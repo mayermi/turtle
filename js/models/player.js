@@ -1,12 +1,12 @@
-var Turtle = (function() {
-  function Turtle(game, x, y) {
+var Player = (function() {
+  function Player(game, x, y) {
     var animations,
         firstFrame,
         framesPerAnimation,
         framesRange,
         lastFrame;
 
-    Phaser.Sprite.call(this, game, x * 32, y * 32, 'turtle');
+    Phaser.Sprite.call(this, game, x * 32, y * 32, 'player');
 
     this.walkVelocity = 200;
     this.walkDrag = 800;
@@ -41,45 +41,45 @@ var Turtle = (function() {
     this.body.drag.x = this.walkDrag;
   }
 
-  Turtle.prototype = Object.create(Phaser.Sprite.prototype);
-  Turtle.prototype.constructor = Turtle;
+  Player.prototype = Object.create(Phaser.Sprite.prototype);
+  Player.prototype.constructor = Player;
 
-  Turtle.prototype.update = function() {
+  Player.prototype.update = function() {
     if (this.body.velocity.y === 0) {
       this.currentJumpCount = 0;
     }
   };
 
-  Turtle.prototype.cheer = function() {
+  Player.prototype.cheer = function() {
     this.animations.play('cheer');
   };
 
-  Turtle.prototype.die = function() {
+  Player.prototype.die = function() {
     this.animations.play('die');
   };
 
-  Turtle.prototype.jump = function() {
+  Player.prototype.jump = function() {
     if (this.currentJumpCount < this.maximumJumpCount) {
       this.currentJumpCount += 1;
       this.body.velocity.y = this.jumpVelocity;
     }
   };
 
-  Turtle.prototype.moveLeft = function() {
+  Player.prototype.moveLeft = function() {
     this.body.velocity.x = -1 * this.walkVelocity;
   };
 
-  Turtle.prototype.moveRight = function() {
+  Player.prototype.moveRight = function() {
     this.body.velocity.x = this.walkVelocity;
   };
 
-  Turtle.prototype.turnLeft = function() {
+  Player.prototype.turnLeft = function() {
     this.animations.play('walk-left');
   };
 
-  Turtle.prototype.turnRight = function() {
+  Player.prototype.turnRight = function() {
     this.animations.play('walk-right');
   };
 
-  return Turtle;
+  return Player;
 })();
