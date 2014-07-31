@@ -19,12 +19,17 @@ var PlayState = {
 
     tilemap = this.game.add.tilemap('forest-tilemap');
     tilemap.addTilesetImage('forest-tiles');
-    tilemap.setCollision(2);
 
     this.layer = tilemap.createLayer('layer-1');
     this.layer.resizeWorld();
 
     this.player = new Player(this.game, 1, 6, 0);
+
+    tilemap.setCollision(2);
+    tilemap.setTileIndexCallback(2, function() {
+      console.log('hit');
+      return true;
+    });
 
     this.menuLabel = this.add.text(10, 10, 'Menu', { 'font': '24px Lato' });
     this.menuLabel.fixedToCamera = true;

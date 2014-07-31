@@ -154,12 +154,17 @@ var PlayState = {
 
     tilemap = this.game.add.tilemap('forest-tilemap');
     tilemap.addTilesetImage('forest-tiles');
-    tilemap.setCollision(2);
 
     this.layer = tilemap.createLayer('layer-1');
     this.layer.resizeWorld();
 
     this.player = new Player(this.game, 1, 6, 0);
+
+    tilemap.setCollision(2);
+    tilemap.setTileIndexCallback(2, function() {
+      console.log('hit');
+      return true;
+    });
 
     this.menuLabel = this.add.text(10, 10, 'Menu', { 'font': '24px Lato' });
     this.menuLabel.fixedToCamera = true;
@@ -222,13 +227,22 @@ var PlayState = {
   }
 };
 
-var game;
+var game,
+    states;
 
 game = new Phaser.Game(480, 320, Phaser.AUTO, 'turtle');
 
-game.state.add('imprint', ImprintState);
-game.state.add('menu', MenuState);
-game.state.add('play', PlayState);
+states = {
+  'imprint': ImprintState,
+  'menu': MenuState,
+  'play': PlayState
+};
+
+for (var key in states) {
+  if (states.hasOwnProperty(key)) {
+    game.state.add(key, states[key]);
+  }
+}
 
 game.state.start('play');
 }).call(this);
