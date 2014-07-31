@@ -355,8 +355,8 @@ var PlayState = {
   goodies: null,
   layer: null,
   level: null,
-  player: null,
   lifeGroup: null,
+  player: null,
 
   preload: function() {
     var goodies,
@@ -371,7 +371,7 @@ var PlayState = {
 
     this.load.image('forest-tiles', '/img/tiles/forest.png');
     this.load.image('cloud', '/img/images/cloud.png');
-    this.load.image('life', '/img/images/Salat.png');
+    this.load.image('life', '/img/images/life.png');
 
     this.load.spritesheet('player', '/img/sprites/turtle.png', 32, 64);
 
@@ -392,8 +392,7 @@ var PlayState = {
     this.level = config.levels[1];
 
     tilemap.setCollision(2);
-    tilemap.setTileIndexCallback(2, function() {
-      this.player.hitGround();
+    tilemap.setTileIndexCallback(2, function() { this.player.hitGround();
       return true;
     }, this);
 
@@ -410,21 +409,28 @@ var PlayState = {
   },
 
   update: function() {
+    var lifeGroup,
+        newLife,
+        newPosition,
+        playerHealth;
+
+    lifeGroup = this.lifeGroup;
+    playerHealth = this.player.health;
+
     this.game.physics.arcade.collide(this.player, this.layer);
+
     this.game.physics.arcade.collide(this.player, this.goodies, function(player, goody) {
       player.eatGoody(goody);
       goody.kill();
     });
 
-    if (this.player.health >= 0) {
-     if (this.player.health < this.lifeGroup.length) {
-        var life = this.lifeGroup.getAt(this.player.health);
-        life.destroy();
-      } else if (this.player.health > this.lifeGroup.length) {
-        var newPosition = 450 - (this.player.health - 1) * 40;
-        var newLife = game.add.sprite(newPosition, 10, 'life');
-        this.lifeGroup.addAt(newLife, this.lifeGroup.length);
-
+    if (playerHealth >= 0) {
+     if (playerHealth < lifeGroup.length) {
+        lifeGroup.getAt(playerHealth).destroy();
+      } else if (playerHealth > lifeGroup.length) {
+        newPosition = this.stage.bounds.width - playerHealth * 32;
+        newLife = game.add.sprite(newPosition, 16, 'life');
+        lifeGroup.addAt(newLife, lifeGroup.length);
       }
     }
 
@@ -492,9 +498,10 @@ var PlayState = {
 
   initializeHealthBar: function() {
     this.lifeGroup = game.add.group();
+    this.lifeGroup.fixedToCamera = true;
+
     for (var i = 0; i < this.player.health; i += 1) {
-      this.lifeGroup.create(450 - i*40, 10, 'life');
-      this.lifeGroup.fixedToCamera = true;
+      this.lifeGroup.create(this.stage.bounds.width - (i + 1) * 32, 16, 'life');
     }
   },
 
