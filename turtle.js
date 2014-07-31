@@ -398,13 +398,6 @@ var PlayState = {
 
     tilemap.setTileIndexCallback(3, this.player.fallIntoHazardousTerrain, this.player);
 
-    this.menuLabel = this.add.text(10, 10, 'Menu');
-    this.menuLabel.fixedToCamera = true;
-    this.menuLabel.inputEnabled = true;
-    this.menuLabel.events.onInputUp.add(function() {
-      game.state.start('menu');
-    });
-
     this.initialize();
   },
 
