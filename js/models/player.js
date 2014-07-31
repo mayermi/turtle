@@ -84,6 +84,10 @@ var Player = (function() {
     for (var i = 0, l = effects.length; i < l; i += 1) {
       effect = effects[i];
 
+      if (effect.healthIncrease) {
+        this.addEffect('health', effect.healthIncrease, effect.duration);
+      }
+
       if (effect.speedIncrease) {
         this.addEffect('walkVelocity', effect.speedIncrease, effect.duration);
       }

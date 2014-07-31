@@ -39,6 +39,9 @@
   {
     "name": "strawberry",
     "effects": [
+      {
+        "healthIncrease": 1
+      }
     ]
   }
 ]
