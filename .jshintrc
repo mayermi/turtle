@@ -13,7 +13,7 @@
     "Phaser": true
   },
   "immed": true,
-  "jquery": false,
+  "jquery": true,
   "latedef": true,
 
   "loopfunc": true,

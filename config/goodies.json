@@ -1,0 +1,40 @@
+[
+  {
+    "name": "bubble",
+    "effects": [
+      {
+        "jumpHeightIncrease": -100,
+        "duration": 4000
+      }
+    ]
+  },
+  {
+    "name": "candy",
+    "effects": [
+    ]
+  },
+  {
+    "name": "chili",
+    "effects": [
+      {
+        "speedIncrease": 100,
+        "duration": 4000
+      }
+    ]
+  },
+  {
+    "name": "ice",
+    "effects": [
+    ]
+  },
+  {
+    "name": "salad",
+    "effects": [
+    ]
+  },
+  {
+    "name": "strawberry",
+    "effects": [
+    ]
+  }
+]

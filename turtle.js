@@ -1,6 +1,24 @@
 ;(function() {
   'use strict';
 
+var Config = (function() {
+  function Config() {
+    var goody,
+        that = this;
+
+    this.goodies = {};
+
+    $.getJSON('/config/goodies.json', function(goodies) {
+      for (var i = 0, l = goodies.length; i < l; i += 1) {
+        goody = goodies[i];
+        that.goodies[goody.name] = goody;
+      }
+    });
+  }
+
+  return Config;
+})();
+
 var Goody = (function() {
   function Goody(game, x, y, sprite, effects) {
     Phaser.Sprite.call(this, game, x * 32, y * 32, sprite);
@@ -97,7 +115,9 @@ var Player = (function() {
 
   Player.prototype.eatGoody = function(goody) {
     var effect,
-        effects = goody.effects;
+        effects;
+
+    effects = config.goodies[goody.name].effects;
 
     for (var i = 0, l = effects.length; i < l; i += 1) {
       effect = effects[i];
@@ -206,19 +226,15 @@ var PlayState = {
   player: null,
 
   preload: function() {
-    var goodies;
+    var goodies,
+        goody;
 
-    goodies = [
-      'bubble',
-      'candy',
-      'chili',
-      'ice',
-      'salad',
-      'strawberry'
-    ];
+    goodies = config.goodies;
 
-    for (var i = 0, l = goodies.length; i < l; i += 1) {
-      this.load.image(goodies[i], '/img/goodies/' + goodies[i] + '.png');
+    for (goody in goodies) {
+      if (goodies.hasOwnProperty(goody)) {
+        this.load.image(goody, '/img/goodies/' + goody + '.png');
+      }
     }
 
     this.load.image('forest-tiles', '/img/tiles/forest.png');
@@ -313,8 +329,8 @@ var PlayState = {
     this.goodies.enableBody = true;
     this.goodies.physicsBodyType = Phaser.Physics.ARCADE;
 
-    this.goodies.add(new Goody(this.game, 12, 5, 'chili', [{ speedIncrease: 100, duration: 4000 }]));
-    this.goodies.add(new Goody(this.game, 41, 5, 'bubble', [{ jumpHeightIncrease: -100 }]));
+    this.goodies.add(new Goody(this.game, 12, 5, 'chili'));
+    this.goodies.add(new Goody(this.game, 41, 5, 'bubble'));
   },
 
   initializeKeyboard: function() {
@@ -378,8 +394,11 @@ var PlayState = {
   }
 };
 
-var game,
+var config,
+    game,
     states;
+
+config = new Config();
 
 game = new Phaser.Game(480, 320, Phaser.AUTO, 'turtle');
 

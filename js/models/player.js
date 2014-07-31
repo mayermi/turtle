@@ -77,7 +77,9 @@ var Player = (function() {
 
   Player.prototype.eatGoody = function(goody) {
     var effect,
-        effects = goody.effects;
+        effects;
+
+    effects = config.goodies[goody.name].effects;
 
     for (var i = 0, l = effects.length; i < l; i += 1) {
       effect = effects[i];

@@ -6,6 +6,7 @@ module.exports = {
   run: {
     files: {
       '<%= package.name %>.js': [
+        'js/config.js',
         'js/models/**/*.js',
         'js/states/**/*.js',
         'js/game.js'
