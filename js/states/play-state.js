@@ -21,7 +21,7 @@ var PlayState = {
     this.load.image('forest-tiles', '/img/tiles/forest.png');
     this.load.image('cloud', '/img/images/cloud.png');
 
-    this.load.spritesheet('player', '/img/sprites/gehen-groesser.png', 32, 48);
+    this.load.spritesheet('player', '/img/sprites/turtle.png', 32, 64);
 
     this.load.tilemap('forest-tilemap', '/img/tiles/forest.json', null, Phaser.Tilemap.TILED_JSON);
 

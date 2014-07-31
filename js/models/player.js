@@ -17,10 +17,14 @@ var Player = (function() {
     this.isInHazardousTerrain = false;
 
     animations = [
-      // 'cheer',
       'walk-right',
-      // 'die',
-      // 'walk-left'
+      'walk-left',
+      'walk-right-naked',
+      'walk-left-naked',
+      'eat',
+      'eat-naked',
+      'jump',
+      'jump-naked'
     ];
     framesPerAnimation = 10;
 
@@ -79,6 +83,8 @@ var Player = (function() {
     var effect,
         effects;
 
+    this.animations.play('eat', null, false);
+
     effects = config.goodies[goody.name].effects;
 
     for (var i = 0, l = effects.length; i < l; i += 1) {
@@ -102,6 +108,7 @@ var Player = (function() {
     if (this.isInHazardousTerrain) {
       console.log('nicht wasser');
       this.isInHazardousTerrain = false;
+      this.animations.play('walk-right');
     }
   };
 
@@ -113,9 +120,29 @@ var Player = (function() {
   };
 
   Player.prototype.jump = function() {
+    var previousAnimation,
+        that,
+        wasWalking;
+
+    that = this;
+
+    wasWalking = this.animations.currentAnim.name.indexOf('walk') === 0;
+    if (wasWalking) {
+      previousAnimation = this.animations.currentAnim;
+    }
+
     if (this.currentJumpCount < this.maximumJumpCount) {
-      this.currentJumpCount += 1;
+      this.animations.stop();
+
       this.body.velocity.y = this.jumpVelocity;
+      this.currentJumpCount += 1;
+
+      this.animations.play('jump', null, false);
+      if (previousAnimation) {
+        this.events.onAnimationComplete.add(function() {
+          that.animations.play(previousAnimation.name);
+        });
+      }
     }
   };
 
@@ -128,6 +155,7 @@ var Player = (function() {
   };
 
   Player.prototype.turnLeft = function() {
+    console.log('turn left');
     this.animations.play('walk-left');
   };
 
