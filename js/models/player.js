@@ -13,6 +13,8 @@ var Player = (function() {
     this.jumpVelocity = -400;
     this.currentJumpCount = 0;
     this.maximumJumpCount = 2;
+    this.health = 3;
+    this.isInHazardousTerrain = false;
 
     animations = [
       // 'cheer',
@@ -50,12 +52,28 @@ var Player = (function() {
     }
   };
 
+  /* Custom methods */
   Player.prototype.cheer = function() {
     this.animations.play('cheer');
+
   };
 
   Player.prototype.die = function() {
     this.animations.play('die');
+  };
+
+  Player.prototype.hitGround = function() {
+    if (this.isInHazardousTerrain) {
+      console.log('nicht wasser');
+      this.isInHazardousTerrain = false;
+    }
+  };
+
+  Player.prototype.fallIntoHazardousTerrain = function() {
+    if (!this.isInHazardousTerrain) {
+      console.log('auauauauau');
+      this.isInHazardousTerrain = true;
+    }
   };
 
   Player.prototype.jump = function() {

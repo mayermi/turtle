@@ -1,5 +1,6 @@
 var PlayState = {
   clouds: null,
+  healthLabel: null,
   layer: null,
   player: null,
 
@@ -24,10 +25,22 @@ var PlayState = {
     this.player = new Player(this.game, 1, 6, 0);
 
     tilemap.setCollision(2);
-    // tilemap.setTileIndexCallback(2, function() {
-    //   console.log('hit');
-    //   return true;
-    // });
+    tilemap.setTileIndexCallback(2, function() {
+      this.player.hitGround();
+      return true;
+    }, this);
+
+    tilemap.setTileIndexCallback(3, this.player.fallIntoHazardousTerrain, this.player);
+
+    this.healthLabel = this.add.text(380, 10, 'Health');
+    this.healthLabel.fixedToCamera = true;
+
+    this.menuLabel = this.add.text(10, 10, 'Menu');
+    this.menuLabel.fixedToCamera = true;
+    this.menuLabel.inputEnabled = true;
+    this.menuLabel.events.onInputUp.add(function() {
+      game.state.start('menu');
+    });
 
     this.initialize();
   },
@@ -106,6 +119,9 @@ var PlayState = {
     menuLabel.events.onInputUp.add(function() {
       game.state.start('menu');
     });
+
+    this.healthLabel = this.add.text(380, 10, 'Health');
+    this.healthLabel.fixedToCamera = true;
   },
 
   initializePhysics: function() {
