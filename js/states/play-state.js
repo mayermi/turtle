@@ -1,4 +1,5 @@
 var PlayState = {
+  healthLabel: null,
   layer: null,
   menuLabel: null,
   player: null,
@@ -31,7 +32,10 @@ var PlayState = {
       return true;
     });
 
-    this.menuLabel = this.add.text(10, 10, 'Menu', { 'font': '24px Lato' });
+    this.healthLabel = this.add.text(380, 10, 'Health');
+    this.healthLabel.fixedToCamera = true;
+
+    this.menuLabel = this.add.text(10, 10, 'Menu');
     this.menuLabel.fixedToCamera = true;
     this.menuLabel.inputEnabled = true;
     this.menuLabel.events.onInputUp.add(function() {
@@ -73,7 +77,6 @@ var PlayState = {
   update: function() {
     this.game.physics.arcade.collide(this.player, this.layer);
     this.game.physics.arcade.collide(this.player, this.walls);
-
     this.checkKeys();
   },
 
