@@ -77,6 +77,8 @@ var Player = (function() {
     if (!this.isInHazardousTerrain) {
       if (this.body.blocked.down) {
         console.log('auauauauau');
+        this.damage(1);
+        console.log(this.health);
         this.isInHazardousTerrain = true;
         this.au();
       }
@@ -84,15 +86,18 @@ var Player = (function() {
   };
 
   Player.prototype.au = function() {
-    if (this.isInHazardousTerrain){
-          this.auInterval = setInterval(this.hurt, 1000);
+    var that;
+    that = this;
+
+    if (this.isInHazardousTerrain) {
+      this.auInterval = setInterval(function() {
+        console.log('eiei');
+        that.damage(1);
+        console.log(that.health);
+      }, 1000);
     } else {
       clearInterval(this.auInterval);
     }
-  };
-
-  Player.prototype.hurt = function() {
-    console.log('eiei');
   };
 
   Player.prototype.jump = function() {
