@@ -11,9 +11,11 @@ var PlayState = {
         goody;
 
     goodies = config.goodies;
+    console.log('goodies', config.goodies);
 
     for (goody in goodies) {
       if (goodies.hasOwnProperty(goody)) {
+        console.log('goody', goody);
         this.load.image(goody, '/img/goodies/' + goody + '.png');
       }
     }
