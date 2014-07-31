@@ -5,6 +5,7 @@ var PlayState = {
   layer: null,
   level: null,
   player: null,
+  lifeGroup: null,
 
   preload: function() {
     var goodies,
@@ -20,6 +21,7 @@ var PlayState = {
 
     this.load.image('forest-tiles', '/img/tiles/forest.png');
     this.load.image('cloud', '/img/images/cloud.png');
+    this.load.image('life', '/img/images/Salat.png');
 
     this.load.spritesheet('player', '/img/sprites/gehen-groesser.png', 32, 48);
 
@@ -64,11 +66,16 @@ var PlayState = {
       goody.kill();
     });
 
-    if (this.player.health > 0) {
-      this.healthLabel.setText(this.player.health);      
-    } else {
-      this.healthLabel.setText('X');
+    if (this.player.health >= 0) {
+     if (this.player.health < this.lifeGroup.length) {
+        var life = this.lifeGroup.getFirstAlive();
+        life.destroy();
+      } else if (this.player.health > this.lifeGroup.length) {
+        var newLife = this.lifeGroup.getFirstDead();
+        newLife.reset();
+      }
     }
+
     this.checkKeys();
   },
 
@@ -90,6 +97,7 @@ var PlayState = {
     this.initializeCamera();
     this.initializeClouds();
     this.initializeGoodies();
+    this.initializeHealthBar();
     this.initializeKeyboard();
     this.initializeLabels();
     this.initializePhysics();
@@ -130,6 +138,13 @@ var PlayState = {
     }
   },
 
+  initializeHealthBar: function() {
+    this.lifeGroup = game.add.group();
+    for (var i = 0; i < this.player.health; i += 1) {
+      this.lifes = this.lifeGroup.create(350 + i*40, 10, 'life');
+    }
+  },
+
   initializeKeyboard: function() {
     var cursorKeys;
 
@@ -162,8 +177,8 @@ var PlayState = {
       game.state.start('menu');
     });
 
-    this.healthLabel = this.add.text(440, 10, 'Health '+ this.player.health);
-    this.healthLabel.fixedToCamera = true;
+    //this.healthLabel = this.add.text(440, 10, 'Health '+ this.player.health);
+    //this.healthLabel.fixedToCamera = true;
   },
 
   initializePhysics: function() {

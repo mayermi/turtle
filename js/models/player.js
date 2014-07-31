@@ -113,7 +113,6 @@ var Player = (function() {
     if (this.alive){
       if (!this.isInHazardousTerrain) {
         if (this.body.blocked.down) {
-          console.log('auauauauau');
           this.damage(1);
           console.log(this.health);
           this.isInHazardousTerrain = true;
@@ -130,7 +129,6 @@ var Player = (function() {
     if (this.isInHazardousTerrain) {
       this.auInterval = setInterval(function() {
         if (that.alive) {
-          console.log('eiei');
           that.damage(1);
           console.log(that.health);
         }
