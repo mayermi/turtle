@@ -55,6 +55,7 @@ var Player = (function() {
     }
   };
 
+  /* Custom methods */
   Player.prototype.cheer = function() {
     this.animations.play('cheer');
 
@@ -62,6 +63,13 @@ var Player = (function() {
 
   Player.prototype.die = function() {
     this.animations.play('die');
+  };
+
+  Player.prototype.hitGround = function() {
+    if (this.isInHazardousTerrain) {
+      console.log('nicht wasser');
+      this.isInHazardousTerrain = false;
+    }
   };
 
   Player.prototype.fallIntoHazardousTerrain = function() {
@@ -170,10 +178,12 @@ var PlayState = {
     this.player = new Player(this.game, 1, 6, 0);
 
     tilemap.setCollision(2);
-    // tilemap.setTileIndexCallback(2, function() {
-    //   console.log('hit');
-    //   return true;
-    // });
+    tilemap.setTileIndexCallback(2, function() {
+      this.player.hitGround();
+      return true;
+    }, this);
+
+    tilemap.setTileIndexCallback(3, this.player.fallIntoHazardousTerrain, this.player);
 
     this.initialize();
   },
