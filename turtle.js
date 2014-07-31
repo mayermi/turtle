@@ -429,9 +429,6 @@ var PlayState = {
     menuLabel.events.onInputUp.add(function() {
       game.state.start('menu');
     });
-
-    //this.healthLabel = this.add.text(440, 10, 'Health '+ this.player.health);
-    //this.healthLabel.fixedToCamera = true;
   },
 
   initializePhysics: function() {
