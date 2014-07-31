@@ -1,7 +1,6 @@
 var PlayState = {
   clouds: null,
   goodies: null,
-  healthLabel: null,
   layer: null,
   level: null,
   player: null,
@@ -72,8 +71,8 @@ var PlayState = {
         life.destroy();
       } else if (this.player.health > this.lifeGroup.length) {
         var newPosition = 450 - (this.player.health - 1) * 40;
-        var ufo = game.add.sprite(newPosition, 10, 'life');
-        this.lifeGroup.addAt(ufo, this.lifeGroup.length);
+        var newLife = game.add.sprite(newPosition, 10, 'life');
+        this.lifeGroup.addAt(newLife, this.lifeGroup.length);
 
       }
     }

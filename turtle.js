@@ -140,7 +140,6 @@ var Player = (function() {
   Player.prototype.hitGround = function() {
     if (this.isInHazardousTerrain) {
       if (!this.body.blocked.left && !this.body.blocked.right && !this.body.blocked.down){
-        console.log('nicht wasser');
         this.isInHazardousTerrain = false;
         this.au();
       }
@@ -152,7 +151,6 @@ var Player = (function() {
       if (!this.isInHazardousTerrain) {
         if (this.body.blocked.down) {
           this.damage(1);
-          console.log(this.health);
           this.isInHazardousTerrain = true;
           this.au();
         }
@@ -168,7 +166,6 @@ var Player = (function() {
       this.auInterval = setInterval(function() {
         if (that.alive) {
           that.damage(1);
-          console.log(that.health);
         }
       }, 1000);
     } else {
@@ -251,7 +248,6 @@ var MenuState = {
 var PlayState = {
   clouds: null,
   goodies: null,
-  healthLabel: null,
   layer: null,
   level: null,
   player: null,
@@ -322,8 +318,8 @@ var PlayState = {
         life.destroy();
       } else if (this.player.health > this.lifeGroup.length) {
         var newPosition = 450 - (this.player.health - 1) * 40;
-        var ufo = game.add.sprite(newPosition, 10, 'life');
-        this.lifeGroup.addAt(ufo, this.lifeGroup.length);
+        var newLife = game.add.sprite(newPosition, 10, 'life');
+        this.lifeGroup.addAt(newLife, this.lifeGroup.length);
 
       }
     }
