@@ -134,14 +134,14 @@ var MenuState = {
 };
 
 var PlayState = {
+  clouds: null,
   layer: null,
   menuLabel: null,
   player: null,
-  walls: null,
 
   preload: function() {
     this.load.image('forest-tiles', '/img/tiles/forest.png');
-    this.load.image('wall', '/img/images/wall.png');
+    this.load.image('cloud', '/img/images/cloud.png');
 
     this.load.spritesheet('player', '/img/sprites/gehen-groesser.png', 32, 48);
 
@@ -158,13 +158,15 @@ var PlayState = {
     this.layer = tilemap.createLayer('layer-1');
     this.layer.resizeWorld();
 
+    this.initializeClouds();
+
     this.player = new Player(this.game, 1, 6, 0);
 
     tilemap.setCollision(2);
-    tilemap.setTileIndexCallback(2, function() {
-      console.log('hit');
-      return true;
-    });
+    // tilemap.setTileIndexCallback(2, function() {
+    //   console.log('hit');
+    //   return true;
+    // });
 
     this.menuLabel = this.add.text(10, 10, 'Menu', { 'font': '24px Lato' });
     this.menuLabel.fixedToCamera = true;
@@ -195,14 +197,6 @@ var PlayState = {
 
     cursorKeys.right.onDown.add(this.player.turnRight, this.player);
     cursorKeys.left.onDown.add(this.player.turnLeft, this.player);
-
-    this.walls = this.game.add.group();
-    this.walls.enableBody = true;
-    this.walls.physicsBodyType = Phaser.Physics.ARCADE;
-
-    var wall = this.walls.create(128, 256, 'wall');
-    wall.body.immovable = true;
-    wall.body.allowGravity = false;
   },
 
   update: function() {
@@ -224,6 +218,36 @@ var PlayState = {
     if (cursorKeys.right.isDown) {
       this.player.moveRight();
     }
+  },
+
+  initializeClouds: function() {
+    console.log(this.world);
+
+    this.clouds = this.game.add.group();
+    this.clouds.enableBody = true;
+    this.clouds.physicsBodyType = Phaser.Physics.ARCADE;
+
+    for (var i = 0, l = 8; i < l; i += 1) {
+      this.addCloud(_.random(0, this.world.bounds.width / 32) * 32);
+    }
+  },
+
+  addCloud: function(x) {
+    var cloud,
+        that = this;
+
+    if (typeof x === 'undefined') {
+      x = this.world.bounds.width;
+    }
+
+    cloud = this.clouds.create(x, _.random(1, 3) * 32, 'cloud');
+    cloud.body.velocity.x = -1 * _.random(1, 2) * 32;
+    cloud.body.allowGravity = false;
+    cloud.checkWorldBounds = true;
+    cloud.events.onKilled.add(function() {
+      that.addCloud();
+    });
+    cloud.outOfBoundsKill = true;
   }
 };
 
