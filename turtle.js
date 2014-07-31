@@ -18,6 +18,7 @@ var Player = (function() {
     this.maximumJumpCount = 2;
     this.health = 3;
     this.isInHazardousTerrain = false;
+    this.auInterval = null;
 
     animations = [
       // 'cheer',
@@ -70,6 +71,7 @@ var Player = (function() {
       if (!this.body.blocked.left && !this.body.blocked.right && !this.body.blocked.down){
         console.log('nicht wasser');
         this.isInHazardousTerrain = false;
+        this.au();
       }
     }
   };
@@ -79,8 +81,21 @@ var Player = (function() {
       if (this.body.blocked.down) {
         console.log('auauauauau');
         this.isInHazardousTerrain = true;
+        this.au();
       }
     }
+  };
+
+  Player.prototype.au = function() {
+    if (this.isInHazardousTerrain){
+          this.auInterval = setInterval(this.hurt, 1000);
+    } else {
+      clearInterval(this.auInterval);
+    }
+  };
+
+  Player.prototype.hurt = function() {
+    console.log('eiei');
   };
 
   Player.prototype.jump = function() {
