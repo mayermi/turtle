@@ -134,15 +134,19 @@ var Player = (function() {
 
   Player.prototype.hitGround = function() {
     if (this.isInHazardousTerrain) {
-      console.log('nicht wasser');
-      this.isInHazardousTerrain = false;
+      if (!this.body.blocked.left && !this.body.blocked.right && !this.body.blocked.down){
+        console.log('nicht wasser');
+        this.isInHazardousTerrain = false;
+      }
     }
   };
 
   Player.prototype.fallIntoHazardousTerrain = function() {
     if (!this.isInHazardousTerrain) {
-      console.log('auauauauau');
-      this.isInHazardousTerrain = true;
+      if (this.body.blocked.down) {
+        console.log('auauauauau');
+        this.isInHazardousTerrain = true;
+      }
     }
   };
 
