@@ -55,6 +55,7 @@ var Player = (function() {
     }
   };
 
+  /* Custom methods */
   Player.prototype.cheer = function() {
     this.animations.play('cheer');
 
@@ -62,6 +63,13 @@ var Player = (function() {
 
   Player.prototype.die = function() {
     this.animations.play('die');
+  };
+
+  Player.prototype.hitGround = function() {
+    if (this.isInHazardousTerrain) {
+      console.log('nicht wasser');
+      this.isInHazardousTerrain = false;
+    }
   };
 
   Player.prototype.fallIntoHazardousTerrain = function() {
@@ -173,9 +181,11 @@ var PlayState = {
 
     tilemap.setCollision(2);
     tilemap.setTileIndexCallback(2, function() {
-      console.log('hit');
+      this.player.hitGround();
       return true;
-    });
+    }, this);
+
+    tilemap.setTileIndexCallback(3, this.player.fallIntoHazardousTerrain, this.player);
 
     this.healthLabel = this.add.text(380, 10, 'Health');
     this.healthLabel.fixedToCamera = true;
@@ -214,9 +224,9 @@ var PlayState = {
     this.walls.enableBody = true;
     this.walls.physicsBodyType = Phaser.Physics.ARCADE;
 
-    var wall = this.walls.create(128, 256, 'wall');
+    /*var wall = this.walls.create(128, 256, 'wall');
     wall.body.immovable = true;
-    wall.body.allowGravity = false;
+    wall.body.allowGravity = false;*/
   },
 
   update: function() {

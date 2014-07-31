@@ -52,6 +52,7 @@ var Player = (function() {
     }
   };
 
+  /* Custom methods */
   Player.prototype.cheer = function() {
     this.animations.play('cheer');
 
@@ -59,6 +60,13 @@ var Player = (function() {
 
   Player.prototype.die = function() {
     this.animations.play('die');
+  };
+
+  Player.prototype.hitGround = function() {
+    if (this.isInHazardousTerrain) {
+      console.log('nicht wasser');
+      this.isInHazardousTerrain = false;
+    }
   };
 
   Player.prototype.fallIntoHazardousTerrain = function() {
