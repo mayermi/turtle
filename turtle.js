@@ -266,6 +266,7 @@ var PlayState = {
 
     for (goody in goodies) {
       if (goodies.hasOwnProperty(goody)) {
+        console.log('goody', goody);
         this.load.image(goody, '/img/goodies/' + goody + '.png');
       }
     }
