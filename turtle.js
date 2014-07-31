@@ -13,6 +13,8 @@ var Config = (function() {
         goody = goodies[i];
         that.goodies[goody.name] = goody;
       }
+
+      console.log('read goodies');
     });
   }
 
