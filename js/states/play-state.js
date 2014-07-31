@@ -68,11 +68,13 @@ var PlayState = {
 
     if (this.player.health >= 0) {
      if (this.player.health < this.lifeGroup.length) {
-        var life = this.lifeGroup.getFirstAlive();
+        var life = this.lifeGroup.getAt(this.player.health);
         life.destroy();
       } else if (this.player.health > this.lifeGroup.length) {
-        var newLife = this.lifeGroup.getFirstDead();
-        newLife.reset();
+        var newPosition = 450 - (this.player.health - 1) * 40;
+        var ufo = game.add.sprite(newPosition, 10, 'life');
+        this.lifeGroup.addAt(ufo, this.lifeGroup.length);
+
       }
     }
 
@@ -141,7 +143,8 @@ var PlayState = {
   initializeHealthBar: function() {
     this.lifeGroup = game.add.group();
     for (var i = 0; i < this.player.health; i += 1) {
-      this.lifes = this.lifeGroup.create(350 + i*40, 10, 'life');
+      this.lifeGroup.create(450 - i*40, 10, 'life');
+      this.lifeGroup.fixedToCamera = true;
     }
   },
 
