@@ -1,5 +1,6 @@
 var PlayState = {
   clouds: null,
+  healthLabel: null,
   layer: null,
   player: null,
 
@@ -106,6 +107,9 @@ var PlayState = {
     menuLabel.events.onInputUp.add(function() {
       game.state.start('menu');
     });
+
+    this.healthLabel = this.add.text(380, 10, 'Health');
+    this.healthLabel.fixedToCamera = true;
   },
 
   initializePhysics: function() {

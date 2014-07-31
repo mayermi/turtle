@@ -16,6 +16,8 @@ var Player = (function() {
     this.jumpVelocity = -400;
     this.currentJumpCount = 0;
     this.maximumJumpCount = 2;
+    this.health = 3;
+    this.isInHazardousTerrain = false;
 
     animations = [
       // 'cheer',
@@ -55,10 +57,18 @@ var Player = (function() {
 
   Player.prototype.cheer = function() {
     this.animations.play('cheer');
+
   };
 
   Player.prototype.die = function() {
     this.animations.play('die');
+  };
+
+  Player.prototype.fallIntoHazardousTerrain = function() {
+    if (!this.isInHazardousTerrain) {
+      console.log('auauauauau');
+      this.isInHazardousTerrain = true;
+    }
   };
 
   Player.prototype.jump = function() {
@@ -135,6 +145,7 @@ var MenuState = {
 
 var PlayState = {
   clouds: null,
+  healthLabel: null,
   layer: null,
   player: null,
 
@@ -241,6 +252,9 @@ var PlayState = {
     menuLabel.events.onInputUp.add(function() {
       game.state.start('menu');
     });
+
+    this.healthLabel = this.add.text(380, 10, 'Health');
+    this.healthLabel.fixedToCamera = true;
   },
 
   initializePhysics: function() {
