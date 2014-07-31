@@ -1,9 +1,18 @@
-var game;
+var game,
+    states;
 
 game = new Phaser.Game(480, 320, Phaser.AUTO, 'turtle');
 
-game.state.add('imprint', ImprintState);
-game.state.add('menu', MenuState);
-game.state.add('play', PlayState);
+states = {
+  'imprint': ImprintState,
+  'menu': MenuState,
+  'play': PlayState
+};
+
+for (var key in states) {
+  if (states.hasOwnProperty(key)) {
+    game.state.add(key, states[key]);
+  }
+}
 
 game.state.start('play');
