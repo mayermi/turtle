@@ -129,6 +129,7 @@ var Player = (function() {
     this.maximumJumpCount = 2;
     this.health = 3;
     this.isInHazardousTerrain = false;
+    this.auInterval = null;
 
     animations = [
       'walk-right',
@@ -220,16 +221,40 @@ var Player = (function() {
 
   Player.prototype.hitGround = function() {
     if (this.isInHazardousTerrain) {
-      console.log('nicht wasser');
-      this.isInHazardousTerrain = false;
-      this.animations.play('walk-right');
+      // this.animations.play('walk-right');
+
+      if (!this.body.blocked.left && !this.body.blocked.right && !this.body.blocked.down){
+        this.isInHazardousTerrain = false;
+        this.au();
+      }
     }
   };
 
   Player.prototype.fallIntoHazardousTerrain = function() {
-    if (!this.isInHazardousTerrain) {
-      console.log('auauauauau');
-      this.isInHazardousTerrain = true;
+    if (this.alive){
+      if (!this.isInHazardousTerrain) {
+        if (this.body.blocked.down) {
+          this.damage(1);
+          this.isInHazardousTerrain = true;
+          this.au();
+        }
+      }
+    }
+  };
+
+  Player.prototype.au = function() {
+    var that;
+
+    that = this;
+
+    if (this.isInHazardousTerrain) {
+      this.auInterval = setInterval(function() {
+        if (that.alive) {
+          that.damage(1);
+        }
+      }, 1000);
+    } else {
+      clearInterval(this.auInterval);
     }
   };
 
@@ -328,10 +353,10 @@ var MenuState = {
 var PlayState = {
   clouds: null,
   goodies: null,
-  healthLabel: null,
   layer: null,
   level: null,
   player: null,
+  lifeGroup: null,
 
   preload: function() {
     var goodies,
@@ -346,6 +371,7 @@ var PlayState = {
 
     this.load.image('forest-tiles', '/img/tiles/forest.png');
     this.load.image('cloud', '/img/images/cloud.png');
+    this.load.image('life', '/img/images/Salat.png');
 
     this.load.spritesheet('player', '/img/sprites/turtle.png', 32, 64);
 
@@ -373,9 +399,6 @@ var PlayState = {
 
     tilemap.setTileIndexCallback(3, this.player.fallIntoHazardousTerrain, this.player);
 
-    this.healthLabel = this.add.text(380, 10, 'Health');
-    this.healthLabel.fixedToCamera = true;
-
     this.menuLabel = this.add.text(10, 10, 'Menu');
     this.menuLabel.fixedToCamera = true;
     this.menuLabel.inputEnabled = true;
@@ -392,6 +415,18 @@ var PlayState = {
       player.eatGoody(goody);
       goody.kill();
     });
+
+    if (this.player.health >= 0) {
+     if (this.player.health < this.lifeGroup.length) {
+        var life = this.lifeGroup.getAt(this.player.health);
+        life.destroy();
+      } else if (this.player.health > this.lifeGroup.length) {
+        var newPosition = 450 - (this.player.health - 1) * 40;
+        var newLife = game.add.sprite(newPosition, 10, 'life');
+        this.lifeGroup.addAt(newLife, this.lifeGroup.length);
+
+      }
+    }
 
     this.checkKeys();
   },
@@ -414,6 +449,7 @@ var PlayState = {
     this.initializeCamera();
     this.initializeClouds();
     this.initializeGoodies();
+    this.initializeHealthBar();
     this.initializeKeyboard();
     this.initializeLabels();
     this.initializePhysics();
@@ -454,6 +490,14 @@ var PlayState = {
     }
   },
 
+  initializeHealthBar: function() {
+    this.lifeGroup = game.add.group();
+    for (var i = 0; i < this.player.health; i += 1) {
+      this.lifeGroup.create(450 - i*40, 10, 'life');
+      this.lifeGroup.fixedToCamera = true;
+    }
+  },
+
   initializeKeyboard: function() {
     var cursorKeys;
 
@@ -485,9 +529,6 @@ var PlayState = {
     menuLabel.events.onInputUp.add(function() {
       game.state.start('menu');
     });
-
-    this.healthLabel = this.add.text(380, 10, 'Health');
-    this.healthLabel.fixedToCamera = true;
   },
 
   initializePhysics: function() {

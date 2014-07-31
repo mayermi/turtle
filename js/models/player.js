@@ -15,6 +15,7 @@ var Player = (function() {
     this.maximumJumpCount = 2;
     this.health = 3;
     this.isInHazardousTerrain = false;
+    this.auInterval = null;
 
     animations = [
       'walk-right',
@@ -106,16 +107,40 @@ var Player = (function() {
 
   Player.prototype.hitGround = function() {
     if (this.isInHazardousTerrain) {
-      console.log('nicht wasser');
-      this.isInHazardousTerrain = false;
-      this.animations.play('walk-right');
+      // this.animations.play('walk-right');
+
+      if (!this.body.blocked.left && !this.body.blocked.right && !this.body.blocked.down){
+        this.isInHazardousTerrain = false;
+        this.au();
+      }
     }
   };
 
   Player.prototype.fallIntoHazardousTerrain = function() {
-    if (!this.isInHazardousTerrain) {
-      console.log('auauauauau');
-      this.isInHazardousTerrain = true;
+    if (this.alive){
+      if (!this.isInHazardousTerrain) {
+        if (this.body.blocked.down) {
+          this.damage(1);
+          this.isInHazardousTerrain = true;
+          this.au();
+        }
+      }
+    }
+  };
+
+  Player.prototype.au = function() {
+    var that;
+
+    that = this;
+
+    if (this.isInHazardousTerrain) {
+      this.auInterval = setInterval(function() {
+        if (that.alive) {
+          that.damage(1);
+        }
+      }, 1000);
+    } else {
+      clearInterval(this.auInterval);
     }
   };
 
