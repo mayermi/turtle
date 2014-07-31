@@ -123,6 +123,10 @@ var Player = (function() {
     for (var i = 0, l = effects.length; i < l; i += 1) {
       effect = effects[i];
 
+      if (effect.healthIncrease) {
+        this.addEffect('health', effect.healthIncrease, effect.duration);
+      }
+
       if (effect.speedIncrease) {
         this.addEffect('walkVelocity', effect.speedIncrease, effect.duration);
       }
@@ -144,13 +148,15 @@ var Player = (function() {
   };
 
   Player.prototype.fallIntoHazardousTerrain = function() {
-    if (!this.isInHazardousTerrain) {
-      if (this.body.blocked.down) {
-        console.log('auauauauau');
-        this.damage(1);
-        console.log(this.health);
-        this.isInHazardousTerrain = true;
-        this.au();
+    if (this.alive){
+      if (!this.isInHazardousTerrain) {
+        if (this.body.blocked.down) {
+          console.log('auauauauau');
+          this.damage(1);
+          console.log(this.health);
+          this.isInHazardousTerrain = true;
+          this.au();
+        }
       }
     }
   };
@@ -158,12 +164,14 @@ var Player = (function() {
   Player.prototype.au = function() {
     var that;
     that = this;
-
+    
     if (this.isInHazardousTerrain) {
       this.auInterval = setInterval(function() {
-        console.log('eiei');
-        that.damage(1);
-        console.log(that.health);
+        if (that.alive) {
+          console.log('eiei');
+          that.damage(1);
+          console.log(that.health);
+        }
       }, 1000);
     } else {
       clearInterval(this.auInterval);
@@ -291,9 +299,6 @@ var PlayState = {
 
     tilemap.setTileIndexCallback(3, this.player.fallIntoHazardousTerrain, this.player);
 
-    this.healthLabel = this.add.text(380, 10, 'Health');
-    this.healthLabel.fixedToCamera = true;
-
     this.menuLabel = this.add.text(10, 10, 'Menu');
     this.menuLabel.fixedToCamera = true;
     this.menuLabel.inputEnabled = true;
@@ -311,6 +316,11 @@ var PlayState = {
       goody.kill();
     });
 
+    if (this.player.health > 0) {
+      this.healthLabel.setText(this.player.health);      
+    } else {
+      this.healthLabel.setText('X');
+    }
     this.checkKeys();
   },
 
@@ -404,7 +414,7 @@ var PlayState = {
       game.state.start('menu');
     });
 
-    this.healthLabel = this.add.text(380, 10, 'Health');
+    this.healthLabel = this.add.text(440, 10, 'Health '+ this.player.health);
     this.healthLabel.fixedToCamera = true;
   },
 
