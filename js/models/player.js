@@ -155,7 +155,6 @@ var Player = (function() {
   };
 
   Player.prototype.turnLeft = function() {
-    console.log('turn left');
     this.animations.play('walk-left');
   };
 

@@ -11,11 +11,8 @@ var PlayState = {
         goody;
 
     goodies = config.goodies;
-    console.log('goodies', config.goodies);
-
     for (goody in goodies) {
       if (goodies.hasOwnProperty(goody)) {
-        console.log('goody', goody);
         this.load.image(goody, '/img/goodies/' + goody + '.png');
       }
     }
@@ -26,8 +23,6 @@ var PlayState = {
     this.load.spritesheet('player', '/img/sprites/turtle.png', 32, 64);
 
     this.load.tilemap('forest-tilemap', '/img/tiles/forest.json', null, Phaser.Tilemap.TILED_JSON);
-
-    this.level = new Level(game, 1);
   },
 
   create: function() {
@@ -40,6 +35,8 @@ var PlayState = {
     this.layer.resizeWorld();
 
     this.player = new Player(this.game, 1, 7, 0);
+
+    this.level = config.levels[1];
 
     tilemap.setCollision(2);
     tilemap.setTileIndexCallback(2, function() {

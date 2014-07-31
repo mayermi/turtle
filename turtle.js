@@ -1,25 +1,99 @@
 ;(function() {
   'use strict';
 
-var Config = (function() {
-  function Config() {
-    var goody,
-        that = this;
-
-    this.goodies = {};
-
-    $.getJSON('/config/goodies.json', function(goodies) {
-      for (var i = 0, l = goodies.length; i < l; i += 1) {
-        goody = goodies[i];
-        that.goodies[goody.name] = goody;
+var goodies = {
+  'bubble': {
+    'name': 'bubble',
+    'effects': [
+      {
+        'jumpHeightIncrease': -100,
+        'duration': 4000
       }
-
-      console.log('read goodies');
-    });
+    ]
+  },
+  'candy': {
+    'name': 'candy',
+    'effects': [
+    ]
+  },
+  'chili': {
+    'name': 'chili',
+    'effects': [
+      {
+        'speedIncrease': 100,
+        'duration': 4000
+      }
+    ]
+  },
+  'ice': {
+    'name': 'ice',
+    'effects': [
+      {
+        'speedIncrease': -150,
+        'duration': 2000
+      }
+    ]
+  },
+  'salad': {
+    'name': 'salad',
+    'effects': [
+    ]
+  },
+  'strawberry': {
+    'name': 'strawberry',
+    'effects': [
+      {
+        'healthIncrease': 1
+      }
+    ]
   }
+};
 
-  return Config;
-})();
+var levelOne = {
+  'name': 'Overworld',
+  'goodies': [
+    {
+      'goody': 'bubble',
+      'positions': [
+        {
+          'x': 41,
+          'y': 5
+        }
+      ]
+    },
+    {
+      'goody': 'chili',
+      'positions': [
+        {
+          'x': 12,
+          'y': 5
+        },
+        {
+          'x': 14,
+          'y': 8
+        }
+      ]
+    },
+    {
+      'goody': 'ice',
+      'positions': [
+        {
+          'x': 16,
+          'y': 5
+        }
+      ]
+    },
+    {
+      'goody': 'strawberry',
+      'positions': [
+        {
+          'x': 10,
+          'y': 8
+        }
+      ]
+    }
+  ]
+};
 
 var Goody = (function() {
   function Goody(game, x, y, sprite, effects) {
@@ -195,7 +269,6 @@ var Player = (function() {
   };
 
   Player.prototype.turnLeft = function() {
-    console.log('turn left');
     this.animations.play('walk-left');
   };
 
@@ -265,11 +338,8 @@ var PlayState = {
         goody;
 
     goodies = config.goodies;
-    console.log('goodies', config.goodies);
-
     for (goody in goodies) {
       if (goodies.hasOwnProperty(goody)) {
-        console.log('goody', goody);
         this.load.image(goody, '/img/goodies/' + goody + '.png');
       }
     }
@@ -280,8 +350,6 @@ var PlayState = {
     this.load.spritesheet('player', '/img/sprites/turtle.png', 32, 64);
 
     this.load.tilemap('forest-tilemap', '/img/tiles/forest.json', null, Phaser.Tilemap.TILED_JSON);
-
-    this.level = new Level(game, 1);
   },
 
   create: function() {
@@ -294,6 +362,8 @@ var PlayState = {
     this.layer.resizeWorld();
 
     this.player = new Player(this.game, 1, 7, 0);
+
+    this.level = config.levels[1];
 
     tilemap.setCollision(2);
     tilemap.setTileIndexCallback(2, function() {
@@ -445,19 +515,16 @@ var PlayState = {
   }
 };
 
-var Level = (function() {
-  function Level(game, id) {
-    var that = this;
+var Config = (function() {
+  function Config() {
+    this.goodies = goodies;
 
-    this.goodies = [];
-
-    $.getJSON('/config/levels/level-' + id + '.json', function(level) {
-      that.name = level.name;
-      that.goodies = level.goodies;
-    });
+    this.levels = {
+      1: levelOne
+    };
   }
 
-  return Level;
+  return Config;
 })();
 
 var config,
