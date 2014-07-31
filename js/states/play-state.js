@@ -1,10 +1,26 @@
 var PlayState = {
   clouds: null,
+  goodies: null,
   healthLabel: null,
   layer: null,
   player: null,
 
   preload: function() {
+    var goodies;
+
+    goodies = [
+      'bubble',
+      'candy',
+      'chili',
+      'ice',
+      'salad',
+      'strawberry'
+    ];
+
+    for (var i = 0, l = goodies.length; i < l; i += 1) {
+      this.load.image(goodies[i], '/img/goodies/' + goodies[i] + '.png');
+    }
+
     this.load.image('forest-tiles', '/img/tiles/forest.png');
     this.load.image('cloud', '/img/images/cloud.png');
 
@@ -22,7 +38,7 @@ var PlayState = {
     this.layer = tilemap.createLayer('layer-1');
     this.layer.resizeWorld();
 
-    this.player = new Player(this.game, 1, 6, 0);
+    this.player = new Player(this.game, 1, 7, 0);
 
     tilemap.setCollision(2);
     tilemap.setTileIndexCallback(2, function() {
@@ -47,7 +63,10 @@ var PlayState = {
 
   update: function() {
     this.game.physics.arcade.collide(this.player, this.layer);
-    this.game.physics.arcade.collide(this.player, this.walls);
+    this.game.physics.arcade.collide(this.player, this.goodies, function(player, goody) {
+      player.eatGoody(goody);
+      goody.kill();
+    });
 
     this.checkKeys();
   },
@@ -69,6 +88,7 @@ var PlayState = {
   initialize: function() {
     this.initializeCamera();
     this.initializeClouds();
+    this.initializeGoodies();
     this.initializeKeyboard();
     this.initializeLabels();
     this.initializePhysics();
@@ -86,6 +106,15 @@ var PlayState = {
     for (var i = 0, l = 8; i < l; i += 1) {
       this.addCloud(_.random(0, this.world.bounds.width / 32) * 32);
     }
+  },
+
+  initializeGoodies: function() {
+    this.goodies = this.game.add.group();
+    this.goodies.enableBody = true;
+    this.goodies.physicsBodyType = Phaser.Physics.ARCADE;
+
+    this.goodies.add(new Goody(this.game, 12, 5, 'chili', [{ speedIncrease: 100, duration: 4000 }]));
+    this.goodies.add(new Goody(this.game, 41, 5, 'bubble', [{ jumpHeightIncrease: -100 }]));
   },
 
   initializeKeyboard: function() {

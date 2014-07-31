@@ -39,7 +39,6 @@ var Player = (function() {
 
     this.body.collideWorldBounds = true;
     this.body.checkCollision.up = false;
-    // this.body.checkCollision.right = true;
     this.body.drag.x = this.walkDrag;
   }
 
@@ -53,6 +52,20 @@ var Player = (function() {
   };
 
   /* Custom methods */
+  Player.prototype.addEffect = function(property, valueChange, duration) {
+    var that;
+
+    that = this;
+
+    that[property] += valueChange;
+
+    if (duration) {
+      setTimeout(function() {
+        that[property] -= valueChange;
+      }, duration);
+    }
+  };
+
   Player.prototype.cheer = function() {
     this.animations.play('cheer');
 
@@ -60,6 +73,23 @@ var Player = (function() {
 
   Player.prototype.die = function() {
     this.animations.play('die');
+  };
+
+  Player.prototype.eatGoody = function(goody) {
+    var effect,
+        effects = goody.effects;
+
+    for (var i = 0, l = effects.length; i < l; i += 1) {
+      effect = effects[i];
+
+      if (effect.speedIncrease) {
+        this.addEffect('walkVelocity', effect.speedIncrease, effect.duration);
+      }
+
+      if (effect.jumpHeightIncrease) {
+        this.addEffect('jumpVelocity', effect.jumpHeightIncrease, effect.duration);
+      }
+    }
   };
 
   Player.prototype.hitGround = function() {

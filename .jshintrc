@@ -15,6 +15,9 @@
   "immed": true,
   "jquery": false,
   "latedef": true,
+
+  "loopfunc": true,
+
   "newcap": true,
   "noarg": true,
   "noempty": true,
