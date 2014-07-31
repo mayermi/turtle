@@ -9,6 +9,7 @@ module.exports = {
         'js/config.js',
         'js/models/**/*.js',
         'js/states/**/*.js',
+        'js/level.js',
         'js/game.js'
       ]
     }

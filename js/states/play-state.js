@@ -3,6 +3,7 @@ var PlayState = {
   goodies: null,
   healthLabel: null,
   layer: null,
+  level: null,
   player: null,
 
   preload: function() {
@@ -23,6 +24,8 @@ var PlayState = {
     this.load.spritesheet('player', '/img/sprites/gehen-groesser.png', 32, 48);
 
     this.load.tilemap('forest-tilemap', '/img/tiles/forest.json', null, Phaser.Tilemap.TILED_JSON);
+
+    this.level = new Level(game, 1);
   },
 
   create: function() {
@@ -105,12 +108,24 @@ var PlayState = {
   },
 
   initializeGoodies: function() {
+    var goodiesEntry,
+        position,
+        positions;
+
     this.goodies = this.game.add.group();
     this.goodies.enableBody = true;
     this.goodies.physicsBodyType = Phaser.Physics.ARCADE;
 
-    this.goodies.add(new Goody(this.game, 12, 5, 'chili'));
-    this.goodies.add(new Goody(this.game, 41, 5, 'bubble'));
+    for (var i = 0, l = this.level.goodies.length; i < l; i += 1) {
+      goodiesEntry = this.level.goodies[i];
+      positions = goodiesEntry.positions;
+
+      for (var j = 0, k = positions.length; j < k; j += 1) {
+        position = positions[j];
+
+        this.goodies.add(new Goody(this.game, position.x, position.y, goodiesEntry.goody));
+      }
+    }
   },
 
   initializeKeyboard: function() {
