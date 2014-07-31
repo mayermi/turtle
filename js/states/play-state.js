@@ -3,10 +3,12 @@ var PlayState = {
   healthLabel: null,
   layer: null,
   player: null,
+  lifeGroup: null,
 
   preload: function() {
     this.load.image('forest-tiles', '/img/tiles/forest.png');
     this.load.image('cloud', '/img/images/cloud.png');
+    this.load.image('life', '/img/images/Salat.png');
 
     this.load.spritesheet('player', '/img/sprites/gehen-groesser.png', 32, 48);
 
@@ -45,11 +47,17 @@ var PlayState = {
   update: function() {
     this.game.physics.arcade.collide(this.player, this.layer);
     this.game.physics.arcade.collide(this.player, this.walls);
-    if (this.player.health > 0) {
-      this.healthLabel.setText(this.player.health);      
-    } else {
-      this.healthLabel.setText('X');
-    }
+
+    if (this.player.health >= 0) {
+     if (this.player.health < this.lifeGroup.length) {
+        var life = this.lifeGroup.getFirstAlive();
+        life.destroy();
+      } else if (this.player.health > this.lifeGroup.length) {
+        var newLife = this.lifeGroup.getFirstDead();
+        newLife.reset();
+      }
+  }
+
     this.checkKeys();
   },
 
@@ -70,6 +78,7 @@ var PlayState = {
   initialize: function() {
     this.initializeCamera();
     this.initializeClouds();
+    this.initializeHealthBar();
     this.initializeKeyboard();
     this.initializeLabels();
     this.initializePhysics();
@@ -86,6 +95,14 @@ var PlayState = {
 
     for (var i = 0, l = 8; i < l; i += 1) {
       this.addCloud(_.random(0, this.world.bounds.width / 32) * 32);
+    }
+  },
+
+  initializeHealthBar: function() {
+    this.lifeGroup = game.add.group();
+    for (var i = 0; i < this.player.health; i += 1)
+    {
+        this.lifes = this.lifeGroup.create(350 + i*40, 10, 'life');
     }
   },
 
@@ -121,8 +138,8 @@ var PlayState = {
       game.state.start('menu');
     });
 
-    this.healthLabel = this.add.text(440, 10, 'Health '+ this.player.health);
-    this.healthLabel.fixedToCamera = true;
+    //this.healthLabel = this.add.text(440, 10, 'Health '+ this.player.health);
+    //this.healthLabel.fixedToCamera = true;
   },
 
   initializePhysics: function() {
