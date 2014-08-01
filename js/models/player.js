@@ -8,8 +8,10 @@ var Player = (function() {
 
     Phaser.Sprite.call(this, game, x * 32, y * 32, 'player');
 
+    this.game = game;
     this.walkVelocity = 200;
     this.walkDrag = 800;
+    this.isCheering = false;
     this.jumpVelocity = -400;
     this.currentJumpCount = 0;
     this.maximumJumpCount = 2;
@@ -42,6 +44,7 @@ var Player = (function() {
 
     game.physics.enable(this, Phaser.Physics.ARCADE);
     this.body.drag.x = this.walkDrag;
+    this.body.collideWorldBounds = true;
 
     game.add.existing(this);
   }
@@ -86,8 +89,15 @@ var Player = (function() {
 
 
   Player.prototype.cheer = function() {
-    this.animations.play('cheer');
+    if (!this.isCheering) {
+      this.isCheering = true;
 
+      this.animations.play('walk-right');
+
+      this.body.collideWorldBounds = false;
+      this.body.drag.x = 0;
+      this.body.velocity.x = this.walkVelocity;
+    }
   };
 
   Player.prototype.die = function() {
@@ -95,34 +105,36 @@ var Player = (function() {
   };
 
   Player.prototype.eatGoody = function(goody) {
-    var effect,
-        effects;
+    if (!this.isCheering) {
+      var effect,
+          effects;
 
-    if (this.hasShell) {
-      this.animations.play('eat', null, false); 
-    } else {
-      this.animations.play('eat-naked', null, false);
-    }
-
-    effects = config.goodies[goody.name].effects;
-
-    for (var i = 0, l = effects.length; i < l; i += 1) {
-      effect = effects[i];
-
-      if (effect.addShell) {
-        this.addBooleanEffect('hasShell', effect.addShell, effect.duration);
+      if (this.hasShell) {
+        this.animations.play('eat', null, false);
+      } else {
+        this.animations.play('eat-naked', null, false);
       }
 
-      if (effect.healthIncrease) {
-        this.addEffect('health', effect.healthIncrease, effect.duration);
-      }
+      effects = config.goodies[goody.name].effects;
 
-      if (effect.speedIncrease) {
-        this.addEffect('walkVelocity', effect.speedIncrease, effect.duration);
-      }
+      for (var i = 0, l = effects.length; i < l; i += 1) {
+        effect = effects[i];
 
-      if (effect.jumpHeightIncrease) {
-        this.addEffect('jumpVelocity', effect.jumpHeightIncrease, effect.duration);
+        if (effect.addShell) {
+          this.addBooleanEffect('hasShell', effect.addShell, effect.duration);
+        }
+
+        if (effect.healthIncrease) {
+          this.addEffect('health', effect.healthIncrease, effect.duration);
+        }
+
+        if (effect.speedIncrease) {
+          this.addEffect('walkVelocity', effect.speedIncrease, effect.duration);
+        }
+
+        if (effect.jumpHeightIncrease) {
+          this.addEffect('jumpVelocity', effect.jumpHeightIncrease, effect.duration);
+        }
       }
     }
   };
@@ -166,64 +178,69 @@ var Player = (function() {
     }
   };
 
-  Player.prototype.bounceBack = function(){
-    this.body.velocity.y = -400;
-    this.body.velocity.x = -400;
-  };
-
   Player.prototype.jump = function() {
-    var previousAnimation,
-        that,
-        wasWalking;
+    if (!this.isCheering) {
+      var previousAnimation,
+          that,
+          wasWalking;
 
-    that = this;
+      that = this;
 
-    wasWalking = this.animations.currentAnim.name.indexOf('walk') === 0;
-    if (wasWalking) {
-      previousAnimation = this.animations.currentAnim;
-    }
-
-    if (this.currentJumpCount < this.maximumJumpCount) {
-      this.animations.stop();
-
-      this.body.velocity.y = this.jumpVelocity;
-      this.currentJumpCount += 1;
-
-      if (this.hasShell) {
-        this.animations.play('jump', null, false); 
-      } else {
-        this.animations.play('jump-naked', null, false);
+      wasWalking = this.animations.currentAnim.name.indexOf('walk') === 0;
+      if (wasWalking) {
+        previousAnimation = this.animations.currentAnim;
       }
 
-      if (previousAnimation) {
-        this.events.onAnimationComplete.add(function() {
-          that.animations.play(previousAnimation.name);
-        });
+      if (this.currentJumpCount < this.maximumJumpCount) {
+        this.animations.stop();
+
+        this.body.velocity.y = this.jumpVelocity;
+        this.currentJumpCount += 1;
+
+        if (this.hasShell) {
+          this.animations.play('jump', null, false);
+        } else {
+          this.animations.play('jump-naked', null, false);
+        }
+
+        if (previousAnimation) {
+          this.events.onAnimationComplete.add(function() {
+            that.animations.play(previousAnimation.name);
+          });
+        }
       }
     }
   };
 
   Player.prototype.moveLeft = function() {
-    this.body.velocity.x = -1 * this.walkVelocity;
+    if (!this.isCheering) {
+      this.body.velocity.x = -1 * this.walkVelocity;
+    }
   };
 
   Player.prototype.moveRight = function() {
-    this.body.velocity.x = this.walkVelocity;
+    if (!this.isCheering) {
+      this.body.velocity.x = this.walkVelocity;
+    }
   };
 
   Player.prototype.turnLeft = function() {
-    if (this.hasShell) {
-      this.animations.play('walk-left'); 
-    } else {
-      this.animations.play('walk-left-naked');
+    if (!this.isCheering) {
+      if (this.hasShell) {
+        this.animations.play('walk-left');
+      } else {
+        this.animations.play('walk-left-naked');
+      }
     }
   };
 
   Player.prototype.turnRight = function() {
-    if (this.hasShell) {
-      this.animations.play('walk-right'); 
-    } else {
-      this.animations.play('walk-right-naked');
+    if (!this.isCheering) {
+      if (this.hasShell) {
+        this.animations.play('walk-right');
+      } else {
+        this.animations.play('walk-right-naked');
+      }
     }
   };
 

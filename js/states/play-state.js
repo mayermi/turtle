@@ -1,6 +1,9 @@
 var PlayState = {
   clouds: null,
+  goal: null,
   goodies: null,
+  isLevelComplete: null,
+  isShowingCompleteMessage: null,
   layer: null,
   level: null,
   lifeGroup: null,
@@ -44,10 +47,10 @@ var PlayState = {
     this.layer = this.tilemap.createLayer('layer-1');
     this.layer.resizeWorld();
 
-    this.initializePlatforms();
+    this.initializeBeforePlayer();
 
     this.player = new Player(this.game, 1, 7);
-    this.stork = new Stork(this.game, 27, 5, 'stork');
+    this.stork = new Stork(this.game, 58, 5, 'stork');
 
     this.tilemap.setCollision(2);
     this.tilemap.setTileIndexCallback(2, function() {
@@ -57,30 +60,44 @@ var PlayState = {
 
     this.tilemap.setTileIndexCallback(3, this.player.fallIntoHazardousTerrain, this.player);
 
-    this.initialize();
+    this.initializeAfterPlayer();
   },
 
   update: function() {
-    var lifeGroup,
+    var arcade,
+        lifeGroup,
         newLife,
         newPosition,
-        playerHealth;
+        playerHealth,
+        that;
+
+    that = this;
+
+    arcade = this.game.physics.arcade;
 
     lifeGroup = this.lifeGroup;
     playerHealth = this.player.health;
 
-    this.game.physics.arcade.collide(this.player, this.layer);
+    arcade.collide(this.player, this.layer);
 
-    this.game.physics.arcade.collide(this.player, this.goodies, function(player, goody) {
+    arcade.overlap(this.player, this.goal, function(player) {
+      that.isLevelComplete = true;
+
+      player.cheer();
+      that.showCompleteMessage();
+
+      return false;
+    });
+
+    arcade.collide(this.player, this.goodies, function(player, goody) {
       player.eatGoody(goody);
       goody.kill();
     });
 
-    this.game.physics.arcade.collide(this.player, this.platforms);
+    arcade.collide(this.player, this.platforms);
 
-    this.game.physics.arcade.collide(this.player, this.stork, function(player, stork) {
+    arcade.collide(this.player, this.stork, function(player, stork) {
       stork.hit(player);
-      player.bounceBack();
     });
 
     if (playerHealth >= 0) {
@@ -93,7 +110,9 @@ var PlayState = {
       }
     }
 
-    this.checkKeys();
+    if (!this.isLevelComplete) {
+      this.checkKeys();
+    }
   },
 
   checkKeys: function() {
@@ -110,7 +129,12 @@ var PlayState = {
     }
   },
 
-  initialize: function() {
+  initializeBeforePlayer: function() {
+    this.initializeGoal();
+    this.initializePlatforms();
+  },
+
+  initializeAfterPlayer: function() {
     this.initializeCamera();
     this.initializeClouds();
     this.initializeGoodies();
@@ -119,10 +143,30 @@ var PlayState = {
     this.initializeLabels();
     this.initializePhysics();
     this.initializeTitle();
+
+    this.isLevelComplete = false;
   },
 
   initializeCamera: function() {
     this.game.camera.follow(this.player);
+  },
+
+  initializeGoal: function() {
+    var goal = this.level.goal;
+
+    this.goal = this.game.add.group();
+    this.goal.enableBody = true;
+    this.goal.physicsBodyType = Phaser.Physics.ARCADE;
+
+    for (var i = 0; i < goal.height; i += 1) {
+      var base = this.goal.create(goal.position.x * 32, (goal.position.y - i) * 32, 'world', 4);
+      this.game.physics.enable(base, Phaser.Physics.ARCADE);
+      base.body.allowGravity = false;
+      // base.body.checkCollision.left = false;
+      // base.body.checkCollision.right = false;
+      // base.body.checkCollision.down = false;
+      base.body.immovable = true;
+    }
   },
 
   initializeClouds: function() {
@@ -252,5 +296,14 @@ var PlayState = {
       that.addCloud();
     });
     cloud.outOfBoundsKill = true;
+  },
+
+  showCompleteMessage: function() {
+    if (!this.isShowingCompleteMessage) {
+      var label = helper.addText(2, 8, 'Congratulations!', { fill: config.colors.lightYellow, fontSize: 48 });
+      label.fixedToCamera = true;
+
+      this.isShowingCompleteMessage = true;
+    }
   }
 };

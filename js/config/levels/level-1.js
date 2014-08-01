@@ -1,5 +1,12 @@
 var levelOne = {
   'name': 'Level 1: Overworld',
+  'goal': {
+    'position': {
+      'x': 64,
+      'y': 8,
+    },
+    'height': 8
+  },
   'goodies': [
     {
       'goody': 'bubble',
@@ -45,7 +52,7 @@ var levelOne = {
       'goody': 'strawberry',
       'positions': [
         {
-          'x': 10,
+          'x': 16,
           'y': 8
         }
       ]
