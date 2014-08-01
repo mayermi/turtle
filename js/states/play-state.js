@@ -38,12 +38,13 @@ var PlayState = {
     this.layer.resizeWorld();
 
     this.player = new Player(this.game, 1, 7);
-    this.stork = new Stork(this.game, 3, 5, 'stork');
+    this.stork = new Stork(this.game, 70, 5, 'stork');
 
     this.level = config.levels[1];
 
     tilemap.setCollision(2);
-    tilemap.setTileIndexCallback(2, function() { this.player.hitGround();
+    tilemap.setTileIndexCallback(2, function() {
+      this.player.hitGround();
       return true;
     }, this);
 
@@ -66,6 +67,11 @@ var PlayState = {
     this.game.physics.arcade.collide(this.player, this.goodies, function(player, goody) {
       player.eatGoody(goody);
       goody.kill();
+    });
+
+    this.game.physics.arcade.collide(this.player, this.stork, function(player, stork) {
+      console.log('heeelp');
+      stork.hit(player);
     });
 
     if (playerHealth >= 0) {

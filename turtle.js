@@ -314,6 +314,8 @@ var Stork = (function() {
 
     Phaser.Sprite.call(this, game, x * 32, y * 32, sprite);
 
+    this.touchedSprite = false;
+
     animations = [
       'peck'
     ];
@@ -331,11 +333,32 @@ var Stork = (function() {
 
     game.physics.enable(this, Phaser.Physics.ARCADE);
     this.body.allowGravity = false;
+    this.body.immovable = true;
+
     game.add.existing(this);
   }
 
   Stork.prototype = Object.create(Phaser.Sprite.prototype);
   Stork.prototype.constructor = Stork;
+
+  Stork.prototype.hit = function(sprite) {
+    var that = this;
+    if (!that.touchedSprite) {
+          sprite.damage(1);
+          that.touchedSprite = true;
+          that.au(sprite);
+      }
+  };
+
+  Stork.prototype.au = function(sprite) {
+    if (this.touchedSprite) {
+      this.auInterval = setInterval(function() {
+          sprite.damage(1);
+      }, 1000);
+    } else {
+      clearInterval(this.auInterval);
+    }
+  };
 
   return Stork;
 })();
@@ -426,12 +449,13 @@ var PlayState = {
     this.layer.resizeWorld();
 
     this.player = new Player(this.game, 1, 7);
-    this.stork = new Stork(this.game, 3, 5, 'stork');
+    this.stork = new Stork(this.game, 70, 5, 'stork');
 
     this.level = config.levels[1];
 
     tilemap.setCollision(2);
-    tilemap.setTileIndexCallback(2, function() { this.player.hitGround();
+    tilemap.setTileIndexCallback(2, function() {
+      this.player.hitGround();
       return true;
     }, this);
 
@@ -454,6 +478,11 @@ var PlayState = {
     this.game.physics.arcade.collide(this.player, this.goodies, function(player, goody) {
       player.eatGoody(goody);
       goody.kill();
+    });
+
+    this.game.physics.arcade.collide(this.player, this.stork, function(player, stork) {
+      console.log('heeelp');
+      stork.hit(player);
     });
 
     if (playerHealth >= 0) {
