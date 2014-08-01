@@ -304,6 +304,42 @@ var Player = (function() {
   return Player;
 })();
 
+var Stork = (function() {
+  function Stork(game, x, y, sprite) {
+    var animations,
+        firstFrame,
+        framesPerAnimation,
+        framesRange,
+        lastFrame;
+
+    Phaser.Sprite.call(this, game, x * 32, y * 32, sprite);
+
+    animations = [
+      'peck'
+    ];
+    framesPerAnimation = 8;
+
+    for (var i = 0, l = animations.length; i < l; i += 1) {
+      firstFrame = framesPerAnimation * i;
+      lastFrame = firstFrame + framesPerAnimation;
+      framesRange = _.range(firstFrame, lastFrame);
+
+      this.animations.add(animations[i], framesRange, 12.5, true);
+    }
+
+    this.animations.play('peck');
+
+    game.physics.enable(this, Phaser.Physics.ARCADE);
+    this.body.allowGravity = false;
+    game.add.existing(this);
+  }
+
+  Stork.prototype = Object.create(Phaser.Sprite.prototype);
+  Stork.prototype.constructor = Stork;
+
+  return Stork;
+})();
+
 var ImprintState = {
   create: function() {
     var textLabel,
@@ -357,6 +393,7 @@ var PlayState = {
   level: null,
   lifeGroup: null,
   player: null,
+  stork: null,
 
   preload: function() {
     var goodies,
@@ -374,6 +411,7 @@ var PlayState = {
     this.load.image('life', '/img/images/life.png');
 
     this.load.spritesheet('player', '/img/sprites/turtle.png', 32, 64);
+    this.load.spritesheet('stork', '/img/sprites/stork.png', 144, 144);
 
     this.load.tilemap('forest-tilemap', '/img/tiles/forest.json', null, Phaser.Tilemap.TILED_JSON);
   },
@@ -387,7 +425,8 @@ var PlayState = {
     this.layer = tilemap.createLayer('layer-1');
     this.layer.resizeWorld();
 
-    this.player = new Player(this.game, 1, 7, 0);
+    this.player = new Player(this.game, 1, 7);
+    this.stork = new Stork(this.game, 3, 5, 'stork');
 
     this.level = config.levels[1];
 

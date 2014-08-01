@@ -5,6 +5,7 @@ var PlayState = {
   level: null,
   lifeGroup: null,
   player: null,
+  stork: null,
 
   preload: function() {
     var goodies,
@@ -22,6 +23,7 @@ var PlayState = {
     this.load.image('life', '/img/images/life.png');
 
     this.load.spritesheet('player', '/img/sprites/turtle.png', 32, 64);
+    this.load.spritesheet('stork', '/img/sprites/stork.png', 144, 144);
 
     this.load.tilemap('forest-tilemap', '/img/tiles/forest.json', null, Phaser.Tilemap.TILED_JSON);
   },
@@ -35,7 +37,8 @@ var PlayState = {
     this.layer = tilemap.createLayer('layer-1');
     this.layer.resizeWorld();
 
-    this.player = new Player(this.game, 1, 7, 0);
+    this.player = new Player(this.game, 1, 7);
+    this.stork = new Stork(this.game, 3, 5, 'stork');
 
     this.level = config.levels[1];
 
