@@ -211,10 +211,19 @@ var Player = (function() {
       'walk-left',
       'walk-right-naked',
       'walk-left-naked',
-      'eat',
-      'eat-naked',
-      'jump',
-      'jump-naked'
+      'eat-right',
+      'eat-right-naked',
+      'jump-right',
+      'jump-right-naked',
+      'jump-left',
+      'jump-left-naked',
+      'eat-left',
+      'eat-left-naked',
+      'die-right',
+      'die-left',
+      'die-right-naked',
+      'die-left-naked',
+      'cheer'
     ];
     framesPerAnimation = 10;
 
@@ -275,14 +284,26 @@ var Player = (function() {
 
 
   Player.prototype.cheer = function() {
+    var that;
+
+    that = this;
+
     if (!this.isCheering) {
       this.isCheering = true;
 
-      this.animations.play('walk-right');
-
       this.body.collideWorldBounds = false;
-      this.body.drag.x = 0;
       this.body.velocity.x = this.walkVelocity;
+      this.body.drag.x = that.walkVelocity;
+
+      setTimeout(function() {
+        that.animations.play('cheer');
+
+        setTimeout(function() {
+          that.animations.play('walk-right');
+          that.body.velocity.x = that.walkVelocity / 2;
+          that.body.drag.x = 0;
+        }, 3750);
+      }, 1000);
     }
   };
 
@@ -296,9 +317,9 @@ var Player = (function() {
           effects;
 
       if (this.hasShell) {
-        this.animations.play('eat', null, false);
+        this.animations.play('eat-right', null, false);
       } else {
-        this.animations.play('eat-naked', null, false);
+        this.animations.play('eat-right-naked', null, false);
       }
 
       effects = config.goodies[goody.name].effects;
@@ -384,9 +405,9 @@ var Player = (function() {
         this.currentJumpCount += 1;
 
         if (this.hasShell) {
-          this.animations.play('jump', null, false);
+          this.animations.play('jump-right', null, false);
         } else {
-          this.animations.play('jump-naked', null, false);
+          this.animations.play('jump-right-naked', null, false);
         }
 
         if (previousAnimation) {
