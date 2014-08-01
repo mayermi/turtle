@@ -38,7 +38,7 @@ var PlayState = {
     this.layer.resizeWorld();
 
     this.player = new Player(this.game, 1, 7);
-    this.stork = new Stork(this.game, 70, 5, 'stork');
+    this.stork = new Stork(this.game, 27, 5, 'stork');
 
     this.level = config.levels[1];
 
@@ -71,6 +71,7 @@ var PlayState = {
 
     this.game.physics.arcade.collide(this.player, this.stork, function(player, stork) {
       stork.hit(player);
+      player.bounceBack();
     });
 
     if (playerHealth >= 0) {

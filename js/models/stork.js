@@ -8,7 +8,7 @@ var Stork = (function() {
 
     Phaser.Sprite.call(this, game, x * 32, y * 32, sprite);
 
-    this.touchedSprite = false;
+    this.hasHitPlayer = false;
 
     animations = [
       'peck'
@@ -28,6 +28,7 @@ var Stork = (function() {
     game.physics.enable(this, Phaser.Physics.ARCADE);
     this.body.allowGravity = false;
     this.body.immovable = true;
+    this.body.bounce.setTo(1, 1);
 
     game.add.existing(this);
   }
@@ -35,28 +36,24 @@ var Stork = (function() {
   Stork.prototype = Object.create(Phaser.Sprite.prototype);
   Stork.prototype.constructor = Stork;
 
+
   Stork.prototype.hit = function(sprite) {
-    if(!sprite.hasShell) {
-      if (!this.touchedSprite) {
+    if (!sprite.hasShell) {
+      if (!this.hasHitPlayer) {
         sprite.damage(1);
-        this.touchedSprite = true;
-        this.au(sprite);
-      }
+        this.hasHitPlayer = true;
+        var that = this;
+
+        setTimeout( function() {
+          that.hasHitPlayer = false;
+        }, 500);
+      } 
     } else {
       if (this.body.touching.up) {
         this.kill();
       }
     }
-  };
 
-  Stork.prototype.au = function(sprite) {
-    if (this.touchedSprite) {
-      this.auInterval = setInterval(function() {
-          sprite.damage(1);
-      }, 1000);
-    } else {
-      clearInterval(this.auInterval);
-    }
   };
 
   return Stork;

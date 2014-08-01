@@ -294,6 +294,11 @@ var Player = (function() {
     }
   };
 
+  Player.prototype.bounceBack = function(){
+    this.body.velocity.y = -400;
+    this.body.velocity.x = -400;
+  };
+
   Player.prototype.jump = function() {
     var previousAnimation,
         that,
@@ -363,7 +368,7 @@ var Stork = (function() {
 
     Phaser.Sprite.call(this, game, x * 32, y * 32, sprite);
 
-    this.touchedSprite = false;
+    this.hasHitPlayer = false;
 
     animations = [
       'peck'
@@ -383,6 +388,7 @@ var Stork = (function() {
     game.physics.enable(this, Phaser.Physics.ARCADE);
     this.body.allowGravity = false;
     this.body.immovable = true;
+    this.body.bounce.setTo(1, 1);
 
     game.add.existing(this);
   }
@@ -390,28 +396,24 @@ var Stork = (function() {
   Stork.prototype = Object.create(Phaser.Sprite.prototype);
   Stork.prototype.constructor = Stork;
 
+
   Stork.prototype.hit = function(sprite) {
-    if(!sprite.hasShell) {
-      if (!this.touchedSprite) {
+    if (!sprite.hasShell) {
+      if (!this.hasHitPlayer) {
         sprite.damage(1);
-        this.touchedSprite = true;
-        this.au(sprite);
-      }
+        this.hasHitPlayer = true;
+        var that = this;
+
+        setTimeout( function() {
+          that.hasHitPlayer = false;
+        }, 500);
+      } 
     } else {
       if (this.body.touching.up) {
         this.kill();
       }
     }
-  };
 
-  Stork.prototype.au = function(sprite) {
-    if (this.touchedSprite) {
-      this.auInterval = setInterval(function() {
-          sprite.damage(1);
-      }, 1000);
-    } else {
-      clearInterval(this.auInterval);
-    }
   };
 
   return Stork;
@@ -503,7 +505,7 @@ var PlayState = {
     this.layer.resizeWorld();
 
     this.player = new Player(this.game, 1, 7);
-    this.stork = new Stork(this.game, 70, 5, 'stork');
+    this.stork = new Stork(this.game, 27, 5, 'stork');
 
     this.level = config.levels[1];
 
@@ -536,6 +538,7 @@ var PlayState = {
 
     this.game.physics.arcade.collide(this.player, this.stork, function(player, stork) {
       stork.hit(player);
+      player.bounceBack();
     });
 
     if (playerHealth >= 0) {
