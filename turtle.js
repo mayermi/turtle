@@ -145,10 +145,10 @@ var levelOne = {
   'platforms': [
     {
       'start': {
-        'x': 5,
-        'y': 6
+        'x': 4,
+        'y': 7
       },
-      'length': 4
+      'length': 6
     },
     {
       'start': {
@@ -220,11 +220,9 @@ var Player = (function() {
     this.animations.play('walk-right-naked');
 
     game.physics.enable(this, Phaser.Physics.ARCADE);
-    game.add.existing(this);
-
-    this.body.collideWorldBounds = true;
-    this.body.checkCollision.up = false;
     this.body.drag.x = this.walkDrag;
+
+    game.add.existing(this);
   }
 
   Player.prototype = Object.create(Phaser.Sprite.prototype);
@@ -746,6 +744,9 @@ var PlayState = {
         this.game.physics.enable(platform, Phaser.Physics.ARCADE);
 
         platform.body.allowGravity = false;
+        platform.body.checkCollision.left = false;
+        platform.body.checkCollision.right = false;
+        platform.body.checkCollision.down = false;
         platform.body.immovable = true;
       }
     }
@@ -782,12 +783,6 @@ var PlayState = {
 
 var Config = (function() {
   function Config() {
-    this.goodies = goodies;
-
-    this.levels = {
-      1: levelOne
-    };
-
     this.colors = {
       gray: '#bcbcbc',
       lightBlue: '#0078f8',
@@ -795,10 +790,15 @@ var Config = (function() {
       purple: '#6844fc',
       magenta: '#d800cc',
       red: '#e40058',
-
       green: '#00a800',
       lightGreen: '#00b800',
       lightYellow: '#d8F878'
+    };
+
+    this.goodies = goodies;
+
+    this.levels = {
+      1: levelOne
     };
   }
 

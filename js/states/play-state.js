@@ -217,6 +217,9 @@ var PlayState = {
         this.game.physics.enable(platform, Phaser.Physics.ARCADE);
 
         platform.body.allowGravity = false;
+        platform.body.checkCollision.left = false;
+        platform.body.checkCollision.right = false;
+        platform.body.checkCollision.down = false;
         platform.body.immovable = true;
       }
     }

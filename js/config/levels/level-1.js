@@ -54,10 +54,10 @@ var levelOne = {
   'platforms': [
     {
       'start': {
-        'x': 5,
-        'y': 6
+        'x': 4,
+        'y': 7
       },
-      'length': 4
+      'length': 6
     },
     {
       'start': {

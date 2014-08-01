@@ -41,11 +41,9 @@ var Player = (function() {
     this.animations.play('walk-right-naked');
 
     game.physics.enable(this, Phaser.Physics.ARCADE);
-    game.add.existing(this);
-
-    this.body.collideWorldBounds = true;
-    this.body.checkCollision.up = false;
     this.body.drag.x = this.walkDrag;
+
+    game.add.existing(this);
   }
 
   Player.prototype = Object.create(Phaser.Sprite.prototype);
