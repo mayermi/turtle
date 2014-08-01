@@ -735,13 +735,13 @@ var PlayState = {
     this.goal.physicsBodyType = Phaser.Physics.ARCADE;
 
     for (var i = 0; i < goal.height - 1; i += 1) {
-      pole = this.goal.create(goal.position.x * 32, (goal.position.y - i) * 32, 'world', 9);
+      pole = this.goal.create(goal.position.x * 32, (goal.position.y - i) * 32, 'world', 11);
       this.game.physics.enable(pole, Phaser.Physics.ARCADE);
       pole.body.allowGravity = false;
       pole.body.immovable = true;
     }
 
-    top = this.goal.create(goal.position.x * 32, (goal.position.y - goal.height + 1) * 32, 'world', 10);
+    top = this.goal.create(goal.position.x * 32, (goal.position.y - goal.height + 1) * 32, 'world', 12);
     this.game.physics.enable(top, Phaser.Physics.ARCADE);
     top.body.allowGravity = false;
     top.body.immovable = true;
