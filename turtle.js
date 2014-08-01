@@ -492,8 +492,8 @@ var MenuState = {
 
     this.stage.backgroundColor = '#00a844';
 
-    helper.addText(5, 8, 'TURTLE', { fontSize: 32 });
-    helper.addText(5, 12, 'A fun little game about a turtle.');
+    helper.addText(4, 8, 'TURTLE', { fontSize: 32 });
+    helper.addText(4, 12, 'A fun little game about a fun little turtle.');
 
     playLabel = helper.addText(1, 1, 'Play');
     playLabel.inputEnabled = true;
