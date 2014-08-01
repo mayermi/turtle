@@ -536,6 +536,7 @@ var PlayState = {
   platforms: null,
   player: null,
   stork: null,
+  tilemap: null,
 
   preload: function() {
     var goodies,
@@ -556,30 +557,34 @@ var PlayState = {
     this.load.spritesheet('player', '/img/sprites/turtle.png', 32, 64);
     this.load.spritesheet('stork', '/img/sprites/stork.png', 144, 144);
 
+    this.load.spritesheet('world', '/img/tiles/forest.png', 32, 32);
+
     this.load.tilemap('forest-tilemap', '/img/tiles/forest.json', null, Phaser.Tilemap.TILED_JSON);
   },
 
   create: function() {
-    var tilemap;
+    this.level = config.levels[1];
 
-    tilemap = this.game.add.tilemap('forest-tilemap');
-    tilemap.addTilesetImage('forest-tiles');
+    this.stage.backgroundColor = config.colors.lightBlue;
 
-    this.layer = tilemap.createLayer('layer-1');
+    this.tilemap = this.game.add.tilemap('forest-tilemap');
+    this.tilemap.addTilesetImage('forest-tiles');
+
+    this.layer = this.tilemap.createLayer('layer-1');
     this.layer.resizeWorld();
+
+    this.initializePlatforms();
 
     this.player = new Player(this.game, 1, 7);
     this.stork = new Stork(this.game, 70, 5, 'stork');
 
-    this.level = config.levels[1];
-
-    tilemap.setCollision(2);
-    tilemap.setTileIndexCallback(2, function() {
+    this.tilemap.setCollision(2);
+    this.tilemap.setTileIndexCallback(2, function() {
       this.player.hitGround();
       return true;
     }, this);
 
-    tilemap.setTileIndexCallback(3, this.player.fallIntoHazardousTerrain, this.player);
+    this.tilemap.setTileIndexCallback(3, this.player.fallIntoHazardousTerrain, this.player);
 
     this.initialize();
   },
@@ -640,7 +645,6 @@ var PlayState = {
     this.initializeHealthBar();
     this.initializeKeyboard();
     this.initializeLabels();
-    this.initializePlatforms();
     this.initializePhysics();
     this.initializeTitle();
   },
@@ -737,7 +741,7 @@ var PlayState = {
       platformStart = entry.start;
 
       for (var j = 0; j < entry.length; j += 1) {
-        platform = this.platforms.create((platformStart.x + j) * 32, platformStart.y * 32, 'platform');
+        platform = this.platforms.create((platformStart.x + j) * 32, platformStart.y * 32, 'world', 7);
 
         this.game.physics.enable(platform, Phaser.Physics.ARCADE);
 
