@@ -703,21 +703,27 @@ var PlayState = {
   },
 
   initializeGoal: function() {
-    var goal = this.level.goal;
+    var goal,
+        pole,
+        top;
+
+    goal = this.level.goal;
 
     this.goal = this.game.add.group();
     this.goal.enableBody = true;
     this.goal.physicsBodyType = Phaser.Physics.ARCADE;
 
-    for (var i = 0; i < goal.height; i += 1) {
-      var base = this.goal.create(goal.position.x * 32, (goal.position.y - i) * 32, 'world', 4);
-      this.game.physics.enable(base, Phaser.Physics.ARCADE);
-      base.body.allowGravity = false;
-      // base.body.checkCollision.left = false;
-      // base.body.checkCollision.right = false;
-      // base.body.checkCollision.down = false;
-      base.body.immovable = true;
+    for (var i = 0; i < goal.height - 1; i += 1) {
+      pole = this.goal.create(goal.position.x * 32, (goal.position.y - i) * 32, 'world', 9);
+      this.game.physics.enable(pole, Phaser.Physics.ARCADE);
+      pole.body.allowGravity = false;
+      pole.body.immovable = true;
     }
+
+    top = this.goal.create(goal.position.x * 32, (goal.position.y - goal.height + 1) * 32, 'world', 10);
+    this.game.physics.enable(top, Phaser.Physics.ARCADE);
+    top.body.allowGravity = false;
+    top.body.immovable = true;
   },
 
   initializeClouds: function() {
