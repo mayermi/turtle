@@ -149,6 +149,13 @@ var levelOne = {
         'y': 6
       },
       'length': 4
+    },
+    {
+      'start': {
+        'x': 16,
+        'y': 4
+      },
+      'length': 2
     }
   ]
 };
@@ -716,23 +723,25 @@ var PlayState = {
   },
 
   initializePlatforms: function() {
-    var platform,
-        platformEntry;
+    var entry,
+        platform,
+        platformStart;
 
     this.platforms = this.game.add.group();
     this.platforms.enableBody = true;
     this.platforms.physicsBodyType = Phaser.Physics.ARCADE;
 
     for (var i = 0, l = this.level.platforms.length; i < l; i += 1) {
-      platformEntry = this.level.platforms[i];
-      var start = platformEntry.start;
-      var length = platformEntry.length;
+      entry = this.level.platforms[i];
 
-      console.log(start, length);
+      platformStart = entry.start;
 
-      for (var j = 0; j < length; j += 1) {
-        platform = this.platforms.create((start.x + j) * 32, start.y * 32, 'platform');
-        this.game.physics.enable(platform, Phaser.Physics.ARCADE); platform.body.allowGravity = false;
+      for (var j = 0; j < entry.length; j += 1) {
+        platform = this.platforms.create((platformStart.x + j) * 32, platformStart.y * 32, 'platform');
+
+        this.game.physics.enable(platform, Phaser.Physics.ARCADE);
+
+        platform.body.allowGravity = false;
         platform.body.immovable = true;
       }
     }

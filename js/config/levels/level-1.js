@@ -58,6 +58,13 @@ var levelOne = {
         'y': 6
       },
       'length': 4
+    },
+    {
+      'start': {
+        'x': 16,
+        'y': 4
+      },
+      'length': 2
     }
   ]
 };
