@@ -31,6 +31,7 @@ var PlayState = {
 
     this.load.spritesheet('player', '/img/sprites/turtle.png', 32, 64);
     this.load.spritesheet('stork', '/img/sprites/stork.png', 144, 144);
+    this.load.spritesheet('worm', '/img/sprites/worm.png', 48, 16);
 
     this.load.spritesheet('world', '/img/tiles/forest.png', 32, 32);
 
@@ -52,7 +53,6 @@ var PlayState = {
 
     this.player = new Player(this.game, 1, 7);
     this.stork = new Stork(this.game, 58, 5, 'stork');
-
 
     this.tilemap.setCollision(2);
     this.tilemap.setTileIndexCallback(2, function() {
@@ -216,12 +216,12 @@ var PlayState = {
   },
 
   initializeMinions: function() {
-    this.minions = game.add.group();
+    this.minions = this.game.add.group();
     this.minions.enableBody = true;
     this.minions.physicsBodyType = Phaser.Physics.ARCADE;
 
-    for (var j = 0; j < 5; j += 1) {
-      this.minions.add(new Minion(this.game, game.rnd.integerInRange(3, 70), 4, 'player'));
+    for (var j = 0; j < 20; j += 1) {
+      this.minions.add(new Minion(this.game, this.game.rnd.integerInRange(3, 70), 4, 'worm'));
      }
   },
 

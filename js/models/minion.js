@@ -13,9 +13,9 @@ var Minion = (function() {
     this.hasHitPlayer = false;
 
     animations = [
-      'peck'
+      'walk'
     ];
-    framesPerAnimation = 8;
+    framesPerAnimation = 4;
 
     for (var i = 0, l = animations.length; i < l; i += 1) {
       firstFrame = framesPerAnimation * i;
@@ -25,12 +25,12 @@ var Minion = (function() {
       this.animations.add(animations[i], framesRange, 12.5, true);
     }
 
-    this.animations.play('peck');
+    this.animations.play('walk');
 
     game.physics.enable(this, Phaser.Physics.ARCADE);
-    this.body.allowGravity = true;
     this.body.bounce.x = 1;
     this.body.immovable = true;
+    this.body.gravity.y = 6;
 
     this.move();
 
@@ -49,20 +49,17 @@ var Minion = (function() {
   };
 
   Minion.prototype.hit = function(sprite) {
-    if (!sprite.hasShell) {
-      if (!this.hasHitPlayer) {
-        sprite.damage(1);
-        this.hasHitPlayer = true;
-        var that = this;
+    if (!this.hasHitPlayer) {
+      sprite.damage(1);
+      this.hasHitPlayer = true;
+      var that = this;
 
-        setTimeout( function() {
-          that.hasHitPlayer = false;
-        }, 500);
-      } 
-    } else {
-      if (this.body.touching.up) {
-        this.kill();
-      }
+       setTimeout( function() {
+         that.hasHitPlayer = false;
+       }, 500);
+    }
+    if (this.body.touching.up) {
+      this.kill();
     }
   };
 
