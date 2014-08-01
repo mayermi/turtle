@@ -7,6 +7,7 @@ var PlayState = {
   layer: null,
   level: null,
   lifeGroup: null,
+  minions: null,
   platforms: null,
   player: null,
   stork: null,
@@ -52,6 +53,7 @@ var PlayState = {
     this.player = new Player(this.game, 1, 7);
     this.stork = new Stork(this.game, 58, 5, 'stork');
 
+
     this.tilemap.setCollision(2);
     this.tilemap.setTileIndexCallback(2, function() {
       this.player.hitGround();
@@ -89,6 +91,8 @@ var PlayState = {
       return false;
     });
 
+    arcade.collide(this.minions, this.layer);
+
     arcade.collide(this.player, this.goodies, function(player, goody) {
       player.eatGoody(goody);
       goody.kill();
@@ -98,6 +102,10 @@ var PlayState = {
 
     arcade.collide(this.player, this.stork, function(player, stork) {
       stork.hit(player);
+    });
+
+    arcade.collide(this.player, this.minions, function(player, minion) {
+      minion.hit(player);
     });
 
     if (playerHealth >= 0) {
@@ -141,6 +149,7 @@ var PlayState = {
     this.initializeHealthBar();
     this.initializeKeyboard();
     this.initializeLabels();
+    this.initializeMinions();
     this.initializePhysics();
     this.initializeTitle();
 
@@ -204,6 +213,16 @@ var PlayState = {
         this.goodies.add(new Goody(this.game, position.x, position.y, goodiesEntry.goody));
       }
     }
+  },
+
+  initializeMinions: function() {
+    this.minions = game.add.group();
+    this.minions.enableBody = true;
+    this.minions.physicsBodyType = Phaser.Physics.ARCADE;
+
+    for (var j = 0; j < 5; j += 1) {
+      this.minions.add(new Minion(this.game, game.rnd.integerInRange(3, 70), 4, 'player'));
+     }
   },
 
   initializeHealthBar: function() {
