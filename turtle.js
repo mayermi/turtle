@@ -177,6 +177,76 @@ var Goody = (function() {
   return Goody;
 })();
 
+var Minion = (function() {
+  function Minion(game, x, y, sprite) {
+    var animations,
+        firstFrame,
+        framesPerAnimation,
+        framesRange,
+        lastFrame;
+
+    Phaser.Sprite.call(this, game, x * 32, y * 32, sprite);
+
+    this.walkVelocity = 150;
+
+    this.hasHitPlayer = false;
+
+    animations = [
+      'peck'
+    ];
+    framesPerAnimation = 8;
+
+    for (var i = 0, l = animations.length; i < l; i += 1) {
+      firstFrame = framesPerAnimation * i;
+      lastFrame = firstFrame + framesPerAnimation;
+      framesRange = _.range(firstFrame, lastFrame);
+
+      this.animations.add(animations[i], framesRange, 12.5, true);
+    }
+
+    this.animations.play('peck');
+
+    game.physics.enable(this, Phaser.Physics.ARCADE);
+    this.body.allowGravity = true;
+    this.body.bounce.x = 1;
+    this.body.immovable = true;
+
+    this.move();
+
+    game.add.existing(this);
+  }
+
+  Minion.prototype = Object.create(Phaser.Sprite.prototype);
+  Minion.prototype.constructor = Minion;
+
+  Minion.prototype.move = function() {
+    if (game.rnd.integerInRange(0, 1) === 1) {
+      this.body.velocity.x = this.walkVelocity;
+    } else {
+      this.body.velocity.x = -this.walkVelocity;
+    }
+  };
+
+  Minion.prototype.hit = function(sprite) {
+    if (!sprite.hasShell) {
+      if (!this.hasHitPlayer) {
+        sprite.damage(1);
+        this.hasHitPlayer = true;
+        var that = this;
+
+        setTimeout( function() {
+          that.hasHitPlayer = false;
+        }, 500);
+      } 
+    } else {
+      if (this.body.touching.up) {
+        this.kill();
+      }
+    }
+  };
+
+  return Minion;
+})();
 var Player = (function() {
   function Player(game, x, y) {
     var animations,
@@ -531,6 +601,7 @@ var PlayState = {
   layer: null,
   level: null,
   lifeGroup: null,
+  minions: null,
   platforms: null,
   player: null,
   stork: null,
@@ -576,6 +647,7 @@ var PlayState = {
     this.player = new Player(this.game, 1, 7);
     this.stork = new Stork(this.game, 27, 5, 'stork');
 
+
     this.tilemap.setCollision(2);
     this.tilemap.setTileIndexCallback(2, function() {
       this.player.hitGround();
@@ -597,6 +669,7 @@ var PlayState = {
     playerHealth = this.player.health;
 
     this.game.physics.arcade.collide(this.player, this.layer);
+    this.game.physics.arcade.collide(this.minions, this.layer);
 
     this.game.physics.arcade.collide(this.player, this.goodies, function(player, goody) {
       player.eatGoody(goody);
@@ -604,10 +677,16 @@ var PlayState = {
     });
 
     this.game.physics.arcade.collide(this.player, this.platforms);
+    this.game.physics.arcade.collide(this.minions, this.platforms);
 
     this.game.physics.arcade.collide(this.player, this.stork, function(player, stork) {
       stork.hit(player);
       player.bounceBack();
+    });
+
+    this.game.physics.arcade.collide(this.player, this.minions, function(player, minion) {
+      minion.hit(player);
+      console.log(minion.body);
     });
 
     if (playerHealth >= 0) {
@@ -644,6 +723,7 @@ var PlayState = {
     this.initializeHealthBar();
     this.initializeKeyboard();
     this.initializeLabels();
+    this.initializeMinions();
     this.initializePhysics();
     this.initializeTitle();
   },
@@ -681,6 +761,16 @@ var PlayState = {
         this.goodies.add(new Goody(this.game, position.x, position.y, goodiesEntry.goody));
       }
     }
+  },
+
+  initializeMinions: function() {
+    this.minions = game.add.group();
+    this.minions.enableBody = true;
+    this.minions.physicsBodyType = Phaser.Physics.ARCADE;
+
+    for (var j = 0; j < 5; j += 1) {
+      this.minions.add(new Minion(this.game, game.rnd.integerInRange(3, 70), 4, 'player'));
+     }
   },
 
   initializeHealthBar: function() {
