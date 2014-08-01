@@ -11,6 +11,15 @@ var levelOne = {
       ]
     },
     {
+      'goody': 'candy',
+      'positions': [
+        {
+          'x': 7,
+          'y': 4
+        }
+      ]
+    },
+    {
       'goody': 'chili',
       'positions': [
         {

@@ -11,6 +11,9 @@ var goodies = {
   'candy': {
     'name': 'candy',
     'effects': [
+      {
+        'addShell': true
+      }
     ]
   },
   'chili': {
