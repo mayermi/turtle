@@ -4,10 +4,35 @@
 var Helper = (function() {
   function Helper(game) {
     this.game = game;
+    this.defaultStyle = {
+      fontFamily: 'Uni',
+      fontSize: 16
+    };
   }
 
-  Helper.prototype.addText = function(x, y, text) {
-    return this.game.add.text(x * 16, y * 8, text, { font: '16px Uni' });
+  Helper.prototype.addText = function(x, y, text, style) {
+    var attribute,
+        combinedStyle;
+
+    combinedStyle = {};
+
+    for (attribute in this.defaultStyle) {
+      if (this.defaultStyle.hasOwnProperty(attribute)) {
+        combinedStyle[attribute] = this.defaultStyle[attribute];
+      }
+    }
+
+    for (attribute in style) {
+      if (this.defaultStyle.hasOwnProperty(attribute)) {
+        combinedStyle[attribute] = style[attribute];
+      }
+    }
+
+    combinedStyle.font = combinedStyle.fontSize + 'px ' + combinedStyle.fontFamily;
+    delete combinedStyle.fontSize;
+    delete combinedStyle.fontFamily;
+
+    return this.game.add.text(x * 16, y * 8, text, combinedStyle);
   };
 
   return Helper;
@@ -323,7 +348,7 @@ var ImprintState = {
 
     this.stage.backgroundColor = '#BFEFFF';
 
-    menuLabel = helper.addText(0.5, 1, 'Menu');
+    menuLabel = helper.addText(0.5, 1, 'Menu', { fill: '#ff0000' });
     menuLabel.inputEnabled = true;
     menuLabel.events.onInputUp.add(function() {
       game.state.start('menu');
@@ -340,15 +365,20 @@ var ImprintState = {
 };
 
 var MenuState = {
+  preload: function() {
+    this.load.spritesheet('player', '/img/sprites/turtle.png', 32, 64);
+  },
+
   create: function() {
     var game = this.game,
         imprintLabel,
-        playLabel,
-        titleLabel;
+        player,
+        playLabel;
 
     this.stage.backgroundColor = '#00a844';
 
-    titleLabel = helper.addText(5, 5, 'TURTLE');
+    helper.addText(5, 8, 'TURTLE', { fontSize: 32 });
+    helper.addText(5, 12, 'A fun little game about a turtle.');
 
     playLabel = helper.addText(1, 1, 'Play');
     playLabel.inputEnabled = true;
@@ -361,6 +391,8 @@ var MenuState = {
     imprintLabel.events.onInputUp.add(function() {
       game.state.start('imprint');
     });
+
+    player = new Player(this.game, 6.5, 8, 0);
   }
 };
 
@@ -582,6 +614,12 @@ var Config = (function() {
     this.levels = {
       1: levelOne
     };
+
+    this.colors = {
+      red: '',
+      green: '',
+      blue: ''
+    };
   }
 
   return Config;
@@ -610,5 +648,5 @@ for (var key in states) {
   }
 }
 
-game.state.start('play');
+game.state.start('menu');
 }).call(this);

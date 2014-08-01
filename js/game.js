@@ -21,4 +21,4 @@ for (var key in states) {
   }
 }
 
-game.state.start('play');
+game.state.start('menu');

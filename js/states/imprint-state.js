@@ -5,7 +5,7 @@ var ImprintState = {
 
     this.stage.backgroundColor = '#BFEFFF';
 
-    menuLabel = helper.addText(0.5, 1, 'Menu');
+    menuLabel = helper.addText(0.5, 1, 'Menu', { fill: '#ff0000' });
     menuLabel.inputEnabled = true;
     menuLabel.events.onInputUp.add(function() {
       game.state.start('menu');
