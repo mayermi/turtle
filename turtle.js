@@ -1,6 +1,18 @@
 ;(function() {
   'use strict';
 
+var Helper = (function() {
+  function Helper(game) {
+    this.game = game;
+  }
+
+  Helper.prototype.addText = function(x, y, text) {
+    return this.game.add.text(x * 16, y * 8, text, { font: '16px Uni' });
+  };
+
+  return Helper;
+})();
+
 var goodies = {
   'bubble': {
     'name': 'bubble',
@@ -50,7 +62,7 @@ var goodies = {
 };
 
 var levelOne = {
-  'name': 'Overworld',
+  'name': 'Level 1: Overworld',
   'goodies': [
     {
       'goody': 'bubble',
@@ -311,42 +323,44 @@ var ImprintState = {
 
     this.stage.backgroundColor = '#BFEFFF';
 
-    menuLabel = this.add.text(10, 10, 'Menu');
+    menuLabel = helper.addText(0.5, 1, 'Menu');
     menuLabel.inputEnabled = true;
     menuLabel.events.onInputUp.add(function() {
       game.state.start('menu');
     });
 
-    textLabel = this.add.text(10, 40, 'This game was created by:\nAstrid Wühr\nDominik Habersack\nJudith Steigemann\nMiriam Mayer');
+    textLabel = helper.addText(3, 6,
+        'This game was created by:\n' +
+        '· Astrid Wühr\n' +
+        '· Dominik Habersack\n' +
+        '· Judith Steigemann\n' +
+        '· Miriam Mayer'
+    );
   }
 };
 
 var MenuState = {
-  preload: function() {
-  },
-
   create: function() {
     var game = this.game,
         imprintLabel,
-        playLabel;
+        playLabel,
+        titleLabel;
 
-    this.stage.backgroundColor = '#BFEFFF';
+    this.stage.backgroundColor = '#00a844';
 
-    playLabel = this.add.text(10, 10, 'Play');
+    titleLabel = helper.addText(5, 5, 'TURTLE');
+
+    playLabel = helper.addText(1, 1, 'Play');
     playLabel.inputEnabled = true;
     playLabel.events.onInputUp.add(function() {
       game.state.start('play');
     });
 
-    imprintLabel = this.add.text(380, 10, 'Imprint');
+    imprintLabel = helper.addText(25, 1, 'Imprint');
     imprintLabel.inputEnabled = true;
     imprintLabel.events.onInputUp.add(function() {
       game.state.start('imprint');
     });
-
-  },
-
-  update: function() {
   }
 };
 
@@ -452,6 +466,7 @@ var PlayState = {
     this.initializeKeyboard();
     this.initializeLabels();
     this.initializePhysics();
+    this.initializeTitle();
   },
 
   initializeCamera: function() {
@@ -522,7 +537,7 @@ var PlayState = {
   initializeLabels: function() {
     var menuLabel;
 
-    menuLabel = this.add.text(10, 10, 'Menu');
+    menuLabel = helper.addText(1, 1, 'Menu');
     menuLabel.fixedToCamera = true;
     menuLabel.inputEnabled = true;
 
@@ -535,6 +550,10 @@ var PlayState = {
     this.game.physics.startSystem(Phaser.Physics.ARCADE);
     this.game.physics.arcade.gravity.y = 1200;
     this.game.physics.enable(this.player);
+  },
+
+  initializeTitle: function() {
+    helper.addText(1, 4, config.levels[1].name);
   },
 
   addCloud: function(x) {
@@ -570,11 +589,14 @@ var Config = (function() {
 
 var config,
     game,
+    helper,
     states;
 
 config = new Config();
 
 game = new Phaser.Game(480, 320, Phaser.AUTO, 'turtle');
+
+helper = new Helper(game);
 
 states = {
   'imprint': ImprintState,

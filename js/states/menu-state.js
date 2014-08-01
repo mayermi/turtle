@@ -1,28 +1,24 @@
 var MenuState = {
-  preload: function() {
-  },
-
   create: function() {
     var game = this.game,
         imprintLabel,
-        playLabel;
+        playLabel,
+        titleLabel;
 
-    this.stage.backgroundColor = '#BFEFFF';
+    this.stage.backgroundColor = '#00a844';
 
-    playLabel = this.add.text(10, 10, 'Play');
+    titleLabel = helper.addText(5, 5, 'TURTLE');
+
+    playLabel = helper.addText(1, 1, 'Play');
     playLabel.inputEnabled = true;
     playLabel.events.onInputUp.add(function() {
       game.state.start('play');
     });
 
-    imprintLabel = this.add.text(380, 10, 'Imprint');
+    imprintLabel = helper.addText(25, 1, 'Imprint');
     imprintLabel.inputEnabled = true;
     imprintLabel.events.onInputUp.add(function() {
       game.state.start('imprint');
     });
-
-  },
-
-  update: function() {
   }
 };

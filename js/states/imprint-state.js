@@ -5,12 +5,18 @@ var ImprintState = {
 
     this.stage.backgroundColor = '#BFEFFF';
 
-    menuLabel = this.add.text(10, 10, 'Menu');
+    menuLabel = helper.addText(0.5, 1, 'Menu');
     menuLabel.inputEnabled = true;
     menuLabel.events.onInputUp.add(function() {
       game.state.start('menu');
     });
 
-    textLabel = this.add.text(10, 40, 'This game was created by:\nAstrid Wühr\nDominik Habersack\nJudith Steigemann\nMiriam Mayer');
+    textLabel = helper.addText(3, 6,
+        'This game was created by:\n' +
+        '· Astrid Wühr\n' +
+        '· Dominik Habersack\n' +
+        '· Judith Steigemann\n' +
+        '· Miriam Mayer'
+    );
   }
 };

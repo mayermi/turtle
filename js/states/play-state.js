@@ -100,6 +100,7 @@ var PlayState = {
     this.initializeKeyboard();
     this.initializeLabels();
     this.initializePhysics();
+    this.initializeTitle();
   },
 
   initializeCamera: function() {
@@ -170,7 +171,7 @@ var PlayState = {
   initializeLabels: function() {
     var menuLabel;
 
-    menuLabel = this.add.text(10, 10, 'Menu');
+    menuLabel = helper.addText(1, 1, 'Menu');
     menuLabel.fixedToCamera = true;
     menuLabel.inputEnabled = true;
 
@@ -183,6 +184,10 @@ var PlayState = {
     this.game.physics.startSystem(Phaser.Physics.ARCADE);
     this.game.physics.arcade.gravity.y = 1200;
     this.game.physics.enable(this.player);
+  },
+
+  initializeTitle: function() {
+    helper.addText(1, 4, config.levels[1].name);
   },
 
   addCloud: function(x) {

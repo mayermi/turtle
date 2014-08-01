@@ -1,5 +1,5 @@
 var levelOne = {
-  'name': 'Overworld',
+  'name': 'Level 1: Overworld',
   'goodies': [
     {
       'goody': 'bubble',

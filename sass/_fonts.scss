@@ -1,3 +1,11 @@
+@font-face {
+  font-family: 'Uni';
+  src: url('fonts/Uni/regular.eot');
+  src: url('fonts/Uni/regular.eot?iefix') format('eot'),
+       url('fonts/Uni/regular.woff') format('woff'),
+       url('fonts/Uni/regular.ttf') format('truetype');
+}
+
 // Font stacks are based on
 // http://unitinteractive.com/blog/2008/06/26/better-css-font-stacks/
 $font-family-monospace: 'Courier New', Courier, monospace;
@@ -5,10 +13,10 @@ $font-family-sans-serif: Arial, 'Helvetica Neue', Helvetica, sans-serif;
 $font-family-serif:      Georgia, Times, 'Times New Roman', serif;
 
 // font stack proxies
-$font-family-branding: 'Lato', $font-family-sans-serif;
-$font-family-code:     'Source Code Pro', $font-family-monospace;
-$font-family-content:  'PT Serif', $font-family-serif;
-$font-family-headings: 'PT Serif', $font-family-serif;
+$font-family-branding: 'Uni', $font-family-sans-serif;
+$font-family-code:     $font-family-monospace;
+$font-family-content:  $font-family-serif;
+$font-family-headings: 'Uni', $font-family-serif;
 $font-family-inputs:   $font-family-sans-serif;
 
 // available font-size and line-height combinations based on above defaults:
