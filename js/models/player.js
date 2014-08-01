@@ -14,6 +14,7 @@ var Player = (function() {
     this.currentJumpCount = 0;
     this.maximumJumpCount = 2;
     this.health = 3;
+    this.hasShell = false;
     this.isInHazardousTerrain = false;
     this.auInterval = null;
 
@@ -37,7 +38,7 @@ var Player = (function() {
       this.animations.add(animations[i], framesRange, 12.5, true);
     }
 
-    this.animations.play('walk-right');
+    this.animations.play('walk-right-naked');
 
     game.physics.enable(this, Phaser.Physics.ARCADE);
     game.add.existing(this);
@@ -71,6 +72,21 @@ var Player = (function() {
     }
   };
 
+  Player.prototype.addBooleanEffect = function(property, value, duration) {
+    var that;
+
+    that = this;
+
+    that[property] = value;
+
+    if (duration) {
+      setTimeout(function() {
+        that[property] = !value;
+      }, duration);
+    }
+  };
+
+
   Player.prototype.cheer = function() {
     this.animations.play('cheer');
 
@@ -84,12 +100,20 @@ var Player = (function() {
     var effect,
         effects;
 
-    this.animations.play('eat', null, false);
+    if (this.hasShell) {
+      this.animations.play('eat', null, false); 
+    } else {
+      this.animations.play('eat-naked', null, false);
+    }
 
     effects = config.goodies[goody.name].effects;
 
     for (var i = 0, l = effects.length; i < l; i += 1) {
       effect = effects[i];
+
+      if (effect.addShell) {
+        this.addBooleanEffect('hasShell', effect.addShell, effect.duration);
+      }
 
       if (effect.healthIncrease) {
         this.addEffect('health', effect.healthIncrease, effect.duration);
@@ -162,7 +186,12 @@ var Player = (function() {
       this.body.velocity.y = this.jumpVelocity;
       this.currentJumpCount += 1;
 
-      this.animations.play('jump', null, false);
+      if (this.hasShell) {
+        this.animations.play('jump', null, false); 
+      } else {
+        this.animations.play('jump-naked', null, false);
+      }
+
       if (previousAnimation) {
         this.events.onAnimationComplete.add(function() {
           that.animations.play(previousAnimation.name);
@@ -180,11 +209,19 @@ var Player = (function() {
   };
 
   Player.prototype.turnLeft = function() {
-    this.animations.play('walk-left');
+    if (this.hasShell) {
+      this.animations.play('walk-left'); 
+    } else {
+      this.animations.play('walk-left-naked');
+    }
   };
 
   Player.prototype.turnRight = function() {
-    this.animations.play('walk-right');
+    if (this.hasShell) {
+      this.animations.play('walk-right'); 
+    } else {
+      this.animations.play('walk-right-naked');
+    }
   };
 
   return Player;

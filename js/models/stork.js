@@ -37,11 +37,18 @@ var Stork = (function() {
 
   Stork.prototype.hit = function(sprite) {
     var that = this;
-    if (!that.touchedSprite) {
-          sprite.damage(1);
-          that.touchedSprite = true;
-          that.au(sprite);
+    if(!sprite.hasShell) {
+      if (!that.touchedSprite) {
+        sprite.damage(1);
+        that.touchedSprite = true;
+        that.au(sprite);
       }
+    } else {
+      console.log(sprite.body);
+      if (sprite.body.blocked.up) {
+        console.log('die!');
+      }
+    }
   };
 
   Stork.prototype.au = function(sprite) {

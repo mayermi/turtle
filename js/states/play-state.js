@@ -70,7 +70,6 @@ var PlayState = {
     });
 
     this.game.physics.arcade.collide(this.player, this.stork, function(player, stork) {
-      console.log('heeelp');
       stork.hit(player);
     });
 
