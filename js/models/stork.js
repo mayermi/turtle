@@ -36,17 +36,15 @@ var Stork = (function() {
   Stork.prototype.constructor = Stork;
 
   Stork.prototype.hit = function(sprite) {
-    var that = this;
     if(!sprite.hasShell) {
-      if (!that.touchedSprite) {
+      if (!this.touchedSprite) {
         sprite.damage(1);
-        that.touchedSprite = true;
-        that.au(sprite);
+        this.touchedSprite = true;
+        this.au(sprite);
       }
     } else {
-      console.log(sprite.body);
-      if (sprite.body.blocked.up) {
-        console.log('die!');
+      if (this.body.touching.up) {
+        this.kill();
       }
     }
   };
