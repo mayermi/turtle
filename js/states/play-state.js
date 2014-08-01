@@ -195,7 +195,7 @@ var PlayState = {
   },
 
   initializeTitle: function() {
-    helper.addText(1, 4, config.levels[1].name);
+    helper.addText(1, 4, config.levels[1].name, { fill: config.colors.gray });
   },
 
   addCloud: function(x) {

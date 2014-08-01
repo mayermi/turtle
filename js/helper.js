@@ -20,7 +20,7 @@ var Helper = (function() {
     }
 
     for (attribute in style) {
-      if (this.defaultStyle.hasOwnProperty(attribute)) {
+      if (style.hasOwnProperty(attribute)) {
         combinedStyle[attribute] = style[attribute];
       }
     }

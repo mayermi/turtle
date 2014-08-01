@@ -23,7 +23,7 @@ var Helper = (function() {
     }
 
     for (attribute in style) {
-      if (this.defaultStyle.hasOwnProperty(attribute)) {
+      if (style.hasOwnProperty(attribute)) {
         combinedStyle[attribute] = style[attribute];
       }
     }
@@ -461,9 +461,9 @@ var ImprintState = {
     var textLabel,
         menuLabel;
 
-    this.stage.backgroundColor = '#BFEFFF';
+    this.stage.backgroundColor = config.colors.lightGreen;
 
-    menuLabel = helper.addText(0.5, 1, 'Menu', { fill: '#ff0000' });
+    menuLabel = helper.addText(0.5, 1, '← Menu');
     menuLabel.inputEnabled = true;
     menuLabel.events.onInputUp.add(function() {
       game.state.start('menu');
@@ -490,18 +490,18 @@ var MenuState = {
         player,
         playLabel;
 
-    this.stage.backgroundColor = '#00a844';
+    this.stage.backgroundColor = config.colors.lightYellow;
 
-    helper.addText(4, 8, 'TURTLE', { fontSize: 32 });
-    helper.addText(4, 12, 'A fun little game about a fun little turtle.');
+    helper.addText(4, 4, 'TURTLE', { fontSize: 32, fill: config.colors.green });
+    helper.addText(4, 8, 'A fun little game about a fun little turtle.');
 
-    playLabel = helper.addText(1, 1, 'Play');
+    playLabel = helper.addText(3, 12, '→ Play');
     playLabel.inputEnabled = true;
     playLabel.events.onInputUp.add(function() {
       game.state.start('play');
     });
 
-    imprintLabel = helper.addText(25, 1, 'Imprint');
+    imprintLabel = helper.addText(3, 14, '→ Imprint');
     imprintLabel.inputEnabled = true;
     imprintLabel.events.onInputUp.add(function() {
       game.state.start('imprint');
@@ -708,7 +708,7 @@ var PlayState = {
   },
 
   initializeTitle: function() {
-    helper.addText(1, 4, config.levels[1].name);
+    helper.addText(1, 4, config.levels[1].name, { fill: config.colors.gray });
   },
 
   addCloud: function(x) {
@@ -739,9 +739,16 @@ var Config = (function() {
     };
 
     this.colors = {
-      red: '',
-      green: '',
-      blue: ''
+      gray: '#bcbcbc',
+      lightBlue: '#0078f8',
+      blue: '#0058f8',
+      purple: '#6844fc',
+      magenta: '#d800cc',
+      red: '#e40058',
+
+      green: '#00a800',
+      lightGreen: '#00b800',
+      lightYellow: '#d8F878'
     };
   }
 

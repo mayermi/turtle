@@ -9,18 +9,18 @@ var MenuState = {
         player,
         playLabel;
 
-    this.stage.backgroundColor = '#00a844';
+    this.stage.backgroundColor = config.colors.lightYellow;
 
-    helper.addText(4, 8, 'TURTLE', { fontSize: 32 });
-    helper.addText(4, 12, 'A fun little game about a fun little turtle.');
+    helper.addText(4, 4, 'TURTLE', { fontSize: 32, fill: config.colors.green });
+    helper.addText(4, 8, 'A fun little game about a fun little turtle.');
 
-    playLabel = helper.addText(1, 1, 'Play');
+    playLabel = helper.addText(3, 12, '→ Play');
     playLabel.inputEnabled = true;
     playLabel.events.onInputUp.add(function() {
       game.state.start('play');
     });
 
-    imprintLabel = helper.addText(25, 1, 'Imprint');
+    imprintLabel = helper.addText(3, 14, '→ Imprint');
     imprintLabel.inputEnabled = true;
     imprintLabel.events.onInputUp.add(function() {
       game.state.start('imprint');
