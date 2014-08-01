@@ -168,6 +168,11 @@ var Player = (function() {
     }
   };
 
+  Player.prototype.bounceBack = function(){
+    this.body.velocity.y = -400;
+    this.body.velocity.x = -400;
+  };
+
   Player.prototype.jump = function() {
     var previousAnimation,
         that,

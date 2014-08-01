@@ -47,7 +47,7 @@ var PlayState = {
     this.initializePlatforms();
 
     this.player = new Player(this.game, 1, 7);
-    this.stork = new Stork(this.game, 70, 5, 'stork');
+    this.stork = new Stork(this.game, 27, 5, 'stork');
 
     this.tilemap.setCollision(2);
     this.tilemap.setTileIndexCallback(2, function() {
@@ -80,6 +80,7 @@ var PlayState = {
 
     this.game.physics.arcade.collide(this.player, this.stork, function(player, stork) {
       stork.hit(player);
+      player.bounceBack();
     });
 
     if (playerHealth >= 0) {
