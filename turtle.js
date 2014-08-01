@@ -141,6 +141,15 @@ var levelOne = {
         }
       ]
     }
+  ],
+  'platforms': [
+    {
+      'start': {
+        'x': 5,
+        'y': 6
+      },
+      'length': 4
+    }
   ]
 };
 
@@ -517,6 +526,7 @@ var PlayState = {
   layer: null,
   level: null,
   lifeGroup: null,
+  platforms: null,
   player: null,
   stork: null,
 
@@ -531,9 +541,10 @@ var PlayState = {
       }
     }
 
-    this.load.image('forest-tiles', '/img/tiles/forest.png');
     this.load.image('cloud', '/img/images/cloud.png');
+    this.load.image('forest-tiles', '/img/tiles/forest.png');
     this.load.image('life', '/img/images/life.png');
+    this.load.image('platform', '/img/images/platform.png');
 
     this.load.spritesheet('player', '/img/sprites/turtle.png', 32, 64);
     this.load.spritesheet('stork', '/img/sprites/stork.png', 144, 144);
@@ -582,6 +593,8 @@ var PlayState = {
       goody.kill();
     });
 
+    this.game.physics.arcade.collide(this.player, this.platforms);
+
     this.game.physics.arcade.collide(this.player, this.stork, function(player, stork) {
       stork.hit(player);
     });
@@ -620,6 +633,7 @@ var PlayState = {
     this.initializeHealthBar();
     this.initializeKeyboard();
     this.initializeLabels();
+    this.initializePlatforms();
     this.initializePhysics();
     this.initializeTitle();
   },
@@ -701,6 +715,29 @@ var PlayState = {
     });
   },
 
+  initializePlatforms: function() {
+    var platform,
+        platformEntry;
+
+    this.platforms = this.game.add.group();
+    this.platforms.enableBody = true;
+    this.platforms.physicsBodyType = Phaser.Physics.ARCADE;
+
+    for (var i = 0, l = this.level.platforms.length; i < l; i += 1) {
+      platformEntry = this.level.platforms[i];
+      var start = platformEntry.start;
+      var length = platformEntry.length;
+
+      console.log(start, length);
+
+      for (var j = 0; j < length; j += 1) {
+        platform = this.platforms.create((start.x + j) * 32, start.y * 32, 'platform');
+        this.game.physics.enable(platform, Phaser.Physics.ARCADE); platform.body.allowGravity = false;
+        platform.body.immovable = true;
+      }
+    }
+  },
+
   initializePhysics: function() {
     this.game.physics.startSystem(Phaser.Physics.ARCADE);
     this.game.physics.arcade.gravity.y = 1200;
@@ -778,5 +815,5 @@ for (var key in states) {
   }
 }
 
-game.state.start('menu');
+game.state.start('play');
 }).call(this);
