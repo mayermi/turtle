@@ -184,6 +184,73 @@ var Goody = (function() {
   return Goody;
 })();
 
+var Minion = (function() {
+  function Minion(game, x, y, sprite) {
+    var animations,
+        firstFrame,
+        framesPerAnimation,
+        framesRange,
+        lastFrame;
+
+    Phaser.Sprite.call(this, game, x * 32, y * 32, sprite);
+
+    this.walkVelocity = 150;
+
+    this.hasHitPlayer = false;
+
+    animations = [
+      'walk'
+    ];
+    framesPerAnimation = 4;
+
+    for (var i = 0, l = animations.length; i < l; i += 1) {
+      firstFrame = framesPerAnimation * i;
+      lastFrame = firstFrame + framesPerAnimation;
+      framesRange = _.range(firstFrame, lastFrame);
+
+      this.animations.add(animations[i], framesRange, 12.5, true);
+    }
+
+    this.animations.play('walk');
+
+    game.physics.enable(this, Phaser.Physics.ARCADE);
+    this.body.bounce.x = 1;
+    this.body.immovable = true;
+    this.body.gravity.y = 6;
+
+    this.move();
+
+    game.add.existing(this);
+  }
+
+  Minion.prototype = Object.create(Phaser.Sprite.prototype);
+  Minion.prototype.constructor = Minion;
+
+  Minion.prototype.move = function() {
+    if (game.rnd.integerInRange(0, 1) === 1) {
+      this.body.velocity.x = this.walkVelocity;
+    } else {
+      this.body.velocity.x = -this.walkVelocity;
+    }
+  };
+
+  Minion.prototype.hit = function(sprite) {
+    if (!this.hasHitPlayer) {
+      sprite.damage(1);
+      this.hasHitPlayer = true;
+      var that = this;
+
+       setTimeout( function() {
+         that.hasHitPlayer = false;
+       }, 500);
+    }
+    if (this.body.touching.up) {
+      this.kill();
+    }
+  };
+
+  return Minion;
+})();
 var Player = (function() {
   function Player(game, x, y) {
     var animations,
@@ -579,6 +646,7 @@ var PlayState = {
   layer: null,
   level: null,
   lifeGroup: null,
+  minions: null,
   platforms: null,
   player: null,
   stork: null,
@@ -602,6 +670,7 @@ var PlayState = {
 
     this.load.spritesheet('player', '/img/sprites/turtle.png', 32, 64);
     this.load.spritesheet('stork', '/img/sprites/stork.png', 144, 144);
+    this.load.spritesheet('worm', '/img/sprites/worm.png', 48, 16);
 
     this.load.spritesheet('world', '/img/tiles/forest.png', 32, 32);
 
@@ -623,6 +692,7 @@ var PlayState = {
 
     this.player = new Player(this.game, 1, 7);
     this.stork = new Stork(this.game, 58, 5, 'stork');
+
 
     this.tilemap.setCollision(2);
     this.tilemap.setTileIndexCallback(2, function() {
@@ -661,6 +731,8 @@ var PlayState = {
       return false;
     });
 
+    arcade.collide(this.minions, this.layer);
+
     arcade.collide(this.player, this.goodies, function(player, goody) {
       player.eatGoody(goody);
       goody.kill();
@@ -670,6 +742,15 @@ var PlayState = {
 
     arcade.collide(this.player, this.stork, function(player, stork) {
       stork.hit(player);
+    });
+
+    arcade.collide(this.player, this.minions, function(player, minion) {
+      minion.hit(player);
+    });
+
+    this.game.physics.arcade.collide(this.player, this.minions, function(player, minion) {
+      minion.hit(player);
+      console.log(minion.body);
     });
 
     if (playerHealth >= 0) {
@@ -713,6 +794,7 @@ var PlayState = {
     this.initializeHealthBar();
     this.initializeKeyboard();
     this.initializeLabels();
+    this.initializeMinions();
     this.initializePhysics();
     this.initializeTitle();
 
@@ -776,6 +858,16 @@ var PlayState = {
         this.goodies.add(new Goody(this.game, position.x, position.y, goodiesEntry.goody));
       }
     }
+  },
+
+  initializeMinions: function() {
+    this.minions = this.game.add.group();
+    this.minions.enableBody = true;
+    this.minions.physicsBodyType = Phaser.Physics.ARCADE;
+
+    for (var j = 0; j < 20; j += 1) {
+      this.minions.add(new Minion(this.game, this.game.rnd.integerInRange(3, 70), 4, 'worm'));
+     }
   },
 
   initializeHealthBar: function() {
