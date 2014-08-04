@@ -49,8 +49,10 @@ var PlayState = {
   create: function() {
     this.level = config.levels[1];
 
-    this.backgroundMusic = game.add.audio('happy',1,true);
-    this.backgroundMusic.play('',0,1,true);
+
+    this.fx = game.add.audio('happy');
+    this.fx.addMarker('happy', 0, 16, 1, true);
+    this.fx.play('happy');
 
     this.stage.backgroundColor = config.colors.lightBlue;
 
