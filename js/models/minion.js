@@ -8,9 +8,8 @@ var Minion = (function() {
 
     Phaser.Sprite.call(this, game, x * 32, y * 32, sprite);
 
-    this.walkVelocity = 150;
-
     this.hasHitPlayer = false;
+    this.walkVelocity = 150;
 
     animations = [
       'walk'
@@ -28,9 +27,8 @@ var Minion = (function() {
     this.animations.play('walk');
 
     game.physics.enable(this, Phaser.Physics.ARCADE);
+    this.body.collideWorldBounds = true;
     this.body.bounce.x = 1;
-    this.body.immovable = true;
-    this.body.gravity.y = 6;
 
     this.move();
 
@@ -49,15 +47,19 @@ var Minion = (function() {
   };
 
   Minion.prototype.hit = function(sprite) {
-    if (!this.hasHitPlayer) {
-      sprite.damage(1);
-      this.hasHitPlayer = true;
-      var that = this;
+    var that;
 
-       setTimeout( function() {
+    if (!this.hasHitPlayer) {
+      that = this;
+
+      sprite.damage(1);
+      that.hasHitPlayer = true;
+
+       setTimeout(function() {
          that.hasHitPlayer = false;
        }, 500);
     }
+
     if (this.body.touching.up) {
       this.kill();
     }

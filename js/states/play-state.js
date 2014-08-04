@@ -112,7 +112,10 @@ var PlayState = {
 
     arcade = this.game.physics.arcade;
 
+    arcade.collide(this.minions);
     arcade.collide(this.minions, this.layer);
+
+    arcade.collide(this.minions, this.platforms);
   },
 
   checkPlayerCollisions: function() {
@@ -151,6 +154,7 @@ var PlayState = {
 
   initializeBeforePlayer: function() {
     this.initializeGoal();
+    this.initializePhysics();
     this.initializePlatforms();
   },
 
@@ -162,7 +166,6 @@ var PlayState = {
     this.initializeKeyboard();
     this.initializeLabels();
     this.initializeMinions();
-    this.initializePhysics();
     this.initializeTitle();
 
     this.isLevelComplete = false;
@@ -229,10 +232,8 @@ var PlayState = {
 
   initializeMinions: function() {
     this.minions = this.game.add.group();
-    this.minions.enableBody = true;
-    this.minions.physicsBodyType = Phaser.Physics.ARCADE;
 
-    for (var j = 0; j < 20; j += 1) {
+    for (var j = 0; j < 8; j += 1) {
       this.minions.add(new Minion(this.game, this.game.rnd.integerInRange(3, 70), 4, 'worm'));
      }
   },
@@ -310,7 +311,6 @@ var PlayState = {
   initializePhysics: function() {
     this.game.physics.startSystem(Phaser.Physics.ARCADE);
     this.game.physics.arcade.gravity.y = 1200;
-    this.game.physics.enable(this.player);
   },
 
   initializeTitle: function() {

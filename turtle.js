@@ -194,9 +194,8 @@ var Minion = (function() {
 
     Phaser.Sprite.call(this, game, x * 32, y * 32, sprite);
 
-    this.walkVelocity = 150;
-
     this.hasHitPlayer = false;
+    this.walkVelocity = 150;
 
     animations = [
       'walk'
@@ -214,9 +213,8 @@ var Minion = (function() {
     this.animations.play('walk');
 
     game.physics.enable(this, Phaser.Physics.ARCADE);
+    this.body.collideWorldBounds = true;
     this.body.bounce.x = 1;
-    this.body.immovable = true;
-    this.body.gravity.y = 6;
 
     this.move();
 
@@ -235,15 +233,19 @@ var Minion = (function() {
   };
 
   Minion.prototype.hit = function(sprite) {
-    if (!this.hasHitPlayer) {
-      sprite.damage(1);
-      this.hasHitPlayer = true;
-      var that = this;
+    var that;
 
-       setTimeout( function() {
+    if (!this.hasHitPlayer) {
+      that = this;
+
+      sprite.damage(1);
+      that.hasHitPlayer = true;
+
+       setTimeout(function() {
          that.hasHitPlayer = false;
        }, 500);
     }
+
     if (this.body.touching.up) {
       this.kill();
     }
@@ -251,6 +253,7 @@ var Minion = (function() {
 
   return Minion;
 })();
+
 var Player = (function() {
   function Player(game, x, y) {
     var animations,
@@ -751,7 +754,10 @@ var PlayState = {
 
     arcade = this.game.physics.arcade;
 
+    arcade.collide(this.minions);
     arcade.collide(this.minions, this.layer);
+
+    arcade.collide(this.minions, this.platforms);
   },
 
   checkPlayerCollisions: function() {
@@ -790,6 +796,7 @@ var PlayState = {
 
   initializeBeforePlayer: function() {
     this.initializeGoal();
+    this.initializePhysics();
     this.initializePlatforms();
   },
 
@@ -801,7 +808,6 @@ var PlayState = {
     this.initializeKeyboard();
     this.initializeLabels();
     this.initializeMinions();
-    this.initializePhysics();
     this.initializeTitle();
 
     this.isLevelComplete = false;
@@ -868,10 +874,8 @@ var PlayState = {
 
   initializeMinions: function() {
     this.minions = this.game.add.group();
-    this.minions.enableBody = true;
-    this.minions.physicsBodyType = Phaser.Physics.ARCADE;
 
-    for (var j = 0; j < 20; j += 1) {
+    for (var j = 0; j < 8; j += 1) {
       this.minions.add(new Minion(this.game, this.game.rnd.integerInRange(3, 70), 4, 'worm'));
      }
   },
@@ -949,7 +953,6 @@ var PlayState = {
   initializePhysics: function() {
     this.game.physics.startSystem(Phaser.Physics.ARCADE);
     this.game.physics.arcade.gravity.y = 1200;
-    this.game.physics.enable(this.player);
   },
 
   initializeTitle: function() {
