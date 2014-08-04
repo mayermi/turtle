@@ -54,6 +54,7 @@ var PlayState = {
     this.player = new Player(this.game, 1, 7);
     this.stork = new Stork(this.game, 58, 5, 'stork');
 
+
     this.tilemap.setCollision(2);
     this.tilemap.setTileIndexCallback(2, function() {
       this.player.hitGround();
@@ -106,6 +107,11 @@ var PlayState = {
 
     arcade.collide(this.player, this.minions, function(player, minion) {
       minion.hit(player);
+    });
+
+    this.game.physics.arcade.collide(this.player, this.minions, function(player, minion) {
+      minion.hit(player);
+      console.log(minion.body);
     });
 
     if (playerHealth >= 0) {
