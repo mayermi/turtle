@@ -8,7 +8,11 @@ var Player = (function() {
 
     Phaser.Sprite.call(this, game, x * 32, y * 32, 'player');
 
-    this.game = game;
+    this.wahoo = game.add.audio('wahoo',1);
+    this.aua = game.add.audio('aua',1);
+    this.gulp = game.add.audio('gulp',1);
+    this.woo = game.add.audio('woo',1);
+
     this.walkVelocity = 200;
     this.walkDrag = 800;
     this.isCheering = false;
@@ -130,6 +134,8 @@ var Player = (function() {
       var effect,
           effects;
 
+      this.gulp.play();
+
       if (this.hasShell) {
         this.animations.play('eat-right', null, false);
       } else {
@@ -175,7 +181,7 @@ var Player = (function() {
     if (this.alive){
       if (!this.isInHazardousTerrain) {
         if (this.body.blocked.down) {
-          this.damage(1);
+          this.takeDamage(1);
           this.isInHazardousTerrain = true;
           this.au();
         }
@@ -185,18 +191,22 @@ var Player = (function() {
 
   Player.prototype.au = function() {
     var that;
-
     that = this;
 
     if (this.isInHazardousTerrain) {
       this.auInterval = setInterval(function() {
         if (that.alive) {
-          that.damage(1);
+          that.takeDamage(1);
         }
       }, 1000);
     } else {
       clearInterval(this.auInterval);
     }
+  };
+
+  Player.prototype.takeDamage = function(hits) {
+      this.damage(hits);
+      this.aua.play();
   };
 
   Player.prototype.jump = function() {
@@ -214,6 +224,12 @@ var Player = (function() {
 
       if (this.currentJumpCount < this.maximumJumpCount) {
         this.animations.stop();
+
+        if (this.currentJumpCount === 0){
+          this.woo.play();
+        } else if (this.currentJumpCount === 1) {
+          this.wahoo.play();
+        }
 
         this.body.velocity.y = this.jumpVelocity;
         this.currentJumpCount += 1;

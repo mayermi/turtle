@@ -10,6 +10,8 @@ var Stork = (function() {
 
     this.hasHitPlayer = false;
 
+    this.plop = game.add.audio('plop',1);
+
     animations = [
       'peck'
     ];
@@ -40,7 +42,7 @@ var Stork = (function() {
   Stork.prototype.hit = function(sprite) {
     if (!sprite.hasShell) {
       if (!this.hasHitPlayer) {
-        sprite.damage(1);
+        sprite.takeDamage(1);
         this.hasHitPlayer = true;
         var that = this;
 
@@ -50,6 +52,7 @@ var Stork = (function() {
       } 
     } else {
       if (this.body.touching.up) {
+        this.plop.play();
         this.kill();
       }
     }
