@@ -280,9 +280,7 @@ var Minion = (function() {
 
 var Player = (function() {
   function Player(game, x, y) {
-    var animations,
-        firstFrame,
-        framesPerAnimation,
+    var firstFrame,
         framesRange,
         lastFrame;
 
@@ -293,6 +291,7 @@ var Player = (function() {
     this.gulp = game.add.audio('gulp',1);
     this.woo = game.add.audio('woo',1);
 
+    this.facing = Phaser.RIGHT;
     this.walkVelocity = 200;
     this.walkDrag = 800;
     this.isCheering = false;
@@ -303,8 +302,10 @@ var Player = (function() {
     this.hasShell = false;
     this.isInHazardousTerrain = false;
     this.auInterval = null;
+    this.deathAnimation = null;
+    this.isDying = false;
 
-    animations = [
+    this.animationNames = [
       'walk-right',
       'walk-left',
       'walk-right-naked',
@@ -323,14 +324,14 @@ var Player = (function() {
       'die-left-naked',
       'cheer'
     ];
-    framesPerAnimation = 10;
+    this.framesPerAnimation = 10;
 
-    for (var i = 0, l = animations.length; i < l; i += 1) {
-      firstFrame = framesPerAnimation * i;
-      lastFrame = firstFrame + framesPerAnimation;
+    for (var i = 0, l = this.animationNames.length; i < l; i += 1) {
+      firstFrame = this.framesPerAnimation * i;
+      lastFrame = firstFrame + this.framesPerAnimation;
       framesRange = _.range(firstFrame, lastFrame);
 
-      this.animations.add(animations[i], framesRange, 12.5, true);
+      this.animations.add(this.animationNames[i], framesRange, 12.5, true);
     }
 
     this.animations.play('walk-right-naked');
@@ -339,6 +340,8 @@ var Player = (function() {
     this.body.drag.x = this.walkDrag;
     this.body.collideWorldBounds = true;
 
+    this.events.onKilled.add(this.die, this);
+
     game.add.existing(this);
   }
 
@@ -346,6 +349,11 @@ var Player = (function() {
   Player.prototype.constructor = Player;
 
   Player.prototype.update = function() {
+    if ((this.body.facing === Phaser.LEFT && this.facing !== Phaser.LEFT) ||
+        (this.body.facing === Phaser.RIGHT && this.facing !== Phaser.RIGHT)) {
+      this.facing = this.body.facing;
+    }
+
     if (this.body.velocity.y === 0) {
       this.currentJumpCount = 0;
     }
@@ -380,7 +388,6 @@ var Player = (function() {
     }
   };
 
-
   Player.prototype.cheer = function() {
     var that;
 
@@ -406,11 +413,14 @@ var Player = (function() {
   };
 
   Player.prototype.die = function() {
-    this.animations.play('die');
+    var finalFrameIndex = this.animationNames.indexOf(this.deathAnimation) * this.framesPerAnimation + this.framesPerAnimation - 1;
+
+    this.visible = true;
+    this.frame = finalFrameIndex;
   };
 
   Player.prototype.eatGoody = function(goody) {
-    if (!this.isCheering) {
+    if (!this.isCheering && !this.isDying) {
       var effect,
           effects;
 
@@ -448,8 +458,6 @@ var Player = (function() {
 
   Player.prototype.hitGround = function() {
     if (this.isInHazardousTerrain) {
-      // this.animations.play('walk-right');
-
       if (!this.body.blocked.left && !this.body.blocked.right && !this.body.blocked.down){
         this.isInHazardousTerrain = false;
         this.au();
@@ -471,6 +479,7 @@ var Player = (function() {
 
   Player.prototype.au = function() {
     var that;
+
     that = this;
 
     if (this.isInHazardousTerrain) {
@@ -485,12 +494,30 @@ var Player = (function() {
   };
 
   Player.prototype.takeDamage = function(hits) {
-      this.damage(hits);
-      this.aua.play();
+    if (!this.isCheering && !this.isDying) {
+      if (this.health - hits <= 0) {
+        this.isDying = true;
+        this.body.immovable = true;
+
+        this.health = 0;
+        this.deathAnimation = 'die-';
+
+        this.deathAnimation += (this.facing === Phaser.LEFT) ? 'left' : 'right';
+
+        if (!this.hasShell) {
+          this.deathAnimation += '-naked';
+        }
+
+        this.animations.play(this.deathAnimation, null, false, true);
+      } else {
+        this.aua.play();
+        this.damage(hits);
+      }
+    }
   };
 
   Player.prototype.jump = function() {
-    if (!this.isCheering) {
+    if (!this.isCheering && !this.isDying) {
       var previousAnimation,
           that,
           wasWalking;
@@ -530,19 +557,19 @@ var Player = (function() {
   };
 
   Player.prototype.moveLeft = function() {
-    if (!this.isCheering) {
+    if (!this.isCheering && !this.isDying) {
       this.body.velocity.x = -1 * this.walkVelocity;
     }
   };
 
   Player.prototype.moveRight = function() {
-    if (!this.isCheering) {
+    if (!this.isCheering && !this.isDying) {
       this.body.velocity.x = this.walkVelocity;
     }
   };
 
   Player.prototype.turnLeft = function() {
-    if (!this.isCheering) {
+    if (!this.isCheering && !this.isDying) {
       if (this.hasShell) {
         this.animations.play('walk-left');
       } else {
@@ -552,7 +579,7 @@ var Player = (function() {
   };
 
   Player.prototype.turnRight = function() {
-    if (!this.isCheering) {
+    if (!this.isCheering && !this.isDying) {
       if (this.hasShell) {
         this.animations.play('walk-right');
       } else {
