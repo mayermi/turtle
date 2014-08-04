@@ -112,9 +112,7 @@ var PlayState = {
 
     arcade = this.game.physics.arcade;
 
-    arcade.collide(this.minions);
     arcade.collide(this.minions, this.layer);
-
     arcade.collide(this.minions, this.platforms);
   },
 
@@ -233,9 +231,10 @@ var PlayState = {
   initializeMinions: function() {
     this.minions = this.game.add.group();
 
-    for (var j = 0; j < 8; j += 1) {
-      this.minions.add(new Minion(this.game, this.game.rnd.integerInRange(3, 70), 4, 'worm'));
-     }
+    // for (var j = 0; j < 8; j += 1) {
+      this.minions.add(new Minion(this.game, 12, 8, 'worm'));
+      this.minions.add(new Minion(this.game, 16, 8, 'worm'));
+     // }
   },
 
   initializeHealthBar: function() {
