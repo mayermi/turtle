@@ -304,6 +304,8 @@ var Player = (function() {
     this.auInterval = null;
     this.deathAnimation = null;
     this.isDying = false;
+    this.isWalking = true;
+    this.isJumping = false;
 
     this.animationNames = [
       'walk-right',
@@ -349,6 +351,27 @@ var Player = (function() {
   Player.prototype.constructor = Player;
 
   Player.prototype.update = function() {
+    var currentAnimation,
+        indexOfSuffix,
+        isEatingAnimation,
+        isNakedAnimation,
+        nakedSuffix,
+        newAnimation;
+
+    currentAnimation = this.animations.currentAnim.name;
+    isEatingAnimation = currentAnimation.indexOf('eat-') === 0;
+
+    if (!isEatingAnimation) {
+      nakedSuffix = '-naked';
+      indexOfSuffix = currentAnimation.indexOf(nakedSuffix, 0);
+      isNakedAnimation = indexOfSuffix !== -1;
+
+      if (this.hasShell && isNakedAnimation) {
+        newAnimation = currentAnimation.substring(0, indexOfSuffix);
+        this.animations.play(newAnimation);
+      }
+    }
+
     if ((this.body.facing === Phaser.LEFT && this.facing !== Phaser.LEFT) ||
         (this.body.facing === Phaser.RIGHT && this.facing !== Phaser.RIGHT)) {
       this.facing = this.body.facing;
@@ -421,16 +444,22 @@ var Player = (function() {
 
   Player.prototype.eatGoody = function(goody) {
     if (!this.isCheering && !this.isDying) {
-      var effect,
-          effects;
+      var animation,
+          effect,
+          effects,
+          previousAnimation;
 
+      animation = 'eat-';
       this.gulp.play();
+      previousAnimation = this.animations.currentAnim.name;
 
-      if (this.hasShell) {
-        this.animations.play('eat-right', null, false);
-      } else {
-        this.animations.play('eat-right-naked', null, false);
+      animation += this.facing === Phaser.LEFT ? 'left' : 'right';
+
+      if (!this.hasShell) {
+        animation += '-naked';
       }
+
+      this.animations.play(animation, null, false);
 
       effects = config.goodies[goody.name].effects;
 
@@ -518,10 +547,12 @@ var Player = (function() {
 
   Player.prototype.jump = function() {
     if (!this.isCheering && !this.isDying) {
-      var previousAnimation,
+      var animation,
+          previousAnimation,
           that,
           wasWalking;
 
+      animation = 'jump-';
       that = this;
 
       wasWalking = this.animations.currentAnim.name.indexOf('walk') === 0;
@@ -541,11 +572,13 @@ var Player = (function() {
         this.body.velocity.y = this.jumpVelocity;
         this.currentJumpCount += 1;
 
-        if (this.hasShell) {
-          this.animations.play('jump-right', null, false);
-        } else {
-          this.animations.play('jump-right-naked', null, false);
+        animation += (this.facing === Phaser.LEFT) ? 'left' : 'right';
+
+        if (!this.hasShell) {
+          animation += '-naked';
         }
+
+        this.animations.play(animation, null, false);
 
         if (previousAnimation) {
           this.events.onAnimationComplete.add(function() {
@@ -570,21 +603,25 @@ var Player = (function() {
 
   Player.prototype.turnLeft = function() {
     if (!this.isCheering && !this.isDying) {
-      if (this.hasShell) {
-        this.animations.play('walk-left');
-      } else {
-        this.animations.play('walk-left-naked');
+      var animation = 'walk-left';
+
+      if (!this.hasShell) {
+        animation += '-naked';
       }
+
+      this.animations.play(animation);
     }
   };
 
   Player.prototype.turnRight = function() {
     if (!this.isCheering && !this.isDying) {
-      if (this.hasShell) {
-        this.animations.play('walk-right');
-      } else {
-        this.animations.play('walk-right-naked');
+      var animation = 'walk-right';
+
+      if (!this.hasShell) {
+        animation += '-naked';
       }
+
+      this.animations.play(animation);
     }
   };
 
