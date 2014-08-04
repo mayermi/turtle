@@ -164,9 +164,100 @@ var levelOne = {
       },
       'length': 2
     }
-  ]
+  ],
+  'player': {
+    'jumpVelocity' : -400,
+    'walkDrag' : 800
+  },
+  'physics': {
+    'gravity' : 1200
+  },
 };
 
+var levelTwo = {
+  'name': 'Level 2: Sea',
+  'goal': {
+    'position': {
+      'x': 64,
+      'y': 8,
+    },
+    'height': 8
+  },
+  'goodies': [
+    {
+      'goody': 'bubble',
+      'positions': [
+        {
+          'x': 41,
+          'y': 5
+        }
+      ]
+    },
+    {
+      'goody': 'candy',
+      'positions': [
+        {
+          'x': 10,
+          'y': 4
+        }
+      ]
+    },
+    {
+      'goody': 'chili',
+      'positions': [
+        {
+          'x': 12,
+          'y': 5
+        },
+        {
+          'x': 14,
+          'y': 8
+        }
+      ]
+    },
+    {
+      'goody': 'ice',
+      'positions': [
+        {
+          'x': 16,
+          'y': 5
+        }
+      ]
+    },
+    {
+      'goody': 'strawberry',
+      'positions': [
+        {
+          'x': 16,
+          'y': 8
+        }
+      ]
+    }
+  ],
+  'platforms': [
+    {
+      'start': {
+        'x': 4,
+        'y': 7
+      },
+      'length': 6
+    },
+    {
+      'start': {
+        'x': 16,
+        'y': 4
+      },
+      'length': 2
+    }
+  ],
+  'player': {
+    'jumpVelocity' : -200,
+    'walkDrag' : 800
+  },
+  'physics': {
+    'gravity' : 400
+  },
+};
 var Goody = (function() {
   function Goody(game, x, y, sprite, effects) {
     Phaser.Sprite.call(this, game, x * 32, y * 32, sprite);
@@ -252,7 +343,7 @@ var Minion = (function() {
   return Minion;
 })();
 var Player = (function() {
-  function Player(game, x, y) {
+  function Player(game, x, y, walkDrag, jumpVelocity) {
     var animations,
         firstFrame,
         framesPerAnimation,
@@ -263,9 +354,9 @@ var Player = (function() {
 
     this.game = game;
     this.walkVelocity = 200;
-    this.walkDrag = 800;
+    this.walkDrag = walkDrag;
     this.isCheering = false;
-    this.jumpVelocity = -400;
+    this.jumpVelocity = jumpVelocity;
     this.currentJumpCount = 0;
     this.maximumJumpCount = 2;
     this.health = 3;
@@ -348,7 +439,6 @@ var Player = (function() {
       }, duration);
     }
   };
-
 
   Player.prototype.cheer = function() {
     var that;
@@ -639,6 +729,7 @@ var MenuState = {
 
 var PlayState = {
   clouds: null,
+  createdNewLevel: null,
   goal: null,
   goodies: null,
   isLevelComplete: null,
@@ -675,6 +766,7 @@ var PlayState = {
     this.load.spritesheet('world', '/img/tiles/forest.png', 32, 32);
 
     this.load.tilemap('forest-tilemap', '/img/tiles/forest.json', null, Phaser.Tilemap.TILED_JSON);
+    this.load.tilemap('sea-tilemap', '/img/tiles/sea.json', null, Phaser.Tilemap.TILED_JSON);
   },
 
   create: function() {
@@ -690,9 +782,8 @@ var PlayState = {
 
     this.initializeBeforePlayer();
 
-    this.player = new Player(this.game, 1, 7);
+    this.player = new Player(this.game, 1, 7, this.level.player.walkDrag, this.level.player.jumpVelocity);
     this.stork = new Stork(this.game, 58, 5, 'stork');
-
 
     this.tilemap.setCollision(2);
     this.tilemap.setTileIndexCallback(2, function() {
@@ -728,6 +819,9 @@ var PlayState = {
       player.cheer();
       that.showCompleteMessage();
 
+      setTimeout(function() {
+        that.transitionToNextLevel();
+      }, 3000);
       return false;
     });
 
@@ -865,7 +959,7 @@ var PlayState = {
     this.minions.enableBody = true;
     this.minions.physicsBodyType = Phaser.Physics.ARCADE;
 
-    for (var j = 0; j < 20; j += 1) {
+    for (var j = 0; j < 2; j += 1) {
       this.minions.add(new Minion(this.game, this.game.rnd.integerInRange(3, 70), 4, 'worm'));
      }
   },
@@ -942,7 +1036,7 @@ var PlayState = {
 
   initializePhysics: function() {
     this.game.physics.startSystem(Phaser.Physics.ARCADE);
-    this.game.physics.arcade.gravity.y = 1200;
+    this.game.physics.arcade.gravity.y = this.level.physics.gravity;
     this.game.physics.enable(this.player);
   },
 
@@ -975,6 +1069,41 @@ var PlayState = {
 
       this.isShowingCompleteMessage = true;
     }
+  },
+
+  transitionToNextLevel: function(){
+    if (!this.createdNewLevel) {
+      this.createSecondLevel();
+      this.createdNewLevel = true;
+    }
+  },
+
+  createSecondLevel: function () {
+    this.level = config.levels[2];
+
+    this.stage.backgroundColor = config.colors.lightBlue;
+
+    this.tilemap = this.game.add.tilemap('sea-tilemap');
+    this.tilemap.addTilesetImage('forest-tiles');
+
+    this.layer = this.tilemap.createLayer('layer-1');
+    this.layer.resizeWorld();
+
+    this.initializeBeforePlayer();
+
+    this.stork.destroy();
+
+    this.player = new Player(this.game, 1, 7, this.level.player.walkDrag, this.level.player.jumpVelocity);
+
+    this.tilemap.setCollision(2);
+    this.tilemap.setTileIndexCallback(2, function() {
+      this.player.hitGround();
+      return true;
+    }, this);
+
+    this.tilemap.setTileIndexCallback(3, this.player.fallIntoHazardousTerrain, this.player);
+
+    this.initializeAfterPlayer();
   }
 };
 
@@ -995,7 +1124,8 @@ var Config = (function() {
     this.goodies = goodies;
 
     this.levels = {
-      1: levelOne
+      1: levelOne,
+      2: levelTwo
     };
   }
 

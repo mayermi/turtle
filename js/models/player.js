@@ -1,5 +1,5 @@
 var Player = (function() {
-  function Player(game, x, y) {
+  function Player(game, x, y, walkDrag, jumpVelocity) {
     var animations,
         firstFrame,
         framesPerAnimation,
@@ -10,9 +10,9 @@ var Player = (function() {
 
     this.game = game;
     this.walkVelocity = 200;
-    this.walkDrag = 800;
+    this.walkDrag = walkDrag;
     this.isCheering = false;
-    this.jumpVelocity = -400;
+    this.jumpVelocity = jumpVelocity;
     this.currentJumpCount = 0;
     this.maximumJumpCount = 2;
     this.health = 3;
@@ -95,7 +95,6 @@ var Player = (function() {
       }, duration);
     }
   };
-
 
   Player.prototype.cheer = function() {
     var that;

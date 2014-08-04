@@ -1,5 +1,5 @@
-var levelOne = {
-  'name': 'Level 1: Overworld',
+var levelTwo = {
+  'name': 'Level 2: Sea',
   'goal': {
     'position': {
       'x': 64,
@@ -21,7 +21,7 @@ var levelOne = {
       'goody': 'candy',
       'positions': [
         {
-          'x': 7,
+          'x': 10,
           'y': 4
         }
       ]
@@ -75,10 +75,10 @@ var levelOne = {
     }
   ],
   'player': {
-    'jumpVelocity' : -400,
+    'jumpVelocity' : -200,
     'walkDrag' : 800
   },
   'physics': {
-    'gravity' : 1200
+    'gravity' : 400
   },
 };
