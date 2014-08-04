@@ -61,15 +61,15 @@ var levelTwo = {
   'platforms': [
     {
       'start': {
-        'x': 4,
-        'y': 7
+        'x': 8,
+        'y': 8
       },
-      'length': 6
+      'length': 1
     },
     {
       'start': {
-        'x': 16,
-        'y': 4
+        'x': 6,
+        'y': 1
       },
       'length': 2
     }

@@ -5,6 +5,7 @@ var PlayState = {
   goodies: null,
   isLevelComplete: null,
   isShowingCompleteMessage: null,
+  label: null,
   layer: null,
   level: null,
   lifeGroup: null,
@@ -27,6 +28,7 @@ var PlayState = {
 
     this.load.image('cloud', '/img/images/cloud.png');
     this.load.image('forest-tiles', '/img/tiles/forest.png');
+    this.load.image('sea-tiles', '/img/tiles/sea.png');
     this.load.image('life', '/img/images/life.png');
     this.load.image('platform', '/img/images/platform.png');
 
@@ -335,8 +337,8 @@ var PlayState = {
 
   showCompleteMessage: function() {
     if (!this.isShowingCompleteMessage) {
-      var label = helper.addText(2, 8, 'Congratulations!', { fill: config.colors.lightYellow, fontSize: 48 });
-      label.fixedToCamera = true;
+      this.label = helper.addText(2, 8, 'Congratulations!', { fill: config.colors.lightYellow, fontSize: 48 });
+      this.label.fixedToCamera = true;
 
       this.isShowingCompleteMessage = true;
     }
@@ -350,19 +352,23 @@ var PlayState = {
   },
 
   createSecondLevel: function () {
+    this.label.destroy();
+    this.layer.destroy();
+    this.stork.destroy();
+    this.platforms.destroy();
+    this.player.kill();
+    this.isShowingCompleteMessage = false;
+    this.createdNewLevel = false;
+
     this.level = config.levels[2];
 
-    this.stage.backgroundColor = config.colors.lightBlue;
-
     this.tilemap = this.game.add.tilemap('sea-tilemap');
-    this.tilemap.addTilesetImage('forest-tiles');
+    this.tilemap.addTilesetImage('sea-tiles');
 
     this.layer = this.tilemap.createLayer('layer-1');
     this.layer.resizeWorld();
 
     this.initializeBeforePlayer();
-
-    this.stork.destroy();
 
     this.player = new Player(this.game, 1, 7, this.level.player.walkDrag, this.level.player.jumpVelocity);
 
