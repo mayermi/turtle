@@ -67,52 +67,16 @@ var PlayState = {
   },
 
   update: function() {
-    var arcade,
-        lifeGroup,
+    var lifeGroup,
         newLife,
         newPosition,
-        playerHealth,
-        that;
-
-    that = this;
-
-    arcade = this.game.physics.arcade;
+        playerHealth;
 
     lifeGroup = this.lifeGroup;
     playerHealth = this.player.health;
 
-    arcade.collide(this.player, this.layer);
-
-    arcade.overlap(this.player, this.goal, function(player) {
-      that.isLevelComplete = true;
-
-      player.cheer();
-      that.showCompleteMessage();
-
-      return false;
-    });
-
-    arcade.collide(this.minions, this.layer);
-
-    arcade.collide(this.player, this.goodies, function(player, goody) {
-      player.eatGoody(goody);
-      goody.kill();
-    });
-
-    arcade.collide(this.player, this.platforms);
-
-    arcade.collide(this.player, this.stork, function(player, stork) {
-      stork.hit(player);
-    });
-
-    arcade.collide(this.player, this.minions, function(player, minion) {
-      minion.hit(player);
-    });
-
-    this.game.physics.arcade.collide(this.player, this.minions, function(player, minion) {
-      minion.hit(player);
-      console.log(minion.body);
-    });
+    this.checkPlayerCollisions();
+    this.checkMinionCollisions();
 
     if (playerHealth >= 0) {
      if (playerHealth < lifeGroup.length) {
@@ -141,6 +105,48 @@ var PlayState = {
     if (cursorKeys.right.isDown) {
       this.player.moveRight();
     }
+  },
+
+  checkMinionCollisions: function() {
+    var arcade;
+
+    arcade = this.game.physics.arcade;
+
+    arcade.collide(this.minions, this.layer);
+  },
+
+  checkPlayerCollisions: function() {
+    var arcade,
+        that;
+
+    arcade = this.game.physics.arcade;
+    that = this;
+
+    arcade.overlap(this.player, this.goal, function(player) {
+      that.isLevelComplete = true;
+
+      player.cheer();
+      that.showCompleteMessage();
+
+      return false;
+    });
+
+    arcade.collide(this.player, this.goodies, function(player, goody) {
+      player.eatGoody(goody);
+      goody.kill();
+    });
+
+    arcade.collide(this.player, this.layer);
+
+    arcade.collide(this.player, this.minions, function(player, minion) {
+      minion.hit(player);
+    });
+
+    arcade.collide(this.player, this.platforms);
+
+    arcade.collide(this.player, this.stork, function(player, stork) {
+      stork.hit(player);
+    });
   },
 
   initializeBeforePlayer: function() {
