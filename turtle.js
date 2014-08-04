@@ -169,13 +169,19 @@ var levelOne = {
 
 var Goody = (function() {
   function Goody(game, x, y, sprite, effects) {
+    var that = this;
+
     Phaser.Sprite.call(this, game, x * 32, y * 32, sprite);
+
+    this.dring = game.add.audio('dring',1);
 
     game.physics.enable(this, Phaser.Physics.ARCADE);
     this.body.allowGravity = false;
 
     this.name = sprite;
     this.effects = effects;
+
+    this.events.onKilled.add(function () {that.dring.play();});
   }
 
   Goody.prototype = Object.create(Phaser.Sprite.prototype);
@@ -196,6 +202,8 @@ var Minion = (function() {
 
     this.hasHitPlayer = false;
     this.walkVelocity = 120;
+
+    this.plop = game.add.audio('plop',1);
 
     animations = [
       'walk'
@@ -248,10 +256,9 @@ var Minion = (function() {
     var that;
 
     if (!this.hasHitPlayer) {
+      sprite.takeDamage(1);
+      this.hasHitPlayer = true;
       that = this;
-
-      sprite.damage(1);
-      that.hasHitPlayer = true;
 
        setTimeout(function() {
          that.hasHitPlayer = false;
@@ -259,6 +266,7 @@ var Minion = (function() {
     }
 
     if (this.body.touching.up) {
+      this.plop.play();
       this.kill();
     }
   };
@@ -280,7 +288,11 @@ var Player = (function() {
 
     Phaser.Sprite.call(this, game, x * 32, y * 32, 'player');
 
-    this.game = game;
+    this.wahoo = game.add.audio('wahoo',1);
+    this.aua = game.add.audio('aua',1);
+    this.gulp = game.add.audio('gulp',1);
+    this.woo = game.add.audio('woo',1);
+
     this.walkVelocity = 200;
     this.walkDrag = 800;
     this.isCheering = false;
@@ -402,6 +414,8 @@ var Player = (function() {
       var effect,
           effects;
 
+      this.gulp.play();
+
       if (this.hasShell) {
         this.animations.play('eat-right', null, false);
       } else {
@@ -447,7 +461,7 @@ var Player = (function() {
     if (this.alive){
       if (!this.isInHazardousTerrain) {
         if (this.body.blocked.down) {
-          this.damage(1);
+          this.takeDamage(1);
           this.isInHazardousTerrain = true;
           this.au();
         }
@@ -457,18 +471,22 @@ var Player = (function() {
 
   Player.prototype.au = function() {
     var that;
-
     that = this;
 
     if (this.isInHazardousTerrain) {
       this.auInterval = setInterval(function() {
         if (that.alive) {
-          that.damage(1);
+          that.takeDamage(1);
         }
       }, 1000);
     } else {
       clearInterval(this.auInterval);
     }
+  };
+
+  Player.prototype.takeDamage = function(hits) {
+      this.damage(hits);
+      this.aua.play();
   };
 
   Player.prototype.jump = function() {
@@ -486,6 +504,12 @@ var Player = (function() {
 
       if (this.currentJumpCount < this.maximumJumpCount) {
         this.animations.stop();
+
+        if (this.currentJumpCount === 0){
+          this.woo.play();
+        } else if (this.currentJumpCount === 1) {
+          this.wahoo.play();
+        }
 
         this.body.velocity.y = this.jumpVelocity;
         this.currentJumpCount += 1;
@@ -552,6 +576,8 @@ var Stork = (function() {
 
     this.hasHitPlayer = false;
 
+    this.plop = game.add.audio('plop',1);
+
     animations = [
       'peck'
     ];
@@ -582,7 +608,7 @@ var Stork = (function() {
   Stork.prototype.hit = function(sprite) {
     if (!sprite.hasShell) {
       if (!this.hasHitPlayer) {
-        sprite.damage(1);
+        sprite.takeDamage(1);
         this.hasHitPlayer = true;
         var that = this;
 
@@ -592,6 +618,7 @@ var Stork = (function() {
       } 
     } else {
       if (this.body.touching.up) {
+        this.plop.play();
         this.kill();
       }
     }
@@ -666,6 +693,7 @@ var PlayState = {
   level: null,
   lifeGroup: null,
   minions: null,
+  backgroundMusic: null,
   platforms: null,
   player: null,
   stork: null,
@@ -681,6 +709,13 @@ var PlayState = {
         this.load.image(goody, '/img/goodies/' + goody + '.png');
       }
     }
+    game.load.audio('happy', 'music/Happy.mp3');
+    game.load.audio('aua', 'music/Aua.mp3');
+    game.load.audio('wahoo', 'music/Wahoo.mp3');
+    game.load.audio('gulp', 'music/Gulp.mp3');
+    game.load.audio('woo', 'music/Woo.mp3');
+    game.load.audio('dring', 'music/Dring.mp3');
+    game.load.audio('plop', 'music/Plop.mp3');
 
     this.load.image('cloud', '/img/images/cloud.png');
     this.load.image('forest-tiles', '/img/tiles/forest.png');
@@ -698,6 +733,9 @@ var PlayState = {
 
   create: function() {
     this.level = config.levels[1];
+
+    this.backgroundMusic = game.add.audio('happy',1,true);
+    this.backgroundMusic.play('',0,1,true);
 
     this.stage.backgroundColor = config.colors.lightBlue;
 

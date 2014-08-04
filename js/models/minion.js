@@ -11,6 +11,8 @@ var Minion = (function() {
     this.hasHitPlayer = false;
     this.walkVelocity = 120;
 
+    this.plop = game.add.audio('plop',1);
+
     animations = [
       'walk'
     ];
@@ -62,10 +64,9 @@ var Minion = (function() {
     var that;
 
     if (!this.hasHitPlayer) {
+      sprite.takeDamage(1);
+      this.hasHitPlayer = true;
       that = this;
-
-      sprite.damage(1);
-      that.hasHitPlayer = true;
 
        setTimeout(function() {
          that.hasHitPlayer = false;
@@ -73,6 +74,7 @@ var Minion = (function() {
     }
 
     if (this.body.touching.up) {
+      this.plop.play();
       this.kill();
     }
   };

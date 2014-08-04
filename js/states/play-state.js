@@ -8,6 +8,7 @@ var PlayState = {
   level: null,
   lifeGroup: null,
   minions: null,
+  backgroundMusic: null,
   platforms: null,
   player: null,
   stork: null,
@@ -23,6 +24,13 @@ var PlayState = {
         this.load.image(goody, '/img/goodies/' + goody + '.png');
       }
     }
+    game.load.audio('happy', 'music/Happy.mp3');
+    game.load.audio('aua', 'music/Aua.mp3');
+    game.load.audio('wahoo', 'music/Wahoo.mp3');
+    game.load.audio('gulp', 'music/Gulp.mp3');
+    game.load.audio('woo', 'music/Woo.mp3');
+    game.load.audio('dring', 'music/Dring.mp3');
+    game.load.audio('plop', 'music/Plop.mp3');
 
     this.load.image('cloud', '/img/images/cloud.png');
     this.load.image('forest-tiles', '/img/tiles/forest.png');
@@ -40,6 +48,9 @@ var PlayState = {
 
   create: function() {
     this.level = config.levels[1];
+
+    this.backgroundMusic = game.add.audio('happy',1,true);
+    this.backgroundMusic.play('',0,1,true);
 
     this.stage.backgroundColor = config.colors.lightBlue;
 
