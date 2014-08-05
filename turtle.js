@@ -931,7 +931,7 @@ var PlayState = {
     this.fx.addMarker('sea', 14.95, 16.05, 1, true);
     this.fx.addMarker('happy', 33, 16, 1, true);
     this.fx.addMarker('lava', 50, 13, 1, true);
-    this.fx.addMarker('final', 64, 10, 1, true);
+    this.fx.addMarker('final', 64, 4.6, 1, false);
 
     this.currentLevel = 1;
 
@@ -999,6 +999,9 @@ var PlayState = {
       that.isLevelComplete = true;
 
       player.cheer();
+
+      that.fx.pause();
+      that.fx.play('final');
       that.showCompleteMessage();
       player.checkWorldBounds = true;
 
