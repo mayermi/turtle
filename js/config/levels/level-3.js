@@ -1,6 +1,8 @@
 var levelThree = {
   'name': '3-1: Winter Wonderland',
   'backgroundMusic': 'happy',
+  'type': 'winter',
+  'tilemapLayer': 'layer-1',
   'goal': {
     'position': {
       'x': 64,
@@ -75,7 +77,5 @@ var levelThree = {
       },
       'length': 12
     },
-  ],
-  'tilemap': 'forest-tilemap',
-  'tilemapImage': 'forest-tiles'
+  ]
 };

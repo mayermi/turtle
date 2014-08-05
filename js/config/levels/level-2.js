@@ -1,8 +1,8 @@
 var levelTwo = {
   'name': 'Level 2: Under the sea',
   'backgroundMusic': 'sea',
-  'tilemap': 'sea-tilemap',
-  'tilemapImage': 'sea-tiles',
+  'type': 'sea',
+  'tilemapLayer': 'layer-1',
   'goal': {
     'position': {
       'x': 64,

@@ -29,6 +29,7 @@ var PlayState = {
         this.load.image(goody, '/img/goodies/' + goody + '.png');
       }
     }
+
     game.load.audio('aua', 'music/aua.mp3');
     game.load.audio('wahoo', 'music/wahoo.mp3');
     game.load.audio('gulp', 'music/gulp.mp3');
@@ -48,7 +49,9 @@ var PlayState = {
     this.load.spritesheet('stork', '/img/sprites/stork.png', 144, 144);
     this.load.spritesheet('worm', '/img/sprites/worm.png', 48, 16);
 
-    this.load.spritesheet('world', '/img/tiles/forest.png', 32, 32);
+    this.load.spritesheet('forest-spritesheet', '/img/tiles/forest.png', 32, 32);
+    this.load.spritesheet('sea-spritesheet', '/img/tiles/sea.png', 32, 32);
+    this.load.spritesheet('winter-spritesheet', '/img/tiles/winter.png', 32, 32);
 
     this.load.tilemap('forest-tilemap', '/img/tiles/forest.json', null, Phaser.Tilemap.TILED_JSON);
     this.load.tilemap('sea-tilemap', '/img/tiles/sea.json', null, Phaser.Tilemap.TILED_JSON);
@@ -199,13 +202,13 @@ var PlayState = {
     this.goal.physicsBodyType = Phaser.Physics.ARCADE;
 
     for (var i = 0; i < goal.height - 1; i += 1) {
-      pole = this.goal.create(goal.position.x * 32, (goal.position.y - i) * 32, 'world', 11);
+      pole = this.goal.create(goal.position.x * 32, (goal.position.y - i) * 32, this.level.type + '-spritesheet', 11);
       this.game.physics.enable(pole, Phaser.Physics.ARCADE);
       pole.body.allowGravity = false;
       pole.body.immovable = true;
     }
 
-    top = this.goal.create(goal.position.x * 32, (goal.position.y - goal.height + 1) * 32, 'world', 7);
+    top = this.goal.create(goal.position.x * 32, (goal.position.y - goal.height + 1) * 32, this.level.type + '-spritesheet', 7);
     this.game.physics.enable(top, Phaser.Physics.ARCADE);
     top.body.allowGravity = false;
     top.body.immovable = true;
@@ -331,7 +334,7 @@ var PlayState = {
             tileIndex = 6;
           }
 
-          platform = this.platforms.create((platformStart.x + j) * 32, platformStart.y * 32, 'world', tileIndex);
+          platform = this.platforms.create((platformStart.x + j) * 32, platformStart.y * 32, this.level.type + '-spritesheet', tileIndex);
 
           this.game.physics.enable(platform, Phaser.Physics.ARCADE);
 
@@ -366,7 +369,7 @@ var PlayState = {
         terrainStart = entry.start;
 
         for (var j = 0; j < entry.length; j += 1) {
-          terrain = this.slidingTerrain.create((terrainStart.x + j) * 32, terrainStart.y * 32, 'world', 10);
+          terrain = this.slidingTerrain.create((terrainStart.x + j) * 32, terrainStart.y * 32, this.level.type + '-spritesheet', 10);
 
           this.game.physics.enable(terrain, Phaser.Physics.ARCADE);
 
@@ -439,10 +442,13 @@ var PlayState = {
     this.fx.stop();
     this.fx.play(this.level.backgroundMusic, true);
 
-    this.tilemap = this.game.add.tilemap(this.level.tilemap);
-    this.tilemap.addTilesetImage(this.level.tilemapImage);
+    console.log(this.level.type + '-tilemap');
+    console.log(this.level.type + '-tiles');
 
-    this.layer = this.tilemap.createLayer('layer-1');
+    this.tilemap = this.game.add.tilemap(this.level.type + '-tilemap');
+    this.tilemap.addTilesetImage(this.level.type + '-tiles');
+
+    this.layer = this.tilemap.createLayer(this.level.tilemapLayer);
     this.layer.resizeWorld();
 
     this.initializeBeforePlayer();
@@ -480,7 +486,7 @@ var PlayState = {
       x = this.world.bounds.width;
     }
 
-    cloud = this.clouds.create(x, _.random(1, 3) * 32, 'cloud');
+    cloud = this.clouds.create(x, _.random(1, 3) * 32, this.level.type + '-spritesheet', 0);
     cloud.body.velocity.x = -1 * _.random(1, 2) * 32;
     cloud.body.allowGravity = false;
     cloud.checkWorldBounds = true;
