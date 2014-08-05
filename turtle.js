@@ -91,6 +91,8 @@ var goodies = {
 
 var levelOne = {
   'name': 'Level 1: Overworld',
+  'tilemap': 'forest-tilemap',
+  'tilemapImage': 'forest-tiles',
   'goal': {
     'position': {
       'x': 64,
@@ -176,6 +178,8 @@ var levelOne = {
 
 var levelTwo = {
   'name': 'Level 2: Sea',
+  'tilemap': 'sea-tilemap',
+  'tilemapImage': 'sea-tiles',
   'goal': {
     'position': {
       'x': 64,
@@ -729,7 +733,7 @@ var MenuState = {
 
 var PlayState = {
   clouds: null,
-  createdNewLevel: null,
+  currentLevel: null,
   goal: null,
   goodies: null,
   isLevelComplete: null,
@@ -772,30 +776,9 @@ var PlayState = {
   },
 
   create: function() {
-    this.level = config.levels[1];
+    this.currentLevel = 1;
 
-    this.stage.backgroundColor = config.colors.lightBlue;
-
-    this.tilemap = this.game.add.tilemap('forest-tilemap');
-    this.tilemap.addTilesetImage('forest-tiles');
-
-    this.layer = this.tilemap.createLayer('layer-1');
-    this.layer.resizeWorld();
-
-    this.initializeBeforePlayer();
-
-    this.player = new Player(this.game, 1, 7, this.level.player.walkDrag, this.level.player.jumpVelocity);
-    this.stork = new Stork(this.game, 58, 5, 'stork');
-
-    this.tilemap.setCollision(2);
-    this.tilemap.setTileIndexCallback(2, function() {
-      this.player.hitGround();
-      return true;
-    }, this);
-
-    this.tilemap.setTileIndexCallback(3, this.player.fallIntoHazardousTerrain, this.player);
-
-    this.initializeAfterPlayer();
+    this.startLevel(this.currentLevel);
   },
 
   update: function() {
@@ -820,10 +803,8 @@ var PlayState = {
 
       player.cheer();
       that.showCompleteMessage();
+      player.checkWorldBounds = true;
 
-      setTimeout(function() {
-        that.transitionToNextLevel();
-      }, 3000);
       return false;
     });
 
@@ -1046,6 +1027,78 @@ var PlayState = {
     helper.addText(1, 4, config.levels[1].name, { fill: config.colors.gray });
   },
 
+  startLevel: function(id) {
+    if (this.clouds) {
+      this.clouds.destroy();
+    }
+
+    if (this.goal) {
+      this.goal.destroy();
+    }
+
+    if (this.goodies) {
+      this.goodies.destroy();
+    }
+
+    if (this.label) {
+      this.label.destroy();
+    }
+
+    if (this.layer) {
+      this.layer.destroy();
+    }
+
+    if (this.lifeGroup) {
+      this.lifeGroup.destroy();
+    }
+
+    if (this.minions) {
+      this.minions.destroy();
+    }
+
+    if (this.platforms) {
+      this.platforms.destroy();
+    }
+
+    this.player = null;
+    this.stork = null;
+    this.tilemap = null;
+
+    this.isLevelComplete = false;
+    this.isShowingCompleteMessage = false;
+
+    this.level = config.levels[id];
+
+    this.stage.backgroundColor = config.colors.lightBlue;
+
+    this.tilemap = this.game.add.tilemap(this.level.tilemap);
+    this.tilemap.addTilesetImage(this.level.tilemapImage);
+
+    this.layer = this.tilemap.createLayer('layer-1');
+    this.layer.resizeWorld();
+
+    this.initializeBeforePlayer();
+
+    this.player = new Player(this.game, 1, 7, this.level.player.walkDrag, this.level.player.jumpVelocity);
+    this.stork = new Stork(this.game, 58, 5, 'stork');
+
+    this.player.checkWorldBounds = false;
+    var that = this;
+    this.player.events.onOutOfBounds.add(function() {
+      that.startLevel(that.currentLevel += 1);
+    });
+
+    this.tilemap.setCollision(2);
+    this.tilemap.setTileIndexCallback(2, function() {
+      this.player.hitGround();
+      return true;
+    }, this);
+
+    this.tilemap.setTileIndexCallback(3, this.player.fallIntoHazardousTerrain, this.player);
+
+    this.initializeAfterPlayer();
+  },
+
   addCloud: function(x) {
     var cloud,
         that = this;
@@ -1071,45 +1124,6 @@ var PlayState = {
 
       this.isShowingCompleteMessage = true;
     }
-  },
-
-  transitionToNextLevel: function(){
-    if (!this.createdNewLevel) {
-      this.createSecondLevel();
-      this.createdNewLevel = true;
-    }
-  },
-
-  createSecondLevel: function () {
-    this.label.destroy();
-    this.layer.destroy();
-    this.stork.destroy();
-    this.platforms.destroy();
-    this.player.kill();
-    this.isShowingCompleteMessage = false;
-    this.createdNewLevel = false;
-
-    this.level = config.levels[2];
-
-    this.tilemap = this.game.add.tilemap('sea-tilemap');
-    this.tilemap.addTilesetImage('sea-tiles');
-
-    this.layer = this.tilemap.createLayer('layer-1');
-    this.layer.resizeWorld();
-
-    this.initializeBeforePlayer();
-
-    this.player = new Player(this.game, 1, 7, this.level.player.walkDrag, this.level.player.jumpVelocity);
-
-    this.tilemap.setCollision(2);
-    this.tilemap.setTileIndexCallback(2, function() {
-      this.player.hitGround();
-      return true;
-    }, this);
-
-    this.tilemap.setTileIndexCallback(3, this.player.fallIntoHazardousTerrain, this.player);
-
-    this.initializeAfterPlayer();
   }
 };
 

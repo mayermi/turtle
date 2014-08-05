@@ -1,5 +1,7 @@
 var levelOne = {
   'name': 'Level 1: Overworld',
+  'tilemap': 'forest-tilemap',
+  'tilemapImage': 'forest-tiles',
   'goal': {
     'position': {
       'x': 64,

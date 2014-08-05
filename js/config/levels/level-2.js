@@ -1,5 +1,7 @@
 var levelTwo = {
   'name': 'Level 2: Sea',
+  'tilemap': 'sea-tilemap',
+  'tilemapImage': 'sea-tiles',
   'goal': {
     'position': {
       'x': 64,
