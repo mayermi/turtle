@@ -3,6 +3,13 @@ var levelOneOne = {
   'backgroundMusic': 'happy',
   'type': 'forest',
   'tilemapLayer': 'sublevel-1',
+  'boss': {
+    'type': 'stork',
+    'position': {
+      'x': 58,
+      'y': 5
+    }
+  },
   'goal': {
     'position': {
       'x': 64,

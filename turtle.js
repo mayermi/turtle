@@ -94,6 +94,13 @@ var levelOneOne = {
   'backgroundMusic': 'happy',
   'type': 'forest',
   'tilemapLayer': 'sublevel-1',
+  'boss': {
+    'type': 'stork',
+    'position': {
+      'x': 58,
+      'y': 5
+    }
+  },
   'goal': {
     'position': {
       'x': 64,
@@ -1220,6 +1227,10 @@ var PlayState = {
     arcade = this.game.physics.arcade;
     that = this;
 
+    arcade.collide(this.player, this.boss, function(player, boss) {
+      boss.hit(player);
+    });
+
     arcade.overlap(this.player, this.goal, function(player) {
       that.isLevelComplete = true;
 
@@ -1253,10 +1264,6 @@ var PlayState = {
     arcade.collide(this.player, this.slidingTerrain, function(player) {
       player.slide();
     });
-
-    arcade.collide(this.player, this.stork, function(player, stork) {
-      stork.hit(player);
-    });
   },
 
   initializeBeforePlayer: function() {
@@ -1267,6 +1274,7 @@ var PlayState = {
   },
 
   initializeAfterPlayer: function() {
+    this.initializeBoss();
     this.initializeCamera();
     this.initializeClouds();
     this.initializeGoodies();
@@ -1277,6 +1285,14 @@ var PlayState = {
     this.initializeTitle();
 
     this.isLevelComplete = false;
+  },
+
+  initializeBoss: function() {
+    if (this.level.boss) {
+      if (this.level.boss.type === 'stork') {
+        this.boss = new Stork(this.game, this.level.boss.position.x, this.level.boss.position.y, 'stork');
+      }
+    }
   },
 
   initializeCamera: function() {
@@ -1521,8 +1537,8 @@ var PlayState = {
       this.platforms.destroy();
     }
 
-    if (this.stork) {
-      this.stork.destroy();
+    if (this.boss) {
+      this.boss.destroy();
     }
 
     this.player = null;
@@ -1537,9 +1553,6 @@ var PlayState = {
     this.fx.stop();
     this.fx.play(this.level.backgroundMusic, true);
 
-    console.log(this.level.type + '-tilemap');
-    console.log(this.level.type + '-tiles');
-
     this.tilemap = this.game.add.tilemap(this.level.type + '-tilemap');
     this.tilemap.addTilesetImage(this.level.type + '-tiles');
 
@@ -1550,7 +1563,6 @@ var PlayState = {
 
     playerConfiguration = this.level.player;
     this.player = new Player(this.game, 1, 7, playerConfiguration.walkDrag, playerConfiguration.jumpVelocity, playerConfiguration.hasShell, playerConfiguration.isUnderWater, playerConfiguration.isSanta);
-    this.stork = new Stork(this.game, 58, 5, 'stork');
 
     this.player.checkWorldBounds = false;
     var that = this;
