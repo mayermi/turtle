@@ -8,11 +8,17 @@ var Goody = (function() {
 
     game.physics.enable(this, Phaser.Physics.ARCADE);
     this.body.allowGravity = false;
+    this.body.immovable = true;
 
     this.name = sprite;
     this.effects = effects;
-
-    this.events.onKilled.add(function () {that.dring.play();});
+    
+    this.events.onKilled.add(function () {
+      that.dring.play();
+      setTimeout(function() {
+        that.revive();
+      }, 2000);
+    });
   }
 
   Goody.prototype = Object.create(Phaser.Sprite.prototype);

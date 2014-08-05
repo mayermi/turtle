@@ -178,11 +178,11 @@ var levelOneOne = {
       'minion': 'worm',
       'positions': [
         {
-          'x': 12,
+          'x': 32,
           'y': 9
         },
         {
-          'x': 14,
+          'x': 34,
           'y': 9
         }
       ]
@@ -416,11 +416,17 @@ var Goody = (function() {
 
     game.physics.enable(this, Phaser.Physics.ARCADE);
     this.body.allowGravity = false;
+    this.body.immovable = true;
 
     this.name = sprite;
     this.effects = effects;
-
-    this.events.onKilled.add(function () {that.dring.play();});
+    
+    this.events.onKilled.add(function () {
+      that.dring.play();
+      setTimeout(function() {
+        that.revive();
+      }, 2000);
+    });
   }
 
   Goody.prototype = Object.create(Phaser.Sprite.prototype);
