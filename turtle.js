@@ -263,7 +263,7 @@ var levelTwo = {
   }
 };
 
-var levelZero = {
+var levelThree = {
   'name': '3-1: Winter Wonderland',
   'backgroundMusic': 'happy',
   'goal': {
@@ -667,7 +667,15 @@ var Player = (function() {
           if (that.isUnderWater) {
             that.animations.play('swim-right');
           } else {
-            that.animations.play('walk-right');
+            if (that.isSanta) {
+              that.animations.play('walk-right-santa');
+            } else {
+              if (!that.hasShell) {
+                that.animations.play('walk-right-naked');
+              } else {
+                that.animations.play('walk-right');
+              }
+            }
           }
 
           that.body.velocity.x = that.walkVelocity / 2;
@@ -1568,9 +1576,9 @@ var Config = (function() {
     this.goodies = goodies;
 
     this.levels = [
-      levelZero,
       levelOne,
-      levelTwo
+      levelTwo,
+      levelThree
     ];
   }
 

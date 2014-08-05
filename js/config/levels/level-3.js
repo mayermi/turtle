@@ -1,4 +1,4 @@
-var levelZero = {
+var levelThree = {
   'name': '3-1: Winter Wonderland',
   'backgroundMusic': 'happy',
   'goal': {
