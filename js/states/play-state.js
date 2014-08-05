@@ -278,13 +278,15 @@ var PlayState = {
   },
 
   initializeLabels: function() {
-    var menuLabel;
+    var menuLabel,
+        that = this;
 
     menuLabel = helper.addText(1, 1, 'Menu');
     menuLabel.fixedToCamera = true;
     menuLabel.inputEnabled = true;
 
     menuLabel.events.onInputUp.add(function() {
+      that.fx.stop();
       game.state.start('menu');
     });
   },
@@ -399,7 +401,7 @@ var PlayState = {
     this.level = config.levels[id];
 
     this.stage.backgroundColor = config.colors.lightBlue;
-    this.fx.pause();
+    this.fx.stop();
     this.fx.play(this.level.backgroundMusic, true);
 
     this.tilemap = this.game.add.tilemap(this.level.tilemap);
