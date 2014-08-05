@@ -1,8 +1,8 @@
 var levelThreeOne = {
-  'name': '3-1: Winter Wonderland',
+  'id': '3-1',
+  'name': 'Winter Wonderland',
   'backgroundMusic': 'happy',
   'type': 'winter',
-  'tilemapLayer': 'sublevel-1',
   'goal': {
     'position': {
       'x': 64,

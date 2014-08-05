@@ -90,10 +90,10 @@ var goodies = {
 };
 
 var levelOneOne = {
-  'name': '1-1: Welcome to the world',
+  'id': '1-1',
+  'name': 'Welcome to the world',
   'backgroundMusic': 'happy',
   'type': 'forest',
-  'tilemapLayer': 'sublevel-1',
   'boss': {
     'type': 'stork',
     'position': {
@@ -209,10 +209,10 @@ var levelOneOne = {
 };
 
 var levelOneTwo = {
-  'name': '1-2: We need to go deeper',
+  'id': '1-2',
+  'name': 'We need to go deeper',
   'backgroundMusic': 'happy',
   'type': 'forest',
-  'tilemapLayer': 'sublevel-2',
   'goal': {
     'position': {
       'x': 64,
@@ -230,10 +230,10 @@ var levelOneTwo = {
 };
 
 var levelTwoOne = {
-  'name': '2-1: Under the sea',
+  'id': '2-1',
+  'name': 'Under the sea',
   'backgroundMusic': 'sea',
   'type': 'sea',
-  'tilemapLayer': 'sublevel-1',
   'goal': {
     'position': {
       'x': 64,
@@ -304,10 +304,10 @@ var levelTwoOne = {
 };
 
 var levelThreeOne = {
-  'name': '3-1: Winter Wonderland',
+  'id': '3-1',
+  'name': 'Winter Wonderland',
   'backgroundMusic': 'happy',
   'type': 'winter',
-  'tilemapLayer': 'sublevel-1',
   'goal': {
     'position': {
       'x': 64,
@@ -1153,9 +1153,10 @@ var PlayState = {
     this.load.spritesheet('sea-spritesheet', '/img/tiles/sea.png', 32, 32);
     this.load.spritesheet('winter-spritesheet', '/img/tiles/winter.png', 32, 32);
 
-    this.load.tilemap('forest-tilemap', '/img/tiles/forest.json', null, Phaser.Tilemap.TILED_JSON);
-    this.load.tilemap('sea-tilemap', '/img/tiles/sea.json', null, Phaser.Tilemap.TILED_JSON);
-    this.load.tilemap('winter-tilemap', '/img/tiles/winter.json', null, Phaser.Tilemap.TILED_JSON);
+    this.load.tilemap('1-1-tilemap', '/img/tiles/1-1.json', null, Phaser.Tilemap.TILED_JSON);
+    this.load.tilemap('1-2-tilemap', '/img/tiles/1-2.json', null, Phaser.Tilemap.TILED_JSON);
+    this.load.tilemap('2-1-tilemap', '/img/tiles/2-1.json', null, Phaser.Tilemap.TILED_JSON);
+    this.load.tilemap('3-1-tilemap', '/img/tiles/3-1.json', null, Phaser.Tilemap.TILED_JSON);
   },
 
   create: function() {
@@ -1498,11 +1499,15 @@ var PlayState = {
   },
 
   initializeTitle: function() {
-    this.levelNameLabel = helper.addText(1, 4, this.level.name, { fill: config.colors.gray });
+    this.levelNameLabel = helper.addText(1, 4, this.level.id + ': ' + this.level.name, { fill: config.colors.gray });
   },
 
   startLevel: function(id) {
     var playerConfiguration;
+
+    if (this.boss) {
+      this.boss.destroy();
+    }
 
     if (this.clouds) {
       this.clouds.destroy();
@@ -1540,12 +1545,11 @@ var PlayState = {
       this.platforms.destroy();
     }
 
-    if (this.boss) {
-      this.boss.destroy();
+    if (this.tilemap) {
+      this.tilemap.destroy();
     }
 
     this.player = null;
-    this.tilemap = null;
 
     this.isLevelComplete = false;
     this.isShowingCompleteMessage = false;
@@ -1556,10 +1560,10 @@ var PlayState = {
     this.fx.stop();
     this.fx.play(this.level.backgroundMusic, true);
 
-    this.tilemap = this.game.add.tilemap(this.level.type + '-tilemap');
+    this.tilemap = this.game.add.tilemap(this.level.id + '-tilemap');
     this.tilemap.addTilesetImage(this.level.type + '-tiles');
 
-    this.layer = this.tilemap.createLayer(this.level.tilemapLayer);
+    this.layer = this.tilemap.createLayer('layer-1');
     this.layer.resizeWorld();
 
     this.initializeBeforePlayer();
@@ -1633,10 +1637,10 @@ var Config = (function() {
     this.goodies = goodies;
 
     this.levels = [
-      levelThreeOne,
       levelOneOne,
       levelOneTwo,
-      levelTwoOne
+      levelTwoOne,
+      levelThreeOne
     ];
   }
 

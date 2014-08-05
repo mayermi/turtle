@@ -51,9 +51,10 @@ var PlayState = {
     this.load.spritesheet('sea-spritesheet', '/img/tiles/sea.png', 32, 32);
     this.load.spritesheet('winter-spritesheet', '/img/tiles/winter.png', 32, 32);
 
-    this.load.tilemap('forest-tilemap', '/img/tiles/forest.json', null, Phaser.Tilemap.TILED_JSON);
-    this.load.tilemap('sea-tilemap', '/img/tiles/sea.json', null, Phaser.Tilemap.TILED_JSON);
-    this.load.tilemap('winter-tilemap', '/img/tiles/winter.json', null, Phaser.Tilemap.TILED_JSON);
+    this.load.tilemap('1-1-tilemap', '/img/tiles/1-1.json', null, Phaser.Tilemap.TILED_JSON);
+    this.load.tilemap('1-2-tilemap', '/img/tiles/1-2.json', null, Phaser.Tilemap.TILED_JSON);
+    this.load.tilemap('2-1-tilemap', '/img/tiles/2-1.json', null, Phaser.Tilemap.TILED_JSON);
+    this.load.tilemap('3-1-tilemap', '/img/tiles/3-1.json', null, Phaser.Tilemap.TILED_JSON);
   },
 
   create: function() {
@@ -396,11 +397,15 @@ var PlayState = {
   },
 
   initializeTitle: function() {
-    this.levelNameLabel = helper.addText(1, 4, this.level.name, { fill: config.colors.gray });
+    this.levelNameLabel = helper.addText(1, 4, this.level.id + ': ' + this.level.name, { fill: config.colors.gray });
   },
 
   startLevel: function(id) {
     var playerConfiguration;
+
+    if (this.boss) {
+      this.boss.destroy();
+    }
 
     if (this.clouds) {
       this.clouds.destroy();
@@ -438,12 +443,11 @@ var PlayState = {
       this.platforms.destroy();
     }
 
-    if (this.boss) {
-      this.boss.destroy();
+    if (this.tilemap) {
+      this.tilemap.destroy();
     }
 
     this.player = null;
-    this.tilemap = null;
 
     this.isLevelComplete = false;
     this.isShowingCompleteMessage = false;
@@ -454,10 +458,10 @@ var PlayState = {
     this.fx.stop();
     this.fx.play(this.level.backgroundMusic, true);
 
-    this.tilemap = this.game.add.tilemap(this.level.type + '-tilemap');
+    this.tilemap = this.game.add.tilemap(this.level.id + '-tilemap');
     this.tilemap.addTilesetImage(this.level.type + '-tiles');
 
-    this.layer = this.tilemap.createLayer(this.level.tilemapLayer);
+    this.layer = this.tilemap.createLayer('layer-1');
     this.layer.resizeWorld();
 
     this.initializeBeforePlayer();

@@ -1,8 +1,8 @@
 var levelOneOne = {
-  'name': '1-1: Welcome to the world',
+  'id': '1-1',
+  'name': 'Welcome to the world',
   'backgroundMusic': 'happy',
   'type': 'forest',
-  'tilemapLayer': 'sublevel-1',
   'boss': {
     'type': 'stork',
     'position': {

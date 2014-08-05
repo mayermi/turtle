@@ -1,8 +1,8 @@
 var levelOneTwo = {
-  'name': '1-2: We need to go deeper',
+  'id': '1-2',
+  'name': 'We need to go deeper',
   'backgroundMusic': 'happy',
   'type': 'forest',
-  'tilemapLayer': 'sublevel-2',
   'goal': {
     'position': {
       'x': 64,

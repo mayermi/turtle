@@ -3,7 +3,7 @@
   "width": 15,
   "layers": [
     {
-      "name": "sublevel-1",
+      "name": "layer-1",
       "type": "tilelayer",
       "height": 10,
       "width": 75,

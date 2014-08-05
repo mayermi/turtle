@@ -1,8 +1,8 @@
 var levelTwoOne = {
-  'name': '2-1: Under the sea',
+  'id': '2-1',
+  'name': 'Under the sea',
   'backgroundMusic': 'sea',
   'type': 'sea',
-  'tilemapLayer': 'sublevel-1',
   'goal': {
     'position': {
       'x': 64,
