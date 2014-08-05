@@ -91,6 +91,8 @@ var goodies = {
 
 var levelOne = {
   'name': 'Level 1: Overworld',
+  'tilemap': 'forest-tilemap',
+  'tilemapImage': 'forest-tiles',
   'goal': {
     'position': {
       'x': 64,
@@ -165,6 +167,13 @@ var levelOne = {
       'length': 2
     }
   ],
+  'player': {
+    'jumpVelocity' : -400,
+    'walkDrag' : 800
+  },
+  'physics': {
+    'gravity' : 1200
+  },
   'slidingTerrain': [
     {
       'start': {
@@ -176,6 +185,92 @@ var levelOne = {
   ]
 };
 
+var levelTwo = {
+  'name': 'Level 2: Sea',
+  'tilemap': 'sea-tilemap',
+  'tilemapImage': 'sea-tiles',
+  'goal': {
+    'position': {
+      'x': 64,
+      'y': 8,
+    },
+    'height': 8
+  },
+  'goodies': [
+    {
+      'goody': 'bubble',
+      'positions': [
+        {
+          'x': 41,
+          'y': 5
+        }
+      ]
+    },
+    {
+      'goody': 'candy',
+      'positions': [
+        {
+          'x': 10,
+          'y': 4
+        }
+      ]
+    },
+    {
+      'goody': 'chili',
+      'positions': [
+        {
+          'x': 12,
+          'y': 5
+        },
+        {
+          'x': 14,
+          'y': 8
+        }
+      ]
+    },
+    {
+      'goody': 'ice',
+      'positions': [
+        {
+          'x': 16,
+          'y': 5
+        }
+      ]
+    },
+    {
+      'goody': 'strawberry',
+      'positions': [
+        {
+          'x': 16,
+          'y': 8
+        }
+      ]
+    }
+  ],
+  'platforms': [
+    {
+      'start': {
+        'x': 8,
+        'y': 8
+      },
+      'length': 1
+    },
+    {
+      'start': {
+        'x': 6,
+        'y': 1
+      },
+      'length': 2
+    }
+  ],
+  'player': {
+    'jumpVelocity' : -200,
+    'walkDrag' : 800
+  },
+  'physics': {
+    'gravity' : 400
+  },
+};
 var Goody = (function() {
   function Goody(game, x, y, sprite, effects) {
     var that = this;
@@ -288,7 +383,7 @@ var Minion = (function() {
 })();
 
 var Player = (function() {
-  function Player(game, x, y) {
+  function Player(game, x, y, walkDrag, jumpVelocity) {
     var firstFrame,
         framesRange,
         lastFrame;
@@ -302,9 +397,9 @@ var Player = (function() {
 
     this.facing = Phaser.RIGHT;
     this.walkVelocity = 200;
-    this.walkDrag = 800;
+    this.walkDrag = walkDrag;
     this.isCheering = false;
-    this.jumpVelocity = -400;
+    this.jumpVelocity = jumpVelocity;
     this.currentJumpCount = 0;
     this.maximumJumpCount = 2;
     this.health = 3;
@@ -775,10 +870,12 @@ var MenuState = {
 
 var PlayState = {
   clouds: null,
+  currentLevel: null,
   goal: null,
   goodies: null,
   isLevelComplete: null,
   isShowingCompleteMessage: null,
+  label: null,
   layer: null,
   level: null,
   lifeGroup: null,
@@ -810,6 +907,7 @@ var PlayState = {
 
     this.load.image('cloud', '/img/images/cloud.png');
     this.load.image('forest-tiles', '/img/tiles/forest.png');
+    this.load.image('sea-tiles', '/img/tiles/sea.png');
     this.load.image('life', '/img/images/life.png');
     this.load.image('platform', '/img/images/platform.png');
 
@@ -820,37 +918,13 @@ var PlayState = {
     this.load.spritesheet('world', '/img/tiles/forest.png', 32, 32);
 
     this.load.tilemap('forest-tilemap', '/img/tiles/forest.json', null, Phaser.Tilemap.TILED_JSON);
+    this.load.tilemap('sea-tilemap', '/img/tiles/sea.json', null, Phaser.Tilemap.TILED_JSON);
   },
 
   create: function() {
-    this.level = config.levels[1];
+    this.currentLevel = 1;
 
-    this.fx = game.add.audio('happy');
-    this.fx.addMarker('happy', 0, 16, 1, true);
-    this.fx.play('happy');
-
-    this.stage.backgroundColor = config.colors.lightBlue;
-
-    this.tilemap = this.game.add.tilemap('forest-tilemap');
-    this.tilemap.addTilesetImage('forest-tiles');
-
-    this.layer = this.tilemap.createLayer('layer-1');
-    this.layer.resizeWorld();
-
-    this.initializeBeforePlayer();
-
-    this.player = new Player(this.game, 1, 7);
-    this.stork = new Stork(this.game, 58, 5, 'stork');
-
-    this.tilemap.setCollision(2);
-    this.tilemap.setTileIndexCallback(2, function() {
-      this.player.hitGround();
-      return true;
-    }, this);
-
-    this.tilemap.setTileIndexCallback(3, this.player.fallIntoHazardousTerrain, this.player);
-
-    this.initializeAfterPlayer();
+    this.startLevel(this.currentLevel);
   },
 
   update: function() {
@@ -915,6 +989,7 @@ var PlayState = {
 
       player.cheer();
       that.showCompleteMessage();
+      player.checkWorldBounds = true;
 
       return false;
     });
@@ -1028,9 +1103,9 @@ var PlayState = {
     this.minions = this.game.add.group();
 
     // for (var j = 0; j < 8; j += 1) {
-      this.minions.add(new Minion(this.game, 12, 8, 'worm'));
-      this.minions.add(new Minion(this.game, 16, 8, 'worm'));
-     // }
+    this.minions.add(new Minion(this.game, 12, 8, 'worm'));
+    this.minions.add(new Minion(this.game, 16, 8, 'worm'));
+    // }
   },
 
   initializeHealthBar: function() {
@@ -1105,39 +1180,113 @@ var PlayState = {
 
   initializePhysics: function() {
     this.game.physics.startSystem(Phaser.Physics.ARCADE);
-    this.game.physics.arcade.gravity.y = 1200;
+    this.game.physics.arcade.gravity.y = this.level.physics.gravity;
   },
 
   initializeSlidingTerrain: function() {
-    var entry,
-        terrain,
-        terrainStart;
+    if (this.level.slidingTerrain) {
+      var entry,
+          terrain,
+          terrainStart;
 
-    this.slidingTerrain = this.game.add.group();
-    this.slidingTerrain.enableBody = true;
-    this.slidingTerrain.physicsBodyType = Phaser.Physics.ARCADE;
+      this.slidingTerrain = this.game.add.group();
+      this.slidingTerrain.enableBody = true;
+      this.slidingTerrain.physicsBodyType = Phaser.Physics.ARCADE;
 
-    for (var i = 0, l = this.level.slidingTerrain.length; i < l; i += 1) {
-      entry = this.level.slidingTerrain[i];
+      for (var i = 0, l = this.level.slidingTerrain.length; i < l; i += 1) {
+        entry = this.level.slidingTerrain[i];
 
-      terrainStart = entry.start;
+        terrainStart = entry.start;
 
-      for (var j = 0; j < entry.length; j += 1) {
-        terrain = this.slidingTerrain.create((terrainStart.x + j) * 32, terrainStart.y * 32, 'world', 11);
+        for (var j = 0; j < entry.length; j += 1) {
+          terrain = this.slidingTerrain.create((terrainStart.x + j) * 32, terrainStart.y * 32, 'world', 11);
 
-        this.game.physics.enable(terrain, Phaser.Physics.ARCADE);
+          this.game.physics.enable(terrain, Phaser.Physics.ARCADE);
 
-        terrain.body.allowGravity = false;
-        terrain.body.checkCollision.left = false;
-        terrain.body.checkCollision.right = false;
-        terrain.body.checkCollision.down = false;
-        terrain.body.immovable = true;
+          terrain.body.allowGravity = false;
+          terrain.body.checkCollision.left = false;
+          terrain.body.checkCollision.right = false;
+          terrain.body.checkCollision.down = false;
+          terrain.body.immovable = true;
+        }
       }
     }
   },
 
   initializeTitle: function() {
     helper.addText(1, 4, config.levels[1].name, { fill: config.colors.gray });
+  },
+
+  startLevel: function(id) {
+    if (this.clouds) {
+      this.clouds.destroy();
+    }
+
+    if (this.goal) {
+      this.goal.destroy();
+    }
+
+    if (this.goodies) {
+      this.goodies.destroy();
+    }
+
+    if (this.label) {
+      this.label.destroy();
+    }
+
+    if (this.layer) {
+      this.layer.destroy();
+    }
+
+    if (this.lifeGroup) {
+      this.lifeGroup.destroy();
+    }
+
+    if (this.minions) {
+      this.minions.destroy();
+    }
+
+    if (this.platforms) {
+      this.platforms.destroy();
+    }
+
+    this.player = null;
+    this.stork = null;
+    this.tilemap = null;
+
+    this.isLevelComplete = false;
+    this.isShowingCompleteMessage = false;
+
+    this.level = config.levels[id];
+
+    this.stage.backgroundColor = config.colors.lightBlue;
+
+    this.tilemap = this.game.add.tilemap(this.level.tilemap);
+    this.tilemap.addTilesetImage(this.level.tilemapImage);
+
+    this.layer = this.tilemap.createLayer('layer-1');
+    this.layer.resizeWorld();
+
+    this.initializeBeforePlayer();
+
+    this.player = new Player(this.game, 1, 7, this.level.player.walkDrag, this.level.player.jumpVelocity);
+    this.stork = new Stork(this.game, 58, 5, 'stork');
+
+    this.player.checkWorldBounds = false;
+    var that = this;
+    this.player.events.onOutOfBounds.add(function() {
+      that.startLevel(that.currentLevel += 1);
+    });
+
+    this.tilemap.setCollision(2);
+    this.tilemap.setTileIndexCallback(2, function() {
+      this.player.hitGround();
+      return true;
+    }, this);
+
+    this.tilemap.setTileIndexCallback(3, this.player.fallIntoHazardousTerrain, this.player);
+
+    this.initializeAfterPlayer();
   },
 
   addCloud: function(x) {
@@ -1160,8 +1309,8 @@ var PlayState = {
 
   showCompleteMessage: function() {
     if (!this.isShowingCompleteMessage) {
-      var label = helper.addText(2, 8, 'Congratulations!', { fill: config.colors.lightYellow, fontSize: 48 });
-      label.fixedToCamera = true;
+      this.label = helper.addText(2, 8, 'Congratulations!', { fill: config.colors.lightYellow, fontSize: 48 });
+      this.label.fixedToCamera = true;
 
       this.isShowingCompleteMessage = true;
     }
@@ -1185,7 +1334,8 @@ var Config = (function() {
     this.goodies = goodies;
 
     this.levels = {
-      1: levelOne
+      1: levelOne,
+      2: levelTwo
     };
   }
 

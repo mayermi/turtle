@@ -1,7 +1,7 @@
-var levelOne = {
-  'name': 'Level 1: Overworld',
-  'tilemap': 'forest-tilemap',
-  'tilemapImage': 'forest-tiles',
+var levelTwo = {
+  'name': 'Level 2: Sea',
+  'tilemap': 'sea-tilemap',
+  'tilemapImage': 'sea-tiles',
   'goal': {
     'position': {
       'x': 64,
@@ -23,7 +23,7 @@ var levelOne = {
       'goody': 'candy',
       'positions': [
         {
-          'x': 7,
+          'x': 10,
           'y': 4
         }
       ]
@@ -63,33 +63,24 @@ var levelOne = {
   'platforms': [
     {
       'start': {
-        'x': 5,
-        'y': 7
+        'x': 8,
+        'y': 8
       },
-      'length': 4
+      'length': 1
     },
     {
       'start': {
-        'x': 16,
-        'y': 4
+        'x': 6,
+        'y': 1
       },
       'length': 2
     }
   ],
   'player': {
-    'jumpVelocity' : -400,
+    'jumpVelocity' : -200,
     'walkDrag' : 800
   },
   'physics': {
-    'gravity' : 1200
+    'gravity' : 400
   },
-  'slidingTerrain': [
-    {
-      'start': {
-        'x': 25,
-        'y': 9
-      },
-      'length': 12
-    }
-  ]
 };

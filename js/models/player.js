@@ -1,5 +1,5 @@
 var Player = (function() {
-  function Player(game, x, y) {
+  function Player(game, x, y, walkDrag, jumpVelocity) {
     var firstFrame,
         framesRange,
         lastFrame;
@@ -13,9 +13,9 @@ var Player = (function() {
 
     this.facing = Phaser.RIGHT;
     this.walkVelocity = 200;
-    this.walkDrag = 800;
+    this.walkDrag = walkDrag;
     this.isCheering = false;
-    this.jumpVelocity = -400;
+    this.jumpVelocity = jumpVelocity;
     this.currentJumpCount = 0;
     this.maximumJumpCount = 2;
     this.health = 3;
