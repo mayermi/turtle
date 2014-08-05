@@ -432,7 +432,7 @@ var PlayState = {
     this.initializeBeforePlayer();
 
     playerConfiguration = this.level.player;
-    this.player = new Player(this.game, 1, 7, playerConfiguration.walkDrag, playerConfiguration.jumpVelocity, playerConfiguration.hasShell, playerConfiguration.isUnderWater);
+    this.player = new Player(this.game, 1, 7, playerConfiguration.walkDrag, playerConfiguration.jumpVelocity, playerConfiguration.hasShell, playerConfiguration.isUnderWater, playerConfiguration.isSanta);
     this.stork = new Stork(this.game, 58, 5, 'stork');
 
     this.player.checkWorldBounds = false;

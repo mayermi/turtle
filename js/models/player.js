@@ -1,5 +1,5 @@
 var Player = (function() {
-  function Player(game, x, y, walkDrag, jumpVelocity, hasShell, isUnderWater) {
+  function Player(game, x, y, walkDrag, jumpVelocity, hasShell, isUnderWater, isSanta) {
     var firstFrame,
         framesRange,
         lastFrame;
@@ -25,6 +25,13 @@ var Player = (function() {
     this.auInterval = null;
     this.deathAnimation = null;
     this.isDying = false;
+
+    if (isSanta) {
+      this.isSanta = isSanta;
+    } else {
+      this.isSanta = false;
+    }
+
     this.isWalking = true;
     this.isJumping = false;
     this.isOnSlidingTerrain = false;
@@ -74,8 +81,12 @@ var Player = (function() {
       this.animations.add(this.animationNames[i], framesRange, 12.5, true);
     }
 
-    if (this.isUnderWater) {
+    if (this.isSanta) {
+      this.animations.play('walk-right-santa');
+    } else if (this.isUnderWater) {
       this.animations.play('swim-right');
+    } else if (this.hasShell) {
+      this.animations.play('walk-right');
     } else {
       this.animations.play('walk-right-naked');
     }
@@ -167,7 +178,9 @@ var Player = (function() {
       this.body.velocity.x = this.walkVelocity;
       this.body.drag.x = that.walkVelocity;
 
-      if (this.isUnderWater) {
+      if (this.isSanta) {
+        animation += '-santa';
+      } else if (this.isUnderWater) {
         animation += '-underwater';
       }
 
@@ -208,7 +221,9 @@ var Player = (function() {
 
       animation += this.facing === Phaser.LEFT ? 'left' : 'right';
 
-      if (this.isUnderWater) {
+      if (this.isSanta) {
+        animation += '-santa';
+      } else if (this.isUnderWater) {
         animation += '-underwater';
       }
 
@@ -299,7 +314,9 @@ var Player = (function() {
 
         this.deathAnimation += (this.facing === Phaser.LEFT) ? 'left' : 'right';
 
-        if (this.isUnderWater) {
+        if (this.isSanta) {
+          this.deathAnimation += '-santa';
+        } else if (this.isUnderWater) {
           this.deathAnimation += '-underwater';
         }
 
@@ -345,7 +362,9 @@ var Player = (function() {
 
           animation += (this.facing === Phaser.LEFT) ? 'left' : 'right';
 
-          if (!this.hasShell) {
+          if (this.isSanta) {
+            animation += '-santa';
+          } else if (!this.hasShell) {
             animation += '-naked';
           }
 
@@ -398,7 +417,9 @@ var Player = (function() {
       animation = this.isUnderWater ? 'swim' : 'walk';
       animation += '-left';
 
-      if (!this.hasShell) {
+      if (this.isSanta) {
+        animation += '-santa';
+      } else if (!this.hasShell) {
         animation += '-naked';
       }
 
@@ -414,7 +435,9 @@ var Player = (function() {
       animation = this.isUnderWater ? 'swim' : 'walk';
       animation += '-right';
 
-      if (!this.hasShell) {
+      if (this.isSanta) {
+        animation += '-santa';
+      } else if (!this.hasShell) {
         animation += '-naked';
       }
 

@@ -1,5 +1,5 @@
 var levelZero = {
-  'name': '3-1 Winter Wonderland',
+  'name': '3-1: Winter Wonderland',
   'backgroundMusic': 'happy',
   'goal': {
     'position': {
