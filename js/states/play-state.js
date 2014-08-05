@@ -5,6 +5,7 @@ var PlayState = {
   goodies: null,
   isLevelComplete: null,
   isShowingCompleteMessage: null,
+  levelNameLabel: null,
   label: null,
   layer: null,
   level: null,
@@ -352,7 +353,7 @@ var PlayState = {
   },
 
   initializeTitle: function() {
-    helper.addText(1, 4, config.levels[1].name, { fill: config.colors.gray });
+    this.levelNameLabel = helper.addText(1, 4, this.level.name, { fill: config.colors.gray });
   },
 
   startLevel: function(id) {
@@ -376,6 +377,10 @@ var PlayState = {
 
     if (this.layer) {
       this.layer.destroy();
+    }
+
+    if (this.levelNameLabel) {
+      this.levelNameLabel.destroy();
     }
 
     if (this.lifeGroup) {
