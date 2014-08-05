@@ -1,4 +1,5 @@
 var levelOne = {
+  'name': 'Level 1: Overworld',
   'backgroundMusic': 'happy',
   'goal': {
     'position': {
@@ -58,7 +59,21 @@ var levelOne = {
       ]
     }
   ],
-  'name': 'Level 1: Overworld',
+  'minions': [
+    {
+      'minion': 'worm',
+      'positions': [
+        {
+          'x': 12,
+          'y': 9
+        },
+        {
+          'x': 14,
+          'y': 9
+        }
+      ]
+    }
+  ],
   'platforms': [
     {
       'start': {
