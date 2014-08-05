@@ -61,7 +61,6 @@ var levelTwo = {
       ]
     }
   ],
-  'platforms': [],
   'player': {
     'hasShell': true,
     'isUnderWater': true,

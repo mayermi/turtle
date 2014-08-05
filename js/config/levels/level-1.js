@@ -91,8 +91,6 @@ var levelOne = {
     }
   ],
   'player': {
-    'hasShell': false,
-    'isUnderWater': false,
     'jumpVelocity' : -400,
     'walkDrag' : 800
   },

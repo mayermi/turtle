@@ -59,26 +59,8 @@ var levelThree = {
       ]
     }
   ],
-  'platforms': [
-    {
-      'start': {
-        'x': 5,
-        'y': 7
-      },
-      'length': 4
-    },
-    {
-      'start': {
-        'x': 16,
-        'y': 4
-      },
-      'length': 2
-    }
-  ],
   'player': {
-    'hasShell': true,
     'isSanta': true,
-    'isUnderWater': false,
     'jumpVelocity' : -400,
     'walkDrag' : 800
   },

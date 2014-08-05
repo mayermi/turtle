@@ -6,35 +6,39 @@ var Player = (function() {
 
     Phaser.Sprite.call(this, game, x * 32, y * 32, 'player');
 
-    this.wahoo = game.add.audio('wahoo',1);
-    this.aua = game.add.audio('aua',1);
-    this.gulp = game.add.audio('gulp',1);
-    this.woo = game.add.audio('woo',1);
+    this.wahoo = game.add.audio('wahoo', 1);
+    this.aua = game.add.audio('aua', 1);
+    this.gulp = game.add.audio('gulp', 1);
+    this.woo = game.add.audio('woo', 1);
 
-    this.facing = Phaser.RIGHT;
-    this.walkVelocity = 200;
-    this.walkDrag = walkDrag;
-    this.isCheering = false;
-    this.isUnderWater = isUnderWater;
-    this.jumpVelocity = jumpVelocity;
-    this.currentJumpCount = 0;
-    this.maximumJumpCount = 2;
-    this.health = 3;
-    this.hasShell = hasShell;
-    this.isInHazardousTerrain = false;
     this.auInterval = null;
+    this.currentJumpCount = 0;
     this.deathAnimation = null;
+    this.facing = Phaser.RIGHT;
+    this.hasShell = false;
+    this.health = 3;
+    this.isCheering = false;
     this.isDying = false;
+    this.isInHazardousTerrain = false;
+    this.isOnSlidingTerrain = false;
+    this.isSanta = false;
+    this.isUnderWater = false;
+    this.jumpVelocity = jumpVelocity;
+    this.maximumJumpCount = 2;
+    this.walkDrag = walkDrag;
+    this.walkVelocity = 200;
+
+    if (hasShell) {
+      this.hasShell = hasShell;
+    }
 
     if (isSanta) {
       this.isSanta = isSanta;
-    } else {
-      this.isSanta = false;
     }
 
-    this.isWalking = true;
-    this.isJumping = false;
-    this.isOnSlidingTerrain = false;
+    if (isUnderWater) {
+      this.isUnderWater = isUnderWater;
+    }
 
     this.animationNames = [
       'walk-right',

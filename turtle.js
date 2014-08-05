@@ -182,8 +182,6 @@ var levelOne = {
     }
   ],
   'player': {
-    'hasShell': false,
-    'isUnderWater': false,
     'jumpVelocity' : -400,
     'walkDrag' : 800
   },
@@ -266,7 +264,6 @@ var levelTwo = {
       ]
     }
   ],
-  'platforms': [],
   'player': {
     'hasShell': true,
     'isUnderWater': true,
@@ -339,26 +336,8 @@ var levelThree = {
       ]
     }
   ],
-  'platforms': [
-    {
-      'start': {
-        'x': 5,
-        'y': 7
-      },
-      'length': 4
-    },
-    {
-      'start': {
-        'x': 16,
-        'y': 4
-      },
-      'length': 2
-    }
-  ],
   'player': {
-    'hasShell': true,
     'isSanta': true,
-    'isUnderWater': false,
     'jumpVelocity' : -400,
     'walkDrag' : 800
   },
@@ -498,35 +477,39 @@ var Player = (function() {
 
     Phaser.Sprite.call(this, game, x * 32, y * 32, 'player');
 
-    this.wahoo = game.add.audio('wahoo',1);
-    this.aua = game.add.audio('aua',1);
-    this.gulp = game.add.audio('gulp',1);
-    this.woo = game.add.audio('woo',1);
+    this.wahoo = game.add.audio('wahoo', 1);
+    this.aua = game.add.audio('aua', 1);
+    this.gulp = game.add.audio('gulp', 1);
+    this.woo = game.add.audio('woo', 1);
 
-    this.facing = Phaser.RIGHT;
-    this.walkVelocity = 200;
-    this.walkDrag = walkDrag;
-    this.isCheering = false;
-    this.isUnderWater = isUnderWater;
-    this.jumpVelocity = jumpVelocity;
-    this.currentJumpCount = 0;
-    this.maximumJumpCount = 2;
-    this.health = 3;
-    this.hasShell = hasShell;
-    this.isInHazardousTerrain = false;
     this.auInterval = null;
+    this.currentJumpCount = 0;
     this.deathAnimation = null;
+    this.facing = Phaser.RIGHT;
+    this.hasShell = false;
+    this.health = 3;
+    this.isCheering = false;
     this.isDying = false;
+    this.isInHazardousTerrain = false;
+    this.isOnSlidingTerrain = false;
+    this.isSanta = false;
+    this.isUnderWater = false;
+    this.jumpVelocity = jumpVelocity;
+    this.maximumJumpCount = 2;
+    this.walkDrag = walkDrag;
+    this.walkVelocity = 200;
+
+    if (hasShell) {
+      this.hasShell = hasShell;
+    }
 
     if (isSanta) {
       this.isSanta = isSanta;
-    } else {
-      this.isSanta = false;
     }
 
-    this.isWalking = true;
-    this.isJumping = false;
-    this.isOnSlidingTerrain = false;
+    if (isUnderWater) {
+      this.isUnderWater = isUnderWater;
+    }
 
     this.animationNames = [
       'walk-right',
@@ -1335,20 +1318,22 @@ var PlayState = {
   },
 
   initializeMinions: function() {
-    var minionsEntry,
-        position,
-        positions;
+    if (this.level.minions) {
+      var minionsEntry,
+          position,
+          positions;
 
-    this.minions = this.game.add.group();
+      this.minions = this.game.add.group();
 
-    for (var i = 0, l = this.level.minions.length; i < l; i += 1) {
-      minionsEntry = this.level.minions[i];
-      positions = minionsEntry.positions;
+      for (var i = 0, l = this.level.minions.length; i < l; i += 1) {
+        minionsEntry = this.level.minions[i];
+        positions = minionsEntry.positions;
 
-      for (var j = 0, k = positions.length; j < k; j += 1) {
-        position = positions[j];
+        for (var j = 0, k = positions.length; j < k; j += 1) {
+          position = positions[j];
 
-        this.minions.add(new Minion(this.game, position.x, position.y, minionsEntry.minion));
+          this.minions.add(new Minion(this.game, position.x, position.y, minionsEntry.minion));
+        }
       }
     }
   },
@@ -1398,37 +1383,39 @@ var PlayState = {
   },
 
   initializePlatforms: function() {
-    var entry,
-        platform,
-        platformStart;
+    if (this.level.platforms) {
+      var entry,
+          platform,
+          platformStart;
 
-    this.platforms = this.game.add.group();
-    this.platforms.enableBody = true;
-    this.platforms.physicsBodyType = Phaser.Physics.ARCADE;
+      this.platforms = this.game.add.group();
+      this.platforms.enableBody = true;
+      this.platforms.physicsBodyType = Phaser.Physics.ARCADE;
 
-    for (var i = 0, l = this.level.platforms.length; i < l; i += 1) {
-      entry = this.level.platforms[i];
+      for (var i = 0, l = this.level.platforms.length; i < l; i += 1) {
+        entry = this.level.platforms[i];
 
-      platformStart = entry.start;
+        platformStart = entry.start;
 
-      for (var j = 0, k = entry.length; j < k; j += 1) {
-        var tileIndex = 4;
-        if (j > 0) {
-          tileIndex = 5;
+        for (var j = 0, k = entry.length; j < k; j += 1) {
+          var tileIndex = 4;
+          if (j > 0) {
+            tileIndex = 5;
+          }
+          if (j === k) {
+            tileIndex = 6;
+          }
+
+          platform = this.platforms.create((platformStart.x + j) * 32, platformStart.y * 32, 'world', tileIndex);
+
+          this.game.physics.enable(platform, Phaser.Physics.ARCADE);
+
+          platform.body.allowGravity = false;
+          platform.body.checkCollision.left = false;
+          platform.body.checkCollision.right = false;
+          platform.body.checkCollision.down = false;
+          platform.body.immovable = true;
         }
-        if (j === k) {
-          tileIndex = 6;
-        }
-
-        platform = this.platforms.create((platformStart.x + j) * 32, platformStart.y * 32, 'world', tileIndex);
-
-        this.game.physics.enable(platform, Phaser.Physics.ARCADE);
-
-        platform.body.allowGravity = false;
-        platform.body.checkCollision.left = false;
-        platform.body.checkCollision.right = false;
-        platform.body.checkCollision.down = false;
-        platform.body.immovable = true;
       }
     }
   },
@@ -1511,8 +1498,11 @@ var PlayState = {
       this.platforms.destroy();
     }
 
+    if (this.stork) {
+      this.stork.destroy();
+    }
+
     this.player = null;
-    this.stork = null;
     this.tilemap = null;
 
     this.isLevelComplete = false;
