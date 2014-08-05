@@ -29,14 +29,13 @@ var PlayState = {
         this.load.image(goody, '/img/goodies/' + goody + '.png');
       }
     }
-    game.load.audio('happy', 'music/Happy.mp3');
-    game.load.audio('aua', 'music/Aua.mp3');
-    game.load.audio('wahoo', 'music/Wahoo.mp3');
-    game.load.audio('gulp', 'music/Gulp.mp3');
-    game.load.audio('woo', 'music/Woo.mp3');
-    game.load.audio('dring', 'music/Dring.mp3');
-    game.load.audio('plop', 'music/Plop.mp3');
-    game.load.audio('music', 'music/Backgroundmusic.wav');
+    game.load.audio('aua', 'music/aua.mp3');
+    game.load.audio('wahoo', 'music/wahoo.mp3');
+    game.load.audio('gulp', 'music/gulp.mp3');
+    game.load.audio('woo', 'music/woo.mp3');
+    game.load.audio('dring', 'music/dring.mp3');
+    game.load.audio('plop', 'music/plop.mp3');
+    game.load.audio('music', 'music/backgroundmusic.mp3');
 
     this.load.image('cloud', '/img/images/cloud.png');
     this.load.image('forest-tiles', '/img/tiles/forest.png');
@@ -58,11 +57,11 @@ var PlayState = {
 
   create: function() {
     this.fx = game.add.audio('music');
-    this.fx.addMarker('cave', 0, 15, 1, true);
-    this.fx.addMarker('sea', 14.95, 16.05, 1, true);
-    this.fx.addMarker('happy', 33, 16, 1, true);
-    this.fx.addMarker('lava', 50, 13, 1, true);
-    this.fx.addMarker('final', 64, 5, 1, false);
+    this.fx.addMarker('cave', 0, 12.01, 1, true);
+    this.fx.addMarker('sea', 14.95, 16, 1, true);
+    this.fx.addMarker('happy', 32.8, 16, 1, true);
+    this.fx.addMarker('lava', 49, 12, 1, true);
+    this.fx.addMarker('final', 62.5, 4.8, 1, false);
 
     this.currentLevel = 0;
     this.startLevel(this.currentLevel);

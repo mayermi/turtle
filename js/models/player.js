@@ -6,10 +6,10 @@ var Player = (function() {
 
     Phaser.Sprite.call(this, game, x * 32, y * 32, 'player');
 
-    this.wahoo = game.add.audio('wahoo', 1);
-    this.aua = game.add.audio('aua', 1);
-    this.gulp = game.add.audio('gulp', 1);
-    this.woo = game.add.audio('woo', 1);
+    this.wahoo = game.add.audio('wahoo', 0.3);
+    this.aua = game.add.audio('aua', 0.3);
+    this.gulp = game.add.audio('gulp', 0.3);
+    this.woo = game.add.audio('woo', 0.3);
 
     this.auInterval = null;
     this.currentJumpCount = 0;

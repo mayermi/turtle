@@ -11,7 +11,7 @@ var Minion = (function() {
     this.hasHitPlayer = false;
     this.walkVelocity = 120;
 
-    this.plop = game.add.audio('plop',1);
+    this.plop = game.add.audio('plop',1.75);
 
     animations = [
       'walk'
