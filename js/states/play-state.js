@@ -244,12 +244,22 @@ var PlayState = {
   },
 
   initializeMinions: function() {
+    var minionsEntry,
+        position,
+        positions;
+
     this.minions = this.game.add.group();
 
-    // for (var j = 0; j < 8; j += 1) {
-    this.minions.add(new Minion(this.game, 12, 8, 'worm'));
-    this.minions.add(new Minion(this.game, 16, 8, 'worm'));
-    // }
+    for (var i = 0, l = this.level.minions.length; i < l; i += 1) {
+      minionsEntry = this.level.minions[i];
+      positions = minionsEntry.positions;
+
+      for (var j = 0, k = positions.length; j < k; j += 1) {
+        position = positions[j];
+
+        this.minions.add(new Minion(this.game, position.x, position.y, minionsEntry.minion));
+      }
+    }
   },
 
   initializeHealthBar: function() {

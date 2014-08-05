@@ -32,7 +32,8 @@ var Minion = (function() {
     this.body.collideWorldBounds = true;
     this.body.bounce.x = 1;
     this.body.immovable = true;
-    this.body.velocity.x = this.walkVelocity;
+    this.body.velocity.x = -this.walkVelocity;
+    this.scale.x *= -1;
 
     this.anchor.setTo(0.5, 1);
 

@@ -90,6 +90,7 @@ var goodies = {
 };
 
 var levelOne = {
+  'name': 'Level 1: Overworld',
   'backgroundMusic': 'happy',
   'goal': {
     'position': {
@@ -149,7 +150,21 @@ var levelOne = {
       ]
     }
   ],
-  'name': 'Level 1: Overworld',
+  'minions': [
+    {
+      'minion': 'worm',
+      'positions': [
+        {
+          'x': 12,
+          'y': 9
+        },
+        {
+          'x': 14,
+          'y': 9
+        }
+      ]
+    }
+  ],
   'platforms': [
     {
       'start': {
@@ -420,7 +435,8 @@ var Minion = (function() {
     this.body.collideWorldBounds = true;
     this.body.bounce.x = 1;
     this.body.immovable = true;
-    this.body.velocity.x = this.walkVelocity;
+    this.body.velocity.x = -this.walkVelocity;
+    this.scale.x *= -1;
 
     this.anchor.setTo(0.5, 1);
 
@@ -1319,12 +1335,22 @@ var PlayState = {
   },
 
   initializeMinions: function() {
+    var minionsEntry,
+        position,
+        positions;
+
     this.minions = this.game.add.group();
 
-    // for (var j = 0; j < 8; j += 1) {
-    this.minions.add(new Minion(this.game, 12, 8, 'worm'));
-    this.minions.add(new Minion(this.game, 16, 8, 'worm'));
-    // }
+    for (var i = 0, l = this.level.minions.length; i < l; i += 1) {
+      minionsEntry = this.level.minions[i];
+      positions = minionsEntry.positions;
+
+      for (var j = 0, k = positions.length; j < k; j += 1) {
+        position = positions[j];
+
+        this.minions.add(new Minion(this.game, position.x, position.y, minionsEntry.minion));
+      }
+    }
   },
 
   initializeHealthBar: function() {
