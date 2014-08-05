@@ -1,8 +1,8 @@
-var levelTwo = {
-  'name': 'Level 2: Under the sea',
-  'backgroundMusic': 'sea',
-  'type': 'sea',
-  'tilemapLayer': 'layer-1',
+var levelThreeOne = {
+  'name': '3-1: Winter Wonderland',
+  'backgroundMusic': 'happy',
+  'type': 'winter',
+  'tilemapLayer': 'sublevel-1',
   'goal': {
     'position': {
       'x': 64,
@@ -24,7 +24,7 @@ var levelTwo = {
       'goody': 'candy',
       'positions': [
         {
-          'x': 10,
+          'x': 7,
           'y': 4
         }
       ]
@@ -62,12 +62,20 @@ var levelTwo = {
     }
   ],
   'player': {
-    'hasShell': true,
-    'isUnderWater': true,
-    'jumpVelocity' : -200,
+    'isSanta': true,
+    'jumpVelocity' : -400,
     'walkDrag' : 800
   },
   'physics': {
-    'gravity' : 400
-  }
+    'gravity' : 1200
+  },
+  'slidingTerrain': [
+    {
+      'start': {
+        'x': 25,
+        'y': 9
+      },
+      'length': 12
+    },
+  ]
 };

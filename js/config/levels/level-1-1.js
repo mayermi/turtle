@@ -1,8 +1,8 @@
-var levelOne = {
-  'name': 'Level 1: Overworld',
+var levelOneOne = {
+  'name': '1-1: Welcome to the world',
   'backgroundMusic': 'happy',
   'type': 'forest',
-  'tilemapLayer': 'layer-1',
+  'tilemapLayer': 'sublevel-1',
   'goal': {
     'position': {
       'x': 64,
