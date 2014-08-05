@@ -10,7 +10,7 @@ var Stork = (function() {
 
     this.hasHitPlayer = false;
 
-    this.plop = game.add.audio('plop',1);
+    this.plop = game.add.audio('plop',1.75);
 
     animations = [
       'peck'
