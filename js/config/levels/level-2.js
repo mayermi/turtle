@@ -1,7 +1,5 @@
 var levelTwo = {
-  'name': 'Level 2: Sea',
-  'tilemap': 'sea-tilemap',
-  'tilemapImage': 'sea-tiles',
+  'backgroundMusic': 'sea',
   'goal': {
     'position': {
       'x': 64,
@@ -60,6 +58,7 @@ var levelTwo = {
       ]
     }
   ],
+  'name': 'Level 2: Sea',
   'platforms': [
     {
       'start': {
@@ -83,4 +82,6 @@ var levelTwo = {
   'physics': {
     'gravity' : 400
   },
+  'tilemap': 'sea-tilemap',
+  'tilemapImage': 'sea-tiles'
 };

@@ -90,9 +90,7 @@ var goodies = {
 };
 
 var levelOne = {
-  'name': 'Level 1: Overworld',
-  'tilemap': 'forest-tilemap',
-  'tilemapImage': 'forest-tiles',
+  'backgroundMusic': 'happy',
   'goal': {
     'position': {
       'x': 64,
@@ -151,6 +149,7 @@ var levelOne = {
       ]
     }
   ],
+  'name': 'Level 1: Overworld',
   'platforms': [
     {
       'start': {
@@ -181,14 +180,14 @@ var levelOne = {
         'y': 9
       },
       'length': 12
-    }
-  ]
+    },
+  ],
+  'tilemap': 'forest-tilemap',
+  'tilemapImage': 'forest-tiles'
 };
 
 var levelTwo = {
-  'name': 'Level 2: Sea',
-  'tilemap': 'sea-tilemap',
-  'tilemapImage': 'sea-tiles',
+  'backgroundMusic': 'sea',
   'goal': {
     'position': {
       'x': 64,
@@ -247,6 +246,7 @@ var levelTwo = {
       ]
     }
   ],
+  'name': 'Level 2: Sea',
   'platforms': [
     {
       'start': {
@@ -270,6 +270,8 @@ var levelTwo = {
   'physics': {
     'gravity' : 400
   },
+  'tilemap': 'sea-tilemap',
+  'tilemapImage': 'sea-tiles'
 };
 var Goody = (function() {
   function Goody(game, x, y, sprite, effects) {
@@ -871,6 +873,7 @@ var MenuState = {
 var PlayState = {
   clouds: null,
   currentLevel: null,
+  fx: null,
   goal: null,
   goodies: null,
   isLevelComplete: null,
@@ -904,6 +907,7 @@ var PlayState = {
     game.load.audio('woo', 'music/Woo.mp3');
     game.load.audio('dring', 'music/Dring.mp3');
     game.load.audio('plop', 'music/Plop.mp3');
+    game.load.audio('music', 'music/Backgroundmusic.wav');
 
     this.load.image('cloud', '/img/images/cloud.png');
     this.load.image('forest-tiles', '/img/tiles/forest.png');
@@ -922,6 +926,13 @@ var PlayState = {
   },
 
   create: function() {
+    this.fx = game.add.audio('music');
+    this.fx.addMarker('cave', 0, 15, 1, true);
+    this.fx.addMarker('sea', 14.95, 16.05, 1, true);
+    this.fx.addMarker('happy', 33, 16, 1, true);
+    this.fx.addMarker('lava', 50, 13, 1, true);
+    this.fx.addMarker('final', 64, 10, 1, true);
+
     this.currentLevel = 1;
 
     this.startLevel(this.currentLevel);
@@ -1260,6 +1271,8 @@ var PlayState = {
     this.level = config.levels[id];
 
     this.stage.backgroundColor = config.colors.lightBlue;
+    this.fx.pause();
+    this.fx.play(this.level.backgroundMusic, true);
 
     this.tilemap = this.game.add.tilemap(this.level.tilemap);
     this.tilemap.addTilesetImage(this.level.tilemapImage);

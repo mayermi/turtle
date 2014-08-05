@@ -1,7 +1,5 @@
 var levelOne = {
-  'name': 'Level 1: Overworld',
-  'tilemap': 'forest-tilemap',
-  'tilemapImage': 'forest-tiles',
+  'backgroundMusic': 'happy',
   'goal': {
     'position': {
       'x': 64,
@@ -60,6 +58,7 @@ var levelOne = {
       ]
     }
   ],
+  'name': 'Level 1: Overworld',
   'platforms': [
     {
       'start': {
@@ -90,6 +89,8 @@ var levelOne = {
         'y': 9
       },
       'length': 12
-    }
-  ]
+    },
+  ],
+  'tilemap': 'forest-tilemap',
+  'tilemapImage': 'forest-tiles'
 };
