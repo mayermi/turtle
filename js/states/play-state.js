@@ -41,6 +41,7 @@ var PlayState = {
     this.load.image('cloud', '/img/images/cloud.png');
     this.load.image('forest-tiles', '/img/tiles/forest.png');
     this.load.image('sea-tiles', '/img/tiles/sea.png');
+    this.load.image('winter-tiles', '/img/tiles/winter.png');
     this.load.image('life', '/img/images/life.png');
     this.load.image('platform', '/img/images/platform.png');
 
@@ -52,6 +53,7 @@ var PlayState = {
 
     this.load.tilemap('forest-tilemap', '/img/tiles/forest.json', null, Phaser.Tilemap.TILED_JSON);
     this.load.tilemap('sea-tilemap', '/img/tiles/sea.json', null, Phaser.Tilemap.TILED_JSON);
+    this.load.tilemap('winter-tilemap', '/img/tiles/winter.json', null, Phaser.Tilemap.TILED_JSON);
   },
 
   create: function() {
