@@ -52,7 +52,7 @@ var PlayState = {
   },
 
   create: function() {
-    this.currentLevel = 2;
+    this.currentLevel = 1;
 
     this.startLevel(this.currentLevel);
   },
