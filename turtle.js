@@ -219,16 +219,7 @@ var levelOneTwo = {
   },
   'physics': {
     'gravity' : 1200
-  },
-  'slidingTerrain': [
-    {
-      'start': {
-        'x': 25,
-        'y': 9
-      },
-      'length': 12
-    },
-  ]
+  }
 };
 
 var levelTwoOne = {
@@ -1142,12 +1133,10 @@ var PlayState = {
     game.load.audio('plop', 'music/plop.mp3');
     game.load.audio('music', 'music/backgroundmusic.mp3');
 
-    this.load.image('cloud', '/img/images/cloud.png');
     this.load.image('forest-tiles', '/img/tiles/forest.png');
     this.load.image('sea-tiles', '/img/tiles/sea.png');
     this.load.image('winter-tiles', '/img/tiles/winter.png');
     this.load.image('life', '/img/images/life.png');
-    this.load.image('platform', '/img/images/platform.png');
 
     this.load.spritesheet('player', '/img/sprites/turtle.png', 32, 64);
     this.load.spritesheet('stork', '/img/sprites/stork.png', 144, 144);

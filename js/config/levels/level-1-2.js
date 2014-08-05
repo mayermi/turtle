@@ -16,14 +16,5 @@ var levelOneTwo = {
   },
   'physics': {
     'gravity' : 1200
-  },
-  'slidingTerrain': [
-    {
-      'start': {
-        'x': 25,
-        'y': 9
-      },
-      'length': 12
-    },
-  ]
+  }
 };
