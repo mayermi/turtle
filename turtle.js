@@ -90,9 +90,7 @@ var goodies = {
 };
 
 var levelOne = {
-  'name': 'Level 1: Overworld',
-  'tilemap': 'forest-tilemap',
-  'tilemapImage': 'forest-tiles',
+  'backgroundMusic': 'happy',
   'goal': {
     'position': {
       'x': 64,
@@ -151,6 +149,7 @@ var levelOne = {
       ]
     }
   ],
+  'name': 'Level 1: Overworld',
   'platforms': [
     {
       'start': {
@@ -183,12 +182,15 @@ var levelOne = {
         'y': 9
       },
       'length': 12
-    }
-  ]
+    },
+  ],
+  'tilemap': 'forest-tilemap',
+  'tilemapImage': 'forest-tiles'
 };
 
 var levelTwo = {
-  'name': 'Level 2: Sea',
+  'name': 'Level 2: Under the sea',
+  'backgroundMusic': 'sea',
   'tilemap': 'sea-tilemap',
   'tilemapImage': 'sea-tiles',
   'goal': {
@@ -258,7 +260,7 @@ var levelTwo = {
   },
   'physics': {
     'gravity' : 400
-  },
+  }
 };
 
 var Goody = (function() {
@@ -943,6 +945,7 @@ var MenuState = {
 var PlayState = {
   clouds: null,
   currentLevel: null,
+  fx: null,
   goal: null,
   goodies: null,
   isLevelComplete: null,
@@ -977,6 +980,7 @@ var PlayState = {
     game.load.audio('woo', 'music/Woo.mp3');
     game.load.audio('dring', 'music/Dring.mp3');
     game.load.audio('plop', 'music/Plop.mp3');
+    game.load.audio('music', 'music/Backgroundmusic.wav');
 
     this.load.image('cloud', '/img/images/cloud.png');
     this.load.image('forest-tiles', '/img/tiles/forest.png');
@@ -995,8 +999,14 @@ var PlayState = {
   },
 
   create: function() {
-    this.currentLevel = 0;
+    this.fx = game.add.audio('music');
+    this.fx.addMarker('cave', 0, 15, 1, true);
+    this.fx.addMarker('sea', 14.95, 16.05, 1, true);
+    this.fx.addMarker('happy', 33, 16, 1, true);
+    this.fx.addMarker('lava', 50, 13, 1, true);
+    this.fx.addMarker('final', 64, 5, 1, false);
 
+    this.currentLevel = 0;
     this.startLevel(this.currentLevel);
   },
 
@@ -1061,6 +1071,9 @@ var PlayState = {
       that.isLevelComplete = true;
 
       player.cheer();
+
+      that.fx.pause();
+      that.fx.play('final');
       that.showCompleteMessage();
       player.checkWorldBounds = true;
 
@@ -1212,13 +1225,15 @@ var PlayState = {
   },
 
   initializeLabels: function() {
-    var menuLabel;
+    var menuLabel,
+        that = this;
 
     menuLabel = helper.addText(1, 1, 'Menu');
     menuLabel.fixedToCamera = true;
     menuLabel.inputEnabled = true;
 
     menuLabel.events.onInputUp.add(function() {
+      that.fx.stop();
       game.state.start('menu');
     });
   },
@@ -1347,6 +1362,8 @@ var PlayState = {
     this.level = config.levels[id];
 
     this.stage.backgroundColor = config.colors.lightBlue;
+    this.fx.stop();
+    this.fx.play(this.level.backgroundMusic, true);
 
     this.tilemap = this.game.add.tilemap(this.level.tilemap);
     this.tilemap.addTilesetImage(this.level.tilemapImage);

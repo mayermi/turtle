@@ -1,5 +1,6 @@
 var levelTwo = {
-  'name': 'Level 2: Sea',
+  'name': 'Level 2: Under the sea',
+  'backgroundMusic': 'sea',
   'tilemap': 'sea-tilemap',
   'tilemapImage': 'sea-tiles',
   'goal': {
@@ -69,5 +70,5 @@ var levelTwo = {
   },
   'physics': {
     'gravity' : 400
-  },
+  }
 };
