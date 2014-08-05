@@ -864,6 +864,27 @@ var Stork = (function() {
   return Stork;
 })();
 
+var GameCompleteState = {
+  preload: function() {
+    this.load.spritesheet('player', '/img/sprites/turtle.png', 32, 64);
+  },
+
+  create: function() {
+    var game,
+        player;
+
+    game = this.game;
+
+    this.stage.backgroundColor = config.colors.gray;
+
+    helper.addText(4, 4, 'GAME COMPLETE', { fontSize: 32, fill: config.colors.red });
+    helper.addText(4, 9, 'You are done. Good job!\nBut that also means the game is over.\n\nToo bad.');
+
+    player = new Player(this.game, 7, 8, 0);
+    player.animations.play('cheer');
+  }
+};
+
 var ImprintState = {
   create: function() {
     var textLabel,
@@ -915,7 +936,7 @@ var MenuState = {
       game.state.start('imprint');
     });
 
-    player = new Player(this.game, 6.5, 8, 0);
+    player = new Player(this.game, 7, 8, 0);
   }
 };
 
@@ -974,7 +995,7 @@ var PlayState = {
   },
 
   create: function() {
-    this.currentLevel = 1;
+    this.currentLevel = 0;
 
     this.startLevel(this.currentLevel);
   },
@@ -1342,7 +1363,11 @@ var PlayState = {
     this.player.checkWorldBounds = false;
     var that = this;
     this.player.events.onOutOfBounds.add(function() {
-      that.startLevel(that.currentLevel += 1);
+      if ((that.currentLevel += 1) < config.levels.length) {
+        that.startLevel(that.currentLevel);
+      } else {
+        game.state.start('game-complete');
+      }
     });
 
     this.tilemap.setCollision([9, 10]);
@@ -1400,10 +1425,10 @@ var Config = (function() {
 
     this.goodies = goodies;
 
-    this.levels = {
-      1: levelOne,
-      2: levelTwo
-    };
+    this.levels = [
+      levelOne,
+      levelTwo
+    ];
   }
 
   return Config;
@@ -1421,6 +1446,7 @@ game = new Phaser.Game(480, 320, Phaser.AUTO, 'turtle');
 helper = new Helper(game);
 
 states = {
+  'game-complete': GameCompleteState,
   'imprint': ImprintState,
   'menu': MenuState,
   'play': PlayState

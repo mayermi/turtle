@@ -53,7 +53,7 @@ var PlayState = {
   },
 
   create: function() {
-    this.currentLevel = 1;
+    this.currentLevel = 0;
 
     this.startLevel(this.currentLevel);
   },
@@ -421,7 +421,11 @@ var PlayState = {
     this.player.checkWorldBounds = false;
     var that = this;
     this.player.events.onOutOfBounds.add(function() {
-      that.startLevel(that.currentLevel += 1);
+      if ((that.currentLevel += 1) < config.levels.length) {
+        that.startLevel(that.currentLevel);
+      } else {
+        game.state.start('game-complete');
+      }
     });
 
     this.tilemap.setCollision([9, 10]);

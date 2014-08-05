@@ -26,6 +26,6 @@ var MenuState = {
       game.state.start('imprint');
     });
 
-    player = new Player(this.game, 6.5, 8, 0);
+    player = new Player(this.game, 7, 8, 0);
   }
 };

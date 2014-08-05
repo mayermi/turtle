@@ -14,10 +14,10 @@ var Config = (function() {
 
     this.goodies = goodies;
 
-    this.levels = {
-      1: levelOne,
-      2: levelTwo
-    };
+    this.levels = [
+      levelOne,
+      levelTwo
+    ];
   }
 
   return Config;

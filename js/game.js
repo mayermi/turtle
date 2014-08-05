@@ -10,6 +10,7 @@ game = new Phaser.Game(480, 320, Phaser.AUTO, 'turtle');
 helper = new Helper(game);
 
 states = {
+  'game-complete': GameCompleteState,
   'imprint': ImprintState,
   'menu': MenuState,
   'play': PlayState
