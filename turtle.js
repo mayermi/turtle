@@ -1062,7 +1062,7 @@ var PlayState = {
       pole.body.immovable = true;
     }
 
-    top = this.goal.create(goal.position.x * 32, (goal.position.y - goal.height + 1) * 32, 'world', 12);
+    top = this.goal.create(goal.position.x * 32, (goal.position.y - goal.height + 1) * 32, 'world', 7);
     this.game.physics.enable(top, Phaser.Physics.ARCADE);
     top.body.allowGravity = false;
     top.body.immovable = true;
@@ -1164,8 +1164,16 @@ var PlayState = {
 
       platformStart = entry.start;
 
-      for (var j = 0; j < entry.length; j += 1) {
-        platform = this.platforms.create((platformStart.x + j) * 32, platformStart.y * 32, 'world', 7);
+      for (var j = 0, k = entry.length; j < k; j += 1) {
+        var tileIndex = 4;
+        if (j > 0) {
+          tileIndex = 5;
+        }
+        if (j == k) {
+          tileIndex = 6;
+        }
+
+        platform = this.platforms.create((platformStart.x + j) * 32, platformStart.y * 32, 'world', tileIndex);
 
         this.game.physics.enable(platform, Phaser.Physics.ARCADE);
 
@@ -1199,7 +1207,7 @@ var PlayState = {
         terrainStart = entry.start;
 
         for (var j = 0; j < entry.length; j += 1) {
-          terrain = this.slidingTerrain.create((terrainStart.x + j) * 32, terrainStart.y * 32, 'world', 11);
+          terrain = this.slidingTerrain.create((terrainStart.x + j) * 32, terrainStart.y * 32, 'world', 10);
 
           this.game.physics.enable(terrain, Phaser.Physics.ARCADE);
 
@@ -1278,8 +1286,8 @@ var PlayState = {
       that.startLevel(that.currentLevel += 1);
     });
 
-    this.tilemap.setCollision(2);
-    this.tilemap.setTileIndexCallback(2, function() {
+    this.tilemap.setCollision(10);
+    this.tilemap.setTileIndexCallback(10, function() {
       this.player.hitGround();
       return true;
     }, this);
