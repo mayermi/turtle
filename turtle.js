@@ -1462,6 +1462,9 @@ var PlayState = {
   initializePhysics: function() {
     this.game.physics.startSystem(Phaser.Physics.ARCADE);
     this.game.physics.arcade.gravity.y = this.level.physics.gravity;
+
+    // prevent tunneling
+    this.game.time.deltaCap = 0.02;
   },
 
   initializeSlidingTerrain: function() {
