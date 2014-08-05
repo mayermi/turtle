@@ -250,7 +250,6 @@ var PlayState = {
 
     for (var i = 0, l = this.level.minions.length; i < l; i += 1) {
       minionsEntry = this.level.minions[i];
-      console.log(minionsEntry);
       positions = minionsEntry.positions;
 
       for (var j = 0, k = positions.length; j < k; j += 1) {
