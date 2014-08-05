@@ -26,6 +26,7 @@ var Player = (function() {
     this.isDying = false;
     this.isWalking = true;
     this.isJumping = false;
+    this.isOnSlidingTerrain = false;
 
     this.animationNames = [
       'walk-right',
@@ -318,6 +319,22 @@ var Player = (function() {
   Player.prototype.moveRight = function() {
     if (!this.isCheering && !this.isDying) {
       this.body.velocity.x = this.walkVelocity;
+    }
+  };
+
+  Player.prototype.resetSlide = function() {
+    if (this.isOnSlidingTerrain) {
+      this.isOnSlidingTerrain = false;
+
+      this.body.drag.x = this.walkDrag;
+    }
+  };
+
+  Player.prototype.slide = function() {
+    if (!this.isOnSlidingTerrain) {
+      this.isOnSlidingTerrain = true;
+
+      this.body.drag.x = this.walkDrag / 5;
     }
   };
 

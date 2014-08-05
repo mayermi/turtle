@@ -152,10 +152,10 @@ var levelOne = {
   'platforms': [
     {
       'start': {
-        'x': 4,
+        'x': 5,
         'y': 7
       },
-      'length': 6
+      'length': 4
     },
     {
       'start': {
@@ -163,6 +163,15 @@ var levelOne = {
         'y': 4
       },
       'length': 2
+    }
+  ],
+  'slidingTerrain': [
+    {
+      'start': {
+        'x': 25,
+        'y': 9
+      },
+      'length': 12
     }
   ]
 };
@@ -306,6 +315,7 @@ var Player = (function() {
     this.isDying = false;
     this.isWalking = true;
     this.isJumping = false;
+    this.isOnSlidingTerrain = false;
 
     this.animationNames = [
       'walk-right',
@@ -601,6 +611,22 @@ var Player = (function() {
     }
   };
 
+  Player.prototype.resetSlide = function() {
+    if (this.isOnSlidingTerrain) {
+      this.isOnSlidingTerrain = false;
+
+      this.body.drag.x = this.walkDrag;
+    }
+  };
+
+  Player.prototype.slide = function() {
+    if (!this.isOnSlidingTerrain) {
+      this.isOnSlidingTerrain = true;
+
+      this.body.drag.x = this.walkDrag / 5;
+    }
+  };
+
   Player.prototype.turnLeft = function() {
     if (!this.isCheering && !this.isDying) {
       var animation = 'walk-left';
@@ -760,6 +786,7 @@ var PlayState = {
   backgroundMusic: null,
   platforms: null,
   player: null,
+  slidingTerrain: null,
   stork: null,
   tilemap: null,
 
@@ -798,7 +825,6 @@ var PlayState = {
   create: function() {
     this.level = config.levels[1];
 
-
     this.fx = game.add.audio('happy');
     this.fx.addMarker('happy', 0, 16, 1, true);
     this.fx.play('happy');
@@ -815,7 +841,6 @@ var PlayState = {
 
     this.player = new Player(this.game, 1, 7);
     this.stork = new Stork(this.game, 58, 5, 'stork');
-
 
     this.tilemap.setCollision(2);
     this.tilemap.setTileIndexCallback(2, function() {
@@ -899,13 +924,21 @@ var PlayState = {
       goody.kill();
     });
 
-    arcade.collide(this.player, this.layer);
+    arcade.collide(this.player, this.layer, function(player) {
+      player.resetSlide();
+    });
 
     arcade.collide(this.player, this.minions, function(player, minion) {
       minion.hit(player);
     });
 
-    arcade.collide(this.player, this.platforms);
+    arcade.collide(this.player, this.platforms, function(player) {
+      player.resetSlide();
+    });
+
+    arcade.collide(this.player, this.slidingTerrain, function(player) {
+      player.slide();
+    });
 
     arcade.collide(this.player, this.stork, function(player, stork) {
       stork.hit(player);
@@ -916,6 +949,7 @@ var PlayState = {
     this.initializeGoal();
     this.initializePhysics();
     this.initializePlatforms();
+    this.initializeSlidingTerrain();
   },
 
   initializeAfterPlayer: function() {
@@ -1072,6 +1106,34 @@ var PlayState = {
   initializePhysics: function() {
     this.game.physics.startSystem(Phaser.Physics.ARCADE);
     this.game.physics.arcade.gravity.y = 1200;
+  },
+
+  initializeSlidingTerrain: function() {
+    var entry,
+        terrain,
+        terrainStart;
+
+    this.slidingTerrain = this.game.add.group();
+    this.slidingTerrain.enableBody = true;
+    this.slidingTerrain.physicsBodyType = Phaser.Physics.ARCADE;
+
+    for (var i = 0, l = this.level.slidingTerrain.length; i < l; i += 1) {
+      entry = this.level.slidingTerrain[i];
+
+      terrainStart = entry.start;
+
+      for (var j = 0; j < entry.length; j += 1) {
+        terrain = this.slidingTerrain.create((terrainStart.x + j) * 32, terrainStart.y * 32, 'world', 11);
+
+        this.game.physics.enable(terrain, Phaser.Physics.ARCADE);
+
+        terrain.body.allowGravity = false;
+        terrain.body.checkCollision.left = false;
+        terrain.body.checkCollision.right = false;
+        terrain.body.checkCollision.down = false;
+        terrain.body.immovable = true;
+      }
+    }
   },
 
   initializeTitle: function() {

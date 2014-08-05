@@ -61,10 +61,10 @@ var levelOne = {
   'platforms': [
     {
       'start': {
-        'x': 4,
+        'x': 5,
         'y': 7
       },
-      'length': 6
+      'length': 4
     },
     {
       'start': {
@@ -72,6 +72,15 @@ var levelOne = {
         'y': 4
       },
       'length': 2
+    }
+  ],
+  'slidingTerrain': [
+    {
+      'start': {
+        'x': 25,
+        'y': 9
+      },
+      'length': 12
     }
   ]
 };
