@@ -168,6 +168,8 @@ var levelOne = {
     }
   ],
   'player': {
+    'hasShell': false,
+    'isUnderWater': false,
     'jumpVelocity' : -400,
     'walkDrag' : 800
   },
@@ -247,23 +249,10 @@ var levelTwo = {
       ]
     }
   ],
-  'platforms': [
-    {
-      'start': {
-        'x': 8,
-        'y': 8
-      },
-      'length': 1
-    },
-    {
-      'start': {
-        'x': 6,
-        'y': 1
-      },
-      'length': 2
-    }
-  ],
+  'platforms': [],
   'player': {
+    'hasShell': true,
+    'isUnderWater': true,
     'jumpVelocity' : -200,
     'walkDrag' : 800
   },
@@ -271,6 +260,7 @@ var levelTwo = {
     'gravity' : 400
   },
 };
+
 var Goody = (function() {
   function Goody(game, x, y, sprite, effects) {
     var that = this;
@@ -383,7 +373,7 @@ var Minion = (function() {
 })();
 
 var Player = (function() {
-  function Player(game, x, y, walkDrag, jumpVelocity) {
+  function Player(game, x, y, walkDrag, jumpVelocity, hasShell, isUnderWater) {
     var firstFrame,
         framesRange,
         lastFrame;
@@ -399,11 +389,12 @@ var Player = (function() {
     this.walkVelocity = 200;
     this.walkDrag = walkDrag;
     this.isCheering = false;
+    this.isUnderWater = isUnderWater;
     this.jumpVelocity = jumpVelocity;
     this.currentJumpCount = 0;
     this.maximumJumpCount = 2;
     this.health = 3;
-    this.hasShell = false;
+    this.hasShell = hasShell;
     this.isInHazardousTerrain = false;
     this.auInterval = null;
     this.deathAnimation = null;
@@ -429,7 +420,23 @@ var Player = (function() {
       'die-left',
       'die-right-naked',
       'die-left-naked',
-      'cheer'
+      'cheer',
+      'swim-right',
+      'swim-left',
+      'eat-right-underwater',
+      'eat-left-underwater',
+      'cheer-underwater',
+      'die-left-underwater',
+      'die-right-underwater',
+      'walk-right-santa',
+      'walk-left-santa',
+      'eat-right-santa',
+      'eat-left-santa',
+      'jump-right-santa',
+      'jump-left-santa',
+      'die-right-santa',
+      'die-left-santa',
+      'cheer-santa'
     ];
     this.framesPerAnimation = 10;
 
@@ -441,7 +448,11 @@ var Player = (function() {
       this.animations.add(this.animationNames[i], framesRange, 12.5, true);
     }
 
-    this.animations.play('walk-right-naked');
+    if (this.isUnderWater) {
+      this.animations.play('swim-right');
+    } else {
+      this.animations.play('walk-right-naked');
+    }
 
     game.physics.enable(this, Phaser.Physics.ARCADE);
     this.body.drag.x = this.walkDrag;
@@ -517,8 +528,10 @@ var Player = (function() {
   };
 
   Player.prototype.cheer = function() {
-    var that;
+    var animation,
+        that;
 
+    animation = 'cheer';
     that = this;
 
     if (!this.isCheering) {
@@ -528,11 +541,20 @@ var Player = (function() {
       this.body.velocity.x = this.walkVelocity;
       this.body.drag.x = that.walkVelocity;
 
+      if (this.isUnderWater) {
+        animation += '-underwater';
+      }
+
       setTimeout(function() {
-        that.animations.play('cheer');
+        that.animations.play(animation);
 
         setTimeout(function() {
-          that.animations.play('walk-right');
+          if (that.isUnderWater) {
+            that.animations.play('swim-right');
+          } else {
+            that.animations.play('walk-right');
+          }
+
           that.body.velocity.x = that.walkVelocity / 2;
           that.body.drag.x = 0;
         }, 3750);
@@ -560,6 +582,10 @@ var Player = (function() {
 
       animation += this.facing === Phaser.LEFT ? 'left' : 'right';
 
+      if (this.isUnderWater) {
+        animation += '-underwater';
+      }
+
       if (!this.hasShell) {
         animation += '-naked';
       }
@@ -586,6 +612,15 @@ var Player = (function() {
         if (effect.jumpHeightIncrease) {
           this.addEffect('jumpVelocity', effect.jumpHeightIncrease, effect.duration);
         }
+      }
+
+      var wasMoving = previousAnimation.indexOf('walk') === 0 || previousAnimation.indexOf('swim') === 0;
+      var that = this;
+
+      if (wasMoving) {
+        this.events.onAnimationComplete.add(function() {
+          that.animations.play(previousAnimation);
+        });
       }
     }
   };
@@ -638,6 +673,10 @@ var Player = (function() {
 
         this.deathAnimation += (this.facing === Phaser.LEFT) ? 'left' : 'right';
 
+        if (this.isUnderWater) {
+          this.deathAnimation += '-underwater';
+        }
+
         if (!this.hasShell) {
           this.deathAnimation += '-naked';
         }
@@ -652,44 +691,48 @@ var Player = (function() {
 
   Player.prototype.jump = function() {
     if (!this.isCheering && !this.isDying) {
-      var animation,
-          previousAnimation,
-          that,
-          wasWalking;
+      if (!this.isUnderWater) {
+        var animation,
+            previousAnimation,
+            that,
+            wasWalking;
 
-      animation = 'jump-';
-      that = this;
+        animation = 'jump-';
+        that = this;
 
-      wasWalking = this.animations.currentAnim.name.indexOf('walk') === 0;
-      if (wasWalking) {
-        previousAnimation = this.animations.currentAnim;
-      }
-
-      if (this.currentJumpCount < this.maximumJumpCount) {
-        this.animations.stop();
-
-        if (this.currentJumpCount === 0){
-          this.woo.play();
-        } else if (this.currentJumpCount === 1) {
-          this.wahoo.play();
+        wasWalking = this.animations.currentAnim.name.indexOf('walk') === 0;
+        if (wasWalking) {
+          previousAnimation = this.animations.currentAnim;
         }
 
+        if (this.currentJumpCount < this.maximumJumpCount) {
+          this.animations.stop();
+
+          if (this.currentJumpCount === 0){
+            this.woo.play();
+          } else if (this.currentJumpCount === 1) {
+            this.wahoo.play();
+          }
+
+          this.body.velocity.y = this.jumpVelocity;
+          this.currentJumpCount += 1;
+
+          animation += (this.facing === Phaser.LEFT) ? 'left' : 'right';
+
+          if (!this.hasShell) {
+            animation += '-naked';
+          }
+
+          this.animations.play(animation, null, false);
+
+          if (previousAnimation) {
+            this.events.onAnimationComplete.add(function() {
+              that.animations.play(previousAnimation.name);
+            });
+          }
+        }
+      } else {
         this.body.velocity.y = this.jumpVelocity;
-        this.currentJumpCount += 1;
-
-        animation += (this.facing === Phaser.LEFT) ? 'left' : 'right';
-
-        if (!this.hasShell) {
-          animation += '-naked';
-        }
-
-        this.animations.play(animation, null, false);
-
-        if (previousAnimation) {
-          this.events.onAnimationComplete.add(function() {
-            that.animations.play(previousAnimation.name);
-          });
-        }
       }
     }
   };
@@ -724,25 +767,33 @@ var Player = (function() {
 
   Player.prototype.turnLeft = function() {
     if (!this.isCheering && !this.isDying) {
-      var animation = 'walk-left';
+      var animation;
+
+      animation = this.isUnderWater ? 'swim' : 'walk';
+      animation += '-left';
 
       if (!this.hasShell) {
         animation += '-naked';
       }
 
       this.animations.play(animation);
+      this.facing = Phaser.LEFT;
     }
   };
 
   Player.prototype.turnRight = function() {
     if (!this.isCheering && !this.isDying) {
-      var animation = 'walk-right';
+      var animation;
+
+      animation = this.isUnderWater ? 'swim' : 'walk';
+      animation += '-right';
 
       if (!this.hasShell) {
         animation += '-naked';
       }
 
       this.animations.play(animation);
+      this.facing = Phaser.RIGHT;
     }
   };
 
@@ -922,7 +973,7 @@ var PlayState = {
   },
 
   create: function() {
-    this.currentLevel = 1;
+    this.currentLevel = 2;
 
     this.startLevel(this.currentLevel);
   },
@@ -1169,7 +1220,7 @@ var PlayState = {
         if (j > 0) {
           tileIndex = 5;
         }
-        if (j == k) {
+        if (j === k) {
           tileIndex = 6;
         }
 
@@ -1226,6 +1277,8 @@ var PlayState = {
   },
 
   startLevel: function(id) {
+    var playerConfiguration;
+
     if (this.clouds) {
       this.clouds.destroy();
     }
@@ -1277,7 +1330,8 @@ var PlayState = {
 
     this.initializeBeforePlayer();
 
-    this.player = new Player(this.game, 1, 7, this.level.player.walkDrag, this.level.player.jumpVelocity);
+    playerConfiguration = this.level.player;
+    this.player = new Player(this.game, 1, 7, playerConfiguration.walkDrag, playerConfiguration.jumpVelocity, playerConfiguration.hasShell, playerConfiguration.isUnderWater);
     this.stork = new Stork(this.game, 58, 5, 'stork');
 
     this.player.checkWorldBounds = false;
@@ -1286,8 +1340,8 @@ var PlayState = {
       that.startLevel(that.currentLevel += 1);
     });
 
-    this.tilemap.setCollision(10);
-    this.tilemap.setTileIndexCallback(10, function() {
+    this.tilemap.setCollision([9, 10]);
+    this.tilemap.setTileIndexCallback([9, 10], function() {
       this.player.hitGround();
       return true;
     }, this);

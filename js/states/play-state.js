@@ -52,7 +52,7 @@ var PlayState = {
   },
 
   create: function() {
-    this.currentLevel = 1;
+    this.currentLevel = 2;
 
     this.startLevel(this.currentLevel);
   },
@@ -299,7 +299,7 @@ var PlayState = {
         if (j > 0) {
           tileIndex = 5;
         }
-        if (j == k) {
+        if (j === k) {
           tileIndex = 6;
         }
 
@@ -356,6 +356,8 @@ var PlayState = {
   },
 
   startLevel: function(id) {
+    var playerConfiguration;
+
     if (this.clouds) {
       this.clouds.destroy();
     }
@@ -407,7 +409,8 @@ var PlayState = {
 
     this.initializeBeforePlayer();
 
-    this.player = new Player(this.game, 1, 7, this.level.player.walkDrag, this.level.player.jumpVelocity);
+    playerConfiguration = this.level.player;
+    this.player = new Player(this.game, 1, 7, playerConfiguration.walkDrag, playerConfiguration.jumpVelocity, playerConfiguration.hasShell, playerConfiguration.isUnderWater);
     this.stork = new Stork(this.game, 58, 5, 'stork');
 
     this.player.checkWorldBounds = false;
@@ -416,8 +419,8 @@ var PlayState = {
       that.startLevel(that.currentLevel += 1);
     });
 
-    this.tilemap.setCollision(10);
-    this.tilemap.setTileIndexCallback(10, function() {
+    this.tilemap.setCollision([9, 10]);
+    this.tilemap.setTileIndexCallback([9, 10], function() {
       this.player.hitGround();
       return true;
     }, this);

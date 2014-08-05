@@ -60,23 +60,10 @@ var levelTwo = {
       ]
     }
   ],
-  'platforms': [
-    {
-      'start': {
-        'x': 8,
-        'y': 8
-      },
-      'length': 1
-    },
-    {
-      'start': {
-        'x': 6,
-        'y': 1
-      },
-      'length': 2
-    }
-  ],
+  'platforms': [],
   'player': {
+    'hasShell': true,
+    'isUnderWater': true,
     'jumpVelocity' : -200,
     'walkDrag' : 800
   },
