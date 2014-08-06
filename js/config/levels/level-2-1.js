@@ -68,6 +68,21 @@ var levelTwoOne = {
       ]
     }
   ],
+  'minions': [
+    {
+      'type': 'jellyfish',
+      'positions': [
+        {
+          'x': 12,
+          'y': 9
+        },
+        {
+          'x': 14,
+          'y': 9
+        }
+      ]
+    }
+  ],
   'player': {
     'hasShell': true,
     'isUnderWater': true,

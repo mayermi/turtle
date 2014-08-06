@@ -15,9 +15,9 @@ var Config = (function() {
     this.goodies = goodies;
 
     this.levels = [
+      levelTwoOne,
       levelOneOne,
       levelOneTwo,
-      levelTwoOne,
       levelThreeOne
     ];
   }
