@@ -224,7 +224,11 @@ var levelOneOne = {
   ],
   'player': {
     'jumpVelocity' : -400,
-    'walkDrag' : 800
+    'walkDrag' : 800,
+    'position': {
+      'x': 1,
+      'y': 7
+    }
   },
   'physics': {
     'gravity' : 1200
@@ -254,7 +258,11 @@ var levelOneTwo = {
   },
   'player': {
     'jumpVelocity' : -400,
-    'walkDrag' : 800
+    'walkDrag' : 800,
+    'position': {
+      'x': 1,
+      'y': 7
+    }
   },
   'physics': {
     'gravity' : 1200
@@ -359,7 +367,11 @@ var levelTwoOne = {
     'hasShell': true,
     'isUnderWater': true,
     'jumpVelocity' : -200,
-    'walkDrag' : 800
+    'walkDrag' : 800,
+    'position': {
+      'x': 1,
+      'y': 7
+    }
   },
   'physics': {
     'gravity' : 400
@@ -432,7 +444,11 @@ var levelThreeOne = {
   'player': {
     'isSanta': true,
     'jumpVelocity' : -400,
-    'walkDrag' : 800
+    'walkDrag' : 800,
+    'position': {
+      'x': 1,
+      'y': 7
+    }
   },
   'physics': {
     'gravity' : 1200
@@ -1558,8 +1574,7 @@ var PlayState = {
     this.fx.addMarker('desert', 52, 8, 1, true);
     this.fx.addMarker('final', 63.5, 7, 1, false);
 
-    this.currentLevel = 0;
-    this.startLevel(this.currentLevel);
+    this.startLevel();
   },
 
   update: function() {
@@ -1633,6 +1648,12 @@ var PlayState = {
 
     arcade.collide(this.player, this.boss, function(player, boss) {
       boss.hit(player);
+
+      if (player.health <= 0) {
+        setTimeout(function() {
+          game.state.start(game.state.current);
+        }, 2000);
+      }
     });
 
     arcade.overlap(this.player, this.goal, function(player) {
@@ -1649,9 +1670,13 @@ var PlayState = {
     });
 
     arcade.collide(this.player, this.goodies, function(player, goody) {
+      var duration;
+
       player.eatGoody(goody);
       goody.kill();
-      var duration = goodies[goody.name].duration;
+
+      duration = goodies[goody.name].duration;
+
       if (duration){
         setTimeout(function() {
           that.goodies.add(new Goody(that.game, goody.originalX, goody.originalY, goody.name));
@@ -1665,6 +1690,12 @@ var PlayState = {
 
     arcade.collide(this.player, this.minions, function(player, minion) {
       minion.hit(player);
+
+      if (player.health <= 0) {
+        setTimeout(function() {
+          game.state.start(game.state.current);
+        }, 2000);
+      }
     });
 
     arcade.collide(this.player, this.platforms, function(player) {
@@ -1932,8 +1963,11 @@ var PlayState = {
     this.levelNameLabel = helper.addText(1, 4, this.level.id + ': ' + this.level.name, { fill: config.colors.gray });
   },
 
-  startLevel: function(id) {
-    var playerConfiguration;
+  startLevel: function() {
+    var currentLevel,
+        playerConfiguration;
+
+    currentLevel = JSON.parse(localStorage.getItem('turtle')).currentLevel;
 
     if (this.boss) {
       this.boss.destroy();
@@ -1979,12 +2013,10 @@ var PlayState = {
       this.tilemap.destroy();
     }
 
-    this.player = null;
-
     this.isLevelComplete = false;
     this.isShowingCompleteMessage = false;
 
-    this.level = config.levels[id];
+    this.level = config.levels[currentLevel];
 
     this.stage.backgroundColor = config.colors.lightBlue;
     this.fx.stop();
@@ -1999,14 +2031,28 @@ var PlayState = {
     this.initializeBeforePlayer();
 
     playerConfiguration = this.level.player;
-    this.player = new Player(this.game, 1, 7, playerConfiguration.walkDrag, playerConfiguration.jumpVelocity, playerConfiguration.hasShell, playerConfiguration.isUnderWater, playerConfiguration.isSanta);
+    this.player = new Player(
+        this.game,
+        playerConfiguration.position.x,
+        playerConfiguration.position.y,
+        playerConfiguration.walkDrag,
+        playerConfiguration.jumpVelocity,
+        playerConfiguration.hasShell,
+        playerConfiguration.isUnderWater,
+        playerConfiguration.isSanta
+    );
 
     this.player.checkWorldBounds = false;
     var that = this;
+
     this.player.events.onOutOfBounds.add(function() {
-      if ((that.currentLevel += 1) < config.levels.length) {
-        that.startLevel(that.currentLevel);
+      currentLevel += 1;
+      localStorage.setItem('turtle', JSON.stringify({ currentLevel: currentLevel }));
+
+      if (currentLevel < config.levels.length) {
+        that.startLevel();
       } else {
+        localStorage.setItem('turtle', JSON.stringify({ currentLevel: 0 }));
         game.state.start('game-complete');
       }
     });

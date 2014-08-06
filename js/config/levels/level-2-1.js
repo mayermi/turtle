@@ -96,7 +96,11 @@ var levelTwoOne = {
     'hasShell': true,
     'isUnderWater': true,
     'jumpVelocity' : -200,
-    'walkDrag' : 800
+    'walkDrag' : 800,
+    'position': {
+      'x': 1,
+      'y': 7
+    }
   },
   'physics': {
     'gravity' : 400

@@ -64,7 +64,11 @@ var levelThreeOne = {
   'player': {
     'isSanta': true,
     'jumpVelocity' : -400,
-    'walkDrag' : 800
+    'walkDrag' : 800,
+    'position': {
+      'x': 1,
+      'y': 7
+    }
   },
   'physics': {
     'gravity' : 1200
