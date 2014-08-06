@@ -70,30 +70,12 @@ var levelOneOne = {
   ],
   'minions': [
     {
-      'type': 'worm',
+      'minion': 'worm',
       'positions': [
         {
           'x': 12,
           'y': 9
         },
-        {
-          'x': 14,
-          'y': 9
-        }
-      ]
-    },
-    {
-      'type': 'caterpillar',
-      'positions': [
-        {
-          'x': 12,
-          'y': 9
-        }
-      ]
-    },
-    {
-      'type': 'penguin',
-      'positions': [
         {
           'x': 14,
           'y': 9
@@ -119,11 +101,7 @@ var levelOneOne = {
   ],
   'player': {
     'jumpVelocity' : -400,
-    'walkDrag' : 800,
-    'position': {
-      'x': 1,
-      'y': 7
-    }
+    'walkDrag' : 800
   },
   'physics': {
     'gravity' : 1200
