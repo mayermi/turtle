@@ -210,11 +210,12 @@ var Player = (function() {
     this.frame = finalFrameIndex;
   };
 
-  Player.prototype.eatGoody = function(goody) {
+  Player.prototype.eatGoody = function(goodyName) {
     if (!this.isCheering && !this.isDying) {
       var animation,
           effect,
           effects,
+          goody,
           previousAnimation;
 
       animation = 'eat-';
@@ -235,25 +236,26 @@ var Player = (function() {
 
       this.animations.play(animation, null, false);
 
-      effects = config.goodies[goody.name].effects;
+      goody = goodies[goodyName.name];
+      effects = goody.effects;
 
       for (var i = 0, l = effects.length; i < l; i += 1) {
         effect = effects[i];
 
         if (effect.addShell) {
-          this.addBooleanEffect('hasShell', effect.addShell, effect.duration);
+          this.addBooleanEffect('hasShell', effect.addShell, goody.duration);
         }
 
         if (effect.healthIncrease) {
-          this.addEffect('health', effect.healthIncrease, effect.duration);
+          this.addEffect('health', effect.healthIncrease, goody.duration);
         }
 
         if (effect.speedIncrease) {
-          this.addEffect('walkVelocity', effect.speedIncrease, effect.duration);
+          this.addEffect('walkVelocity', effect.speedIncrease, goody.duration);
         }
 
         if (effect.jumpHeightIncrease) {
-          this.addEffect('jumpVelocity', effect.jumpHeightIncrease, effect.duration);
+          this.addEffect('jumpVelocity', effect.jumpHeightIncrease, goody.duration);
         }
       }
 

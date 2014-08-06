@@ -3,10 +3,10 @@ var goodies = {
     'name': 'bubble',
     'effects': [
       {
-        'jumpHeightIncrease': -100,
-        'duration': 4000
+        'jumpHeightIncrease': -100
       }
-    ]
+    ],
+    'duration': 4000
   },
   'candy': {
     'name': 'candy',
@@ -20,19 +20,19 @@ var goodies = {
     'name': 'chili',
     'effects': [
       {
-        'speedIncrease': 100,
-        'duration': 4000
+        'speedIncrease': 100
       }
-    ]
+    ],
+    'duration': 4000
   },
   'ice': {
     'name': 'ice',
     'effects': [
       {
-        'speedIncrease': -150,
-        'duration': 2000
+        'speedIncrease': -150
       }
-    ]
+    ],
+    'duration': 2000
   },
   'salad': {
     'name': 'salad',

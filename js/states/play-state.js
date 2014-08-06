@@ -159,6 +159,12 @@ var PlayState = {
     arcade.collide(this.player, this.goodies, function(player, goody) {
       player.eatGoody(goody);
       goody.kill();
+      var duration = goodies[goody.name].duration;
+      if (duration){
+        setTimeout(function() {
+          that.goodies.add(new Goody(that.game, goody.originalX, goody.originalY, goody.name));
+        }, duration);
+      }
     });
 
     arcade.collide(this.player, this.layer, function(player) {
