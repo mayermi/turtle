@@ -73,11 +73,11 @@ var levelOneOne = {
       'minion': 'worm',
       'positions': [
         {
-          'x': 32,
+          'x': 12,
           'y': 9
         },
         {
-          'x': 34,
+          'x': 14,
           'y': 9
         }
       ]
