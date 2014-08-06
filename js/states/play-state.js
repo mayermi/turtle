@@ -39,6 +39,10 @@ var PlayState = {
     this.fx.addMarker('desert', 52, 8, 1, true);
     this.fx.addMarker('final', 63.5, 7, 1, false);
 
+    if (!localStorage.getItem('turtle')) {
+      localStorage.setItem('turtle', JSON.stringify({ currentLevel: 0 }));
+    }
+
     this.startLevel();
   },
 
