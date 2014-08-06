@@ -1525,7 +1525,7 @@ var MenuState = {
     imprintLabel = helper.addText(3, 14, '→ Imprint');
     imprintLabel.inputEnabled = true;
     imprintLabel.events.onInputUp.add(function() {
-      that.menu.pause();
+      that.fx.pause('menu');
       game.state.start('imprint');
     });
 
