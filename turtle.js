@@ -57,10 +57,10 @@ var goodies = {
     'name': 'bubble',
     'effects': [
       {
-        'jumpHeightIncrease': -100,
-        'duration': 4000
+        'jumpHeightIncrease': -100
       }
-    ]
+    ],
+    'duration': 4000
   },
   'candy': {
     'name': 'candy',
@@ -74,19 +74,19 @@ var goodies = {
     'name': 'chili',
     'effects': [
       {
-        'speedIncrease': 100,
-        'duration': 4000
+        'speedIncrease': 100
       }
-    ]
+    ],
+    'duration': 4000
   },
   'ice': {
     'name': 'ice',
     'effects': [
       {
-        'speedIncrease': -150,
-        'duration': 2000
+        'speedIncrease': -150
       }
-    ]
+    ],
+    'duration': 2000
   },
   'salad': {
     'name': 'salad',
@@ -412,15 +412,20 @@ var Goody = (function() {
 
     Phaser.Sprite.call(this, game, x * 32, y * 32, sprite);
 
-    this.dring = game.add.audio('dring',0.3);
+    this.dring = game.add.audio('dring', 0.3);
 
     game.physics.enable(this, Phaser.Physics.ARCADE);
     this.body.allowGravity = false;
+    this.body.immovable = true;
 
     this.name = sprite;
     this.effects = effects;
-
-    this.events.onKilled.add(function () {that.dring.play();});
+    this.originalX = x;
+    this.originalY = y;
+    
+    this.events.onKilled.add(function () {
+      that.dring.play();
+    });
   }
 
   Goody.prototype = Object.create(Phaser.Sprite.prototype);
@@ -769,11 +774,12 @@ var Player = (function() {
     this.frame = finalFrameIndex;
   };
 
-  Player.prototype.eatGoody = function(goody) {
+  Player.prototype.eatGoody = function(goodyName) {
     if (!this.isCheering && !this.isDying) {
       var animation,
           effect,
           effects,
+          goody,
           previousAnimation;
 
       animation = 'eat-';
@@ -794,25 +800,26 @@ var Player = (function() {
 
       this.animations.play(animation, null, false);
 
-      effects = config.goodies[goody.name].effects;
+      goody = goodies[goodyName.name];
+      effects = goody.effects;
 
       for (var i = 0, l = effects.length; i < l; i += 1) {
         effect = effects[i];
 
         if (effect.addShell) {
-          this.addBooleanEffect('hasShell', effect.addShell, effect.duration);
+          this.addBooleanEffect('hasShell', effect.addShell, goody.duration);
         }
 
         if (effect.healthIncrease) {
-          this.addEffect('health', effect.healthIncrease, effect.duration);
+          this.addEffect('health', effect.healthIncrease, goody.duration);
         }
 
         if (effect.speedIncrease) {
-          this.addEffect('walkVelocity', effect.speedIncrease, effect.duration);
+          this.addEffect('walkVelocity', effect.speedIncrease, goody.duration);
         }
 
         if (effect.jumpHeightIncrease) {
-          this.addEffect('jumpVelocity', effect.jumpHeightIncrease, effect.duration);
+          this.addEffect('jumpVelocity', effect.jumpHeightIncrease, goody.duration);
         }
       }
 
@@ -1289,6 +1296,12 @@ var PlayState = {
     arcade.collide(this.player, this.goodies, function(player, goody) {
       player.eatGoody(goody);
       goody.kill();
+      var duration = goodies[goody.name].duration;
+      if (duration){
+        setTimeout(function() {
+          that.goodies.add(new Goody(that.game, goody.originalX, goody.originalY, goody.name));
+        }, duration);
+      }
     });
 
     arcade.collide(this.player, this.layer, function(player) {
