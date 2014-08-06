@@ -1,4 +1,6 @@
 var MenuState = {
+  fx: null,
+
   preload: function() {
     this.load.spritesheet('player', '/img/sprites/turtle.png', 32, 64);
   },
@@ -9,6 +11,10 @@ var MenuState = {
         player,
         playLabel;
 
+    this.fx = game.add.audio('menu');
+    this.fx.addMarker('menu', 0, 12, 1, true);
+    this.fx.play('menu');
+
     this.stage.backgroundColor = config.colors.lightYellow;
 
     helper.addText(4, 4, 'TURTLE', { fontSize: 32, fill: config.colors.green });
@@ -16,13 +22,17 @@ var MenuState = {
 
     playLabel = helper.addText(3, 12, '→ Play');
     playLabel.inputEnabled = true;
+
+    var that = this;
     playLabel.events.onInputUp.add(function() {
+      that.fx.pause('menu');
       game.state.start('play');
     });
 
     imprintLabel = helper.addText(3, 14, '→ Imprint');
     imprintLabel.inputEnabled = true;
     imprintLabel.events.onInputUp.add(function() {
+      that.menu.pause();
       game.state.start('imprint');
     });
 
