@@ -344,6 +344,15 @@ var levelTwoOne = {
           'y': 9
         }
       ]
+    },
+    {
+      'type': 'pufferfish',
+      'positions': [
+        {
+          'x': 40,
+          'y': 7
+        }
+      ]
     }
   ],
   'player': {
@@ -559,9 +568,9 @@ var Jellyfish = (function() {
     game.physics.enable(this, Phaser.Physics.ARCADE);
     this.body.bounce.x = 1;
     this.body.immovable = true;
-    this.body.velocity.x = -this.walkVelocity;
-    this.body.velocity.y = -this.jumpVelocity;
-    this.scale.x *= -1;
+    this.body.velocity.x = -1 * this.walkVelocity;
+    this.body.velocity.y = -1 * this.jumpVelocity;
+    // this.scale.x *= -1;
 
     this.anchor.setTo(0.5, 1);
 
@@ -569,7 +578,7 @@ var Jellyfish = (function() {
 
     that = this;
     setInterval(function() {
-      that.body.velocity.y = -100;
+      that.body.velocity.y = -1 * that.jumpVelocity;
     }, 1000);
 
     game.add.existing(this);
@@ -1201,6 +1210,88 @@ var Player = (function() {
   return Player;
 })();
 
+var Pufferfish = (function() {
+  function Pufferfish(game, x, y) {
+    var that;
+
+    Phaser.Sprite.call(this, game, x * 32, y * 32, 'pufferfish');
+
+    this.hasHitPlayer = false;
+    this.jumpVelocity = 103;
+    this.walkVelocity = 120;
+
+    this.plop = game.add.audio('plop', 1.75);
+
+    helper.addAnimationsToSprite(this, [
+      'default'
+    ], 6);
+    this.animations.play('default');
+
+    game.physics.enable(this, Phaser.Physics.ARCADE);
+    this.body.collideWorldBounds = true;
+    this.body.bounce.x = 1;
+    this.body.immovable = true;
+    this.body.velocity.x = -1 * this.walkVelocity;
+    this.body.velocity.y = -1 * this.jumpVelocity;
+    this.scale.x = -1;
+
+    this.anchor.setTo(0.5, 1);
+
+    this.facing = this.body.facing;
+
+    that = this;
+    setInterval(function() {
+      that.body.velocity.y = -1 * that.jumpVelocity;
+    }, 500);
+
+    game.add.existing(this);
+  }
+
+  Pufferfish.prototype = Object.create(Phaser.Sprite.prototype);
+  Pufferfish.prototype.constructor = Pufferfish;
+
+  Pufferfish.prototype.update = function() {
+    var LEFT,
+        RIGHT;
+
+    LEFT = Phaser.LEFT;
+    RIGHT = Phaser.RIGHT;
+
+    if (this.body.facing === LEFT && this.facing !== LEFT) {
+      this.facing = LEFT;
+      this.turnAround();
+    } else if (this.body.facing === RIGHT && this.facing !== RIGHT) {
+      this.facing = RIGHT;
+      this.turnAround();
+    }
+  };
+
+  Pufferfish.prototype.hit = function(sprite) {
+    var that;
+
+    if (!this.hasHitPlayer) {
+      sprite.takeDamage(1);
+      this.hasHitPlayer = true;
+      that = this;
+
+       setTimeout(function() {
+         that.hasHitPlayer = false;
+       }, 500);
+    }
+
+    if (this.body.touching.up) {
+      this.plop.play();
+      this.kill();
+    }
+  };
+
+  Pufferfish.prototype.turnAround = function() {
+    this.scale.x *= -1;
+  };
+
+  return Pufferfish;
+})();
+
 var Stork = (function() {
   function Stork(game, x, y) {
     Phaser.Sprite.call(this, game, x * 32, y * 32, 'stork');
@@ -1441,6 +1532,7 @@ var PlayState = {
     this.load.spritesheet('jellyfish', '/img/sprites/jellyfish.png', 32, 48);
     this.load.spritesheet('penguin', '/img/sprites/penguin.png', 32, 28);
     this.load.spritesheet('player', '/img/sprites/turtle.png', 32, 64);
+    this.load.spritesheet('pufferfish', '/img/sprites/pufferfish.png', 32, 32);
     this.load.spritesheet('stork', '/img/sprites/stork.png', 144, 132);
     this.load.spritesheet('worm', '/img/sprites/worm.png', 48, 16);
 
@@ -1697,6 +1789,9 @@ var PlayState = {
               break;
             case 'penguin':
               minion = new Penguin(this.game, position.x, position.y);
+              break;
+            case 'pufferfish':
+              minion = new Pufferfish(this.game, position.x, position.y);
               break;
             case 'worm':
               minion = new Worm(this.game, position.x, position.y);

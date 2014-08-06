@@ -48,6 +48,7 @@ var PlayState = {
     this.load.spritesheet('jellyfish', '/img/sprites/jellyfish.png', 32, 48);
     this.load.spritesheet('penguin', '/img/sprites/penguin.png', 32, 28);
     this.load.spritesheet('player', '/img/sprites/turtle.png', 32, 64);
+    this.load.spritesheet('pufferfish', '/img/sprites/pufferfish.png', 32, 32);
     this.load.spritesheet('stork', '/img/sprites/stork.png', 144, 132);
     this.load.spritesheet('worm', '/img/sprites/worm.png', 48, 16);
 
@@ -304,6 +305,9 @@ var PlayState = {
               break;
             case 'penguin':
               minion = new Penguin(this.game, position.x, position.y);
+              break;
+            case 'pufferfish':
+              minion = new Pufferfish(this.game, position.x, position.y);
               break;
             case 'worm':
               minion = new Worm(this.game, position.x, position.y);

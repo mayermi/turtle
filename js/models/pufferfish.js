@@ -1,12 +1,12 @@
-var Jellyfish = (function() {
-  function Jellyfish(game, x, y) {
+var Pufferfish = (function() {
+  function Pufferfish(game, x, y) {
     var that;
 
-    Phaser.Sprite.call(this, game, x * 32, y * 32, 'jellyfish');
+    Phaser.Sprite.call(this, game, x * 32, y * 32, 'pufferfish');
 
     this.hasHitPlayer = false;
-    this.jumpVelocity = 100;
-    this.walkVelocity = 100;
+    this.jumpVelocity = 103;
+    this.walkVelocity = 120;
 
     this.plop = game.add.audio('plop', 1.75);
 
@@ -16,11 +16,12 @@ var Jellyfish = (function() {
     this.animations.play('default');
 
     game.physics.enable(this, Phaser.Physics.ARCADE);
+    this.body.collideWorldBounds = true;
     this.body.bounce.x = 1;
     this.body.immovable = true;
     this.body.velocity.x = -1 * this.walkVelocity;
     this.body.velocity.y = -1 * this.jumpVelocity;
-    // this.scale.x *= -1;
+    this.scale.x = -1;
 
     this.anchor.setTo(0.5, 1);
 
@@ -29,15 +30,15 @@ var Jellyfish = (function() {
     that = this;
     setInterval(function() {
       that.body.velocity.y = -1 * that.jumpVelocity;
-    }, 1000);
+    }, 500);
 
     game.add.existing(this);
   }
 
-  Jellyfish.prototype = Object.create(Phaser.Sprite.prototype);
-  Jellyfish.prototype.constructor = Jellyfish;
+  Pufferfish.prototype = Object.create(Phaser.Sprite.prototype);
+  Pufferfish.prototype.constructor = Pufferfish;
 
-  Jellyfish.prototype.update = function() {
+  Pufferfish.prototype.update = function() {
     var LEFT,
         RIGHT;
 
@@ -53,7 +54,7 @@ var Jellyfish = (function() {
     }
   };
 
-  Jellyfish.prototype.hit = function(sprite) {
+  Pufferfish.prototype.hit = function(sprite) {
     var that;
 
     if (!this.hasHitPlayer) {
@@ -72,9 +73,9 @@ var Jellyfish = (function() {
     }
   };
 
-  Jellyfish.prototype.turnAround = function() {
+  Pufferfish.prototype.turnAround = function() {
     this.scale.x *= -1;
   };
 
-  return Jellyfish;
+  return Pufferfish;
 })();

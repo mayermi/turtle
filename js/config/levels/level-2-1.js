@@ -81,6 +81,15 @@ var levelTwoOne = {
           'y': 9
         }
       ]
+    },
+    {
+      'type': 'pufferfish',
+      'positions': [
+        {
+          'x': 40,
+          'y': 7
+        }
+      ]
     }
   ],
   'player': {
