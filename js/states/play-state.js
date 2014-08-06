@@ -120,6 +120,7 @@ var PlayState = {
 
       if (player.health <= 0) {
         setTimeout(function() {
+         that.fx.pause();
           game.state.start(game.state.current);
         }, 2000);
       }
@@ -130,7 +131,7 @@ var PlayState = {
 
       player.cheer();
 
-      that.fx.pause();
+      that.fx.stop();
       that.fx.play('final');
       that.showCompleteMessage();
       player.checkWorldBounds = true;
@@ -162,6 +163,7 @@ var PlayState = {
 
       if (player.health <= 0) {
         setTimeout(function() {
+          that.fx.pause();
           game.state.start(game.state.current);
         }, 2000);
       }
