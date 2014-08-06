@@ -369,7 +369,7 @@ var levelTwoOne = {
 var levelThreeOne = {
   'id': '3-1',
   'name': 'Winter Wonderland',
-  'backgroundMusic': 'happy',
+  'backgroundMusic': 'ice',
   'type': 'winter',
   'goal': {
     'position': {
@@ -759,10 +759,12 @@ var Player = (function() {
   function Player(game, x, y, walkDrag, jumpVelocity, hasShell, isUnderWater, isSanta) {
     Phaser.Sprite.call(this, game, x * 32, y * 32, 'player');
 
-    this.wahoo = game.add.audio('wahoo', 0.3);
     this.aua = game.add.audio('aua', 0.3);
     this.gulp = game.add.audio('gulp', 0.3);
+    this.wahoo = game.add.audio('wahoo', 0.3);
+    this.whoop = game.add.audio('whoop', 0.3);
     this.woo = game.add.audio('woo', 0.3);
+
 
     this.auInterval = null;
     this.currentJumpCount = 0;
@@ -1138,6 +1140,7 @@ var Player = (function() {
           }
         }
       } else {
+        this.whoop.play('', 0.2, 1, false);
         this.body.velocity.y = this.jumpVelocity;
       }
     }
@@ -1201,7 +1204,6 @@ var Player = (function() {
       } else if (!this.hasShell) {
         animation += '-naked';
       }
-
       this.animations.play(animation);
       this.facing = Phaser.RIGHT;
     }
@@ -1413,9 +1415,14 @@ var GameCompleteState = {
 
   create: function() {
     var game,
+        menuLabel,
         player;
 
     game = this.game;
+
+    this.fx = game.add.audio('gameover');
+    this.fx.addMarker('gameover', 0, 24, 1, true);
+    this.fx.play('gameover');
 
     this.stage.backgroundColor = config.colors.gray;
 
@@ -1424,19 +1431,37 @@ var GameCompleteState = {
 
     player = new Player(this.game, 7, 8, 0);
     player.animations.play('cheer');
+
+    menuLabel = helper.addText(0.5, 1, '← Menu');
+    menuLabel.inputEnabled = true;
+
+    var that = this;
+    menuLabel.events.onInputUp.add(function() {
+      that.fx.pause('gameover');
+      game.state.start('menu');
+    });
   }
 };
 
 var ImprintState = {
+    fx: null,
+
   create: function() {
     var textLabel,
         menuLabel;
 
     this.stage.backgroundColor = config.colors.lightGreen;
 
+    this.fx = game.add.audio('menu');
+    this.fx.addMarker('menu', 0, 12, 1, true);
+    this.fx.play('menu');
+
     menuLabel = helper.addText(0.5, 1, '← Menu');
     menuLabel.inputEnabled = true;
+
+    var that = this;
     menuLabel.events.onInputUp.add(function() {
+      that.fx.pause('menu');
       game.state.start('menu');
     });
 
@@ -1451,6 +1476,8 @@ var ImprintState = {
 };
 
 var MenuState = {
+  fx: null,
+
   preload: function() {
     this.load.spritesheet('player', '/img/sprites/turtle.png', 32, 64);
   },
@@ -1461,6 +1488,10 @@ var MenuState = {
         player,
         playLabel;
 
+    this.fx = game.add.audio('menu');
+    this.fx.addMarker('menu', 0, 12, 1, true);
+    this.fx.play('menu');
+
     this.stage.backgroundColor = config.colors.lightYellow;
 
     helper.addText(4, 4, 'TURTLE', { fontSize: 32, fill: config.colors.green });
@@ -1468,13 +1499,17 @@ var MenuState = {
 
     playLabel = helper.addText(3, 12, '→ Play');
     playLabel.inputEnabled = true;
+
+    var that = this;
     playLabel.events.onInputUp.add(function() {
+      that.fx.pause('menu');
       game.state.start('play');
     });
 
     imprintLabel = helper.addText(3, 14, '→ Imprint');
     imprintLabel.inputEnabled = true;
     imprintLabel.events.onInputUp.add(function() {
+      that.menu.pause();
       game.state.start('imprint');
     });
 
@@ -1513,46 +1548,15 @@ var PlayState = {
         this.load.image(goody, '/img/goodies/' + goody + '.png');
       }
     }
-
-    game.load.audio('aua', 'music/aua.mp3');
-    game.load.audio('wahoo', 'music/wahoo.mp3');
-    game.load.audio('gulp', 'music/gulp.mp3');
-    game.load.audio('woo', 'music/woo.mp3');
-    game.load.audio('dring', 'music/dring.mp3');
-    game.load.audio('plop', 'music/plop.mp3');
-    game.load.audio('music', 'music/backgroundmusic.mp3');
-
-    this.load.image('forest-tiles', '/img/tiles/forest.png');
-    this.load.image('sea-tiles', '/img/tiles/sea.png');
-    this.load.image('winter-tiles', '/img/tiles/winter.png');
-    this.load.image('life', '/img/images/life.png');
-
-    this.load.spritesheet('lanternfish', '/img/sprites/lanternfish.png', 80, 80);
-    this.load.spritesheet('caterpillar', '/img/sprites/caterpillar.png', 48, 16);
-    this.load.spritesheet('jellyfish', '/img/sprites/jellyfish.png', 32, 48);
-    this.load.spritesheet('penguin', '/img/sprites/penguin.png', 32, 28);
-    this.load.spritesheet('player', '/img/sprites/turtle.png', 32, 64);
-    this.load.spritesheet('pufferfish', '/img/sprites/pufferfish.png', 32, 32);
-    this.load.spritesheet('stork', '/img/sprites/stork.png', 144, 132);
-    this.load.spritesheet('worm', '/img/sprites/worm.png', 48, 16);
-
-    this.load.spritesheet('forest-spritesheet', '/img/tiles/forest.png', 32, 32);
-    this.load.spritesheet('sea-spritesheet', '/img/tiles/sea.png', 32, 32);
-    this.load.spritesheet('winter-spritesheet', '/img/tiles/winter.png', 32, 32);
-
-    this.load.tilemap('1-1-tilemap', '/img/tiles/1-1.json', null, Phaser.Tilemap.TILED_JSON);
-    this.load.tilemap('1-2-tilemap', '/img/tiles/1-2.json', null, Phaser.Tilemap.TILED_JSON);
-    this.load.tilemap('2-1-tilemap', '/img/tiles/2-1.json', null, Phaser.Tilemap.TILED_JSON);
-    this.load.tilemap('3-1-tilemap', '/img/tiles/3-1.json', null, Phaser.Tilemap.TILED_JSON);
   },
 
   create: function() {
-    this.fx = game.add.audio('music');
-    this.fx.addMarker('cave', 0, 12.01, 1, true);
-    this.fx.addMarker('sea', 14.95, 16, 1, true);
-    this.fx.addMarker('happy', 32.8, 16, 1, true);
-    this.fx.addMarker('lava', 49, 12, 1, true);
-    this.fx.addMarker('final', 62.5, 4.8, 1, false);
+    this.fx = game.add.audio('backgroundmusic');
+    this.fx.addMarker('happy', 0, 16, 1, true);
+    this.fx.addMarker('sea', 18, 16, 1, true);
+    this.fx.addMarker('ice', 36, 12, 1, true);
+    this.fx.addMarker('desert', 52, 8, 1, true);
+    this.fx.addMarker('final', 63.5, 7, 1, false);
 
     this.currentLevel = 0;
     this.startLevel(this.currentLevel);
@@ -2046,6 +2050,59 @@ var PlayState = {
   }
 };
 
+var PreloadState = {
+
+  preload: function() {
+    this.ready = false;
+
+    this.load.onLoadComplete.addOnce(this.onLoadComplete, this);
+      
+    game.load.audio('aua', 'music/aua.mp3');
+    game.load.audio('backgroundmusic', 'music/backgroundmusic.mp3');
+    game.load.audio('dring', 'music/dring.mp3');
+    game.load.audio('gameover', 'music/gameover.mp3');
+    game.load.audio('gulp', 'music/gulp.mp3');
+    game.load.audio('menu', 'music/menu.mp3');
+    game.load.audio('plop', 'music/plop.mp3');
+    game.load.audio('wahoo', 'music/wahoo.mp3');
+    game.load.audio('whoop', 'music/whoop.mp3');
+    game.load.audio('woo', 'music/woo.mp3');
+
+    this.load.image('forest-tiles', '/img/tiles/forest.png');
+    this.load.image('sea-tiles', '/img/tiles/sea.png');
+    this.load.image('winter-tiles', '/img/tiles/winter.png');
+    this.load.image('life', '/img/images/life.png');
+
+    this.load.spritesheet('lanternfish', '/img/sprites/lanternfish.png', 80, 80);
+    this.load.spritesheet('caterpillar', '/img/sprites/caterpillar.png', 48, 16);
+    this.load.spritesheet('jellyfish', '/img/sprites/jellyfish.png', 32, 48);
+    this.load.spritesheet('penguin', '/img/sprites/penguin.png', 32, 28);
+    this.load.spritesheet('player', '/img/sprites/turtle.png', 32, 64);
+    this.load.spritesheet('pufferfish', '/img/sprites/pufferfish.png', 32, 32);
+    this.load.spritesheet('stork', '/img/sprites/stork.png', 144, 132);
+    this.load.spritesheet('worm', '/img/sprites/worm.png', 48, 16);
+
+    this.load.spritesheet('forest-spritesheet', '/img/tiles/forest.png', 32, 32);
+    this.load.spritesheet('sea-spritesheet', '/img/tiles/sea.png', 32, 32);
+    this.load.spritesheet('winter-spritesheet', '/img/tiles/winter.png', 32, 32);
+
+    this.load.tilemap('1-1-tilemap', '/img/tiles/1-1.json', null, Phaser.Tilemap.TILED_JSON);
+    this.load.tilemap('1-2-tilemap', '/img/tiles/1-2.json', null, Phaser.Tilemap.TILED_JSON);
+    this.load.tilemap('2-1-tilemap', '/img/tiles/2-1.json', null, Phaser.Tilemap.TILED_JSON);
+    this.load.tilemap('3-1-tilemap', '/img/tiles/3-1.json', null, Phaser.Tilemap.TILED_JSON);
+
+  },
+  create: function() {
+  },
+  update: function() {
+    if(!!this.ready) {
+      this.game.state.start('menu');
+    }
+  },
+  onLoadComplete: function() {
+    this.ready = true;
+  }
+};
 var Config = (function() {
   function Config() {
     this.colors = {
@@ -2088,7 +2145,8 @@ states = {
   'game-complete': GameCompleteState,
   'imprint': ImprintState,
   'menu': MenuState,
-  'play': PlayState
+  'play': PlayState,
+  'preload': PreloadState
 };
 
 for (var key in states) {
@@ -2097,5 +2155,5 @@ for (var key in states) {
   }
 }
 
-game.state.start('play');
+game.state.start('preload');
 }).call(this);

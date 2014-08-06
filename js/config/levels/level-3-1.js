@@ -1,7 +1,7 @@
 var levelThreeOne = {
   'id': '3-1',
   'name': 'Winter Wonderland',
-  'backgroundMusic': 'happy',
+  'backgroundMusic': 'ice',
   'type': 'winter',
   'goal': {
     'position': {

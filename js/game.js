@@ -13,7 +13,8 @@ states = {
   'game-complete': GameCompleteState,
   'imprint': ImprintState,
   'menu': MenuState,
-  'play': PlayState
+  'play': PlayState,
+  'preload': PreloadState
 };
 
 for (var key in states) {
@@ -22,4 +23,4 @@ for (var key in states) {
   }
 }
 
-game.state.start('play');
+game.state.start('preload');

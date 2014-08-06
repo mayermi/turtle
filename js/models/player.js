@@ -2,10 +2,12 @@ var Player = (function() {
   function Player(game, x, y, walkDrag, jumpVelocity, hasShell, isUnderWater, isSanta) {
     Phaser.Sprite.call(this, game, x * 32, y * 32, 'player');
 
-    this.wahoo = game.add.audio('wahoo', 0.3);
     this.aua = game.add.audio('aua', 0.3);
     this.gulp = game.add.audio('gulp', 0.3);
+    this.wahoo = game.add.audio('wahoo', 0.3);
+    this.whoop = game.add.audio('whoop', 0.3);
     this.woo = game.add.audio('woo', 0.3);
+
 
     this.auInterval = null;
     this.currentJumpCount = 0;
@@ -381,6 +383,7 @@ var Player = (function() {
           }
         }
       } else {
+        this.whoop.play('', 0.2, 1, false);
         this.body.velocity.y = this.jumpVelocity;
       }
     }
@@ -444,7 +447,6 @@ var Player = (function() {
       } else if (!this.hasShell) {
         animation += '-naked';
       }
-
       this.animations.play(animation);
       this.facing = Phaser.RIGHT;
     }
