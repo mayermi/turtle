@@ -44,6 +44,7 @@ var PlayState = {
     this.load.image('life', '/img/images/life.png');
 
     this.load.spritesheet('lanternfish', '/img/sprites/lanternfish.png', 80, 80);
+    this.load.spritesheet('penguin', '/img/sprites/penguin.png', 32, 28);
     this.load.spritesheet('player', '/img/sprites/turtle.png', 32, 64);
     this.load.spritesheet('stork', '/img/sprites/stork.png', 144, 132);
     this.load.spritesheet('worm', '/img/sprites/worm.png', 48, 16);
@@ -278,7 +279,8 @@ var PlayState = {
 
   initializeMinions: function() {
     if (this.level.minions) {
-      var minionsEntry,
+      var minion,
+          minionsEntry,
           position,
           positions;
 
@@ -291,7 +293,13 @@ var PlayState = {
         for (var j = 0, k = positions.length; j < k; j += 1) {
           position = positions[j];
 
-          this.minions.add(new Minion(this.game, position.x, position.y, minionsEntry.minion));
+          if (minionsEntry.type === 'worm') {
+            minion = new Worm(this.game, position.x, position.y);
+          } else if (minionsEntry.type === 'penguin') {
+            minion = new Penguin(this.game, position.x, position.y);
+          }
+
+          this.minions.add(minion);
         }
       }
     }

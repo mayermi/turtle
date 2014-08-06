@@ -175,12 +175,21 @@ var levelOneOne = {
   ],
   'minions': [
     {
-      'minion': 'worm',
+      'type': 'worm',
       'positions': [
         {
           'x': 12,
           'y': 9
         },
+        {
+          'x': 14,
+          'y': 9
+        }
+      ]
+    },
+    {
+      'type': 'penguin',
+      'positions': [
         {
           'x': 14,
           'y': 9
@@ -488,23 +497,21 @@ var Lanternfish = (function() {
   return Lanternfish;
 })();
 
-var Minion = (function() {
-  function Minion(game, x, y, sprite) {
-    Phaser.Sprite.call(this, game, x * 32, y * 32, sprite);
+var Penguin = (function() {
+  function Penguin(game, x, y) {
+    Phaser.Sprite.call(this, game, x * 32, y * 32, 'penguin');
 
     this.hasHitPlayer = false;
-    this.walkVelocity = 120;
+    this.walkVelocity = 150;
 
-    this.plop = game.add.audio('plop',1.75);
+    this.plop = game.add.audio('plop', 1.75);
 
     helper.addAnimationsToSprite(this, [
-      'walk'
+      'default'
     ], 4);
-
-    this.animations.play('walk');
+    this.animations.play('default');
 
     game.physics.enable(this, Phaser.Physics.ARCADE);
-    this.body.collideWorldBounds = true;
     this.body.bounce.x = 1;
     this.body.immovable = true;
     this.body.velocity.x = -this.walkVelocity;
@@ -517,10 +524,10 @@ var Minion = (function() {
     game.add.existing(this);
   }
 
-  Minion.prototype = Object.create(Phaser.Sprite.prototype);
-  Minion.prototype.constructor = Minion;
+  Penguin.prototype = Object.create(Phaser.Sprite.prototype);
+  Penguin.prototype.constructor = Penguin;
 
-  Minion.prototype.update = function() {
+  Penguin.prototype.update = function() {
     var LEFT,
         RIGHT;
 
@@ -536,7 +543,7 @@ var Minion = (function() {
     }
   };
 
-  Minion.prototype.hit = function(sprite) {
+  Penguin.prototype.hit = function(sprite) {
     var that;
 
     if (!this.hasHitPlayer) {
@@ -555,11 +562,11 @@ var Minion = (function() {
     }
   };
 
-  Minion.prototype.turnAround = function() {
+  Penguin.prototype.turnAround = function() {
     this.scale.x *= -1;
   };
 
-  return Minion;
+  return Penguin;
 })();
 
 var Player = (function() {
@@ -1059,6 +1066,78 @@ var Stork = (function() {
   return Stork;
 })();
 
+var Worm = (function() {
+  function Worm(game, x, y) {
+    Phaser.Sprite.call(this, game, x * 32, y * 32, 'worm');
+
+    this.hasHitPlayer = false;
+    this.walkVelocity = 120;
+
+    this.plop = game.add.audio('plop',1.75);
+
+    helper.addAnimationsToSprite(this, [
+      'default'
+    ], 4);
+    this.animations.play('default');
+
+    game.physics.enable(this, Phaser.Physics.ARCADE);
+    this.body.bounce.x = 1;
+    this.body.immovable = true;
+    this.body.velocity.x = -this.walkVelocity;
+    this.scale.x *= -1;
+
+    this.anchor.setTo(0.5, 1);
+
+    this.facing = this.body.facing;
+
+    game.add.existing(this);
+  }
+
+  Worm.prototype = Object.create(Phaser.Sprite.prototype);
+  Worm.prototype.constructor = Worm;
+
+  Worm.prototype.update = function() {
+    var LEFT,
+        RIGHT;
+
+    LEFT = Phaser.LEFT;
+    RIGHT = Phaser.RIGHT;
+
+    if (this.body.facing === LEFT && this.facing !== LEFT) {
+      this.facing = LEFT;
+      this.turnAround();
+    } else if (this.body.facing === RIGHT && this.facing !== RIGHT) {
+      this.facing = RIGHT;
+      this.turnAround();
+    }
+  };
+
+  Worm.prototype.hit = function(sprite) {
+    var that;
+
+    if (!this.hasHitPlayer) {
+      sprite.takeDamage(1);
+      this.hasHitPlayer = true;
+      that = this;
+
+       setTimeout(function() {
+         that.hasHitPlayer = false;
+       }, 500);
+    }
+
+    if (this.body.touching.up) {
+      this.plop.play();
+      this.kill();
+    }
+  };
+
+  Worm.prototype.turnAround = function() {
+    this.scale.x *= -1;
+  };
+
+  return Worm;
+})();
+
 var GameCompleteState = {
   preload: function() {
     this.load.spritesheet('player', '/img/sprites/turtle.png', 32, 64);
@@ -1181,6 +1260,7 @@ var PlayState = {
     this.load.image('life', '/img/images/life.png');
 
     this.load.spritesheet('lanternfish', '/img/sprites/lanternfish.png', 80, 80);
+    this.load.spritesheet('penguin', '/img/sprites/penguin.png', 32, 28);
     this.load.spritesheet('player', '/img/sprites/turtle.png', 32, 64);
     this.load.spritesheet('stork', '/img/sprites/stork.png', 144, 132);
     this.load.spritesheet('worm', '/img/sprites/worm.png', 48, 16);
@@ -1415,7 +1495,8 @@ var PlayState = {
 
   initializeMinions: function() {
     if (this.level.minions) {
-      var minionsEntry,
+      var minion,
+          minionsEntry,
           position,
           positions;
 
@@ -1428,7 +1509,13 @@ var PlayState = {
         for (var j = 0, k = positions.length; j < k; j += 1) {
           position = positions[j];
 
-          this.minions.add(new Minion(this.game, position.x, position.y, minionsEntry.minion));
+          if (minionsEntry.type === 'worm') {
+            minion = new Worm(this.game, position.x, position.y);
+          } else if (minionsEntry.type === 'penguin') {
+            minion = new Penguin(this.game, position.x, position.y);
+          }
+
+          this.minions.add(minion);
         }
       }
     }

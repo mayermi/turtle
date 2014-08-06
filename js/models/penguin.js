@@ -1,20 +1,18 @@
-var Minion = (function() {
-  function Minion(game, x, y, sprite) {
-    Phaser.Sprite.call(this, game, x * 32, y * 32, sprite);
+var Penguin = (function() {
+  function Penguin(game, x, y) {
+    Phaser.Sprite.call(this, game, x * 32, y * 32, 'penguin');
 
     this.hasHitPlayer = false;
-    this.walkVelocity = 120;
+    this.walkVelocity = 150;
 
-    this.plop = game.add.audio('plop',1.75);
+    this.plop = game.add.audio('plop', 1.75);
 
     helper.addAnimationsToSprite(this, [
-      'walk'
+      'default'
     ], 4);
-
-    this.animations.play('walk');
+    this.animations.play('default');
 
     game.physics.enable(this, Phaser.Physics.ARCADE);
-    this.body.collideWorldBounds = true;
     this.body.bounce.x = 1;
     this.body.immovable = true;
     this.body.velocity.x = -this.walkVelocity;
@@ -27,10 +25,10 @@ var Minion = (function() {
     game.add.existing(this);
   }
 
-  Minion.prototype = Object.create(Phaser.Sprite.prototype);
-  Minion.prototype.constructor = Minion;
+  Penguin.prototype = Object.create(Phaser.Sprite.prototype);
+  Penguin.prototype.constructor = Penguin;
 
-  Minion.prototype.update = function() {
+  Penguin.prototype.update = function() {
     var LEFT,
         RIGHT;
 
@@ -46,7 +44,7 @@ var Minion = (function() {
     }
   };
 
-  Minion.prototype.hit = function(sprite) {
+  Penguin.prototype.hit = function(sprite) {
     var that;
 
     if (!this.hasHitPlayer) {
@@ -65,9 +63,9 @@ var Minion = (function() {
     }
   };
 
-  Minion.prototype.turnAround = function() {
+  Penguin.prototype.turnAround = function() {
     this.scale.x *= -1;
   };
 
-  return Minion;
+  return Penguin;
 })();

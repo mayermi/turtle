@@ -70,12 +70,21 @@ var levelOneOne = {
   ],
   'minions': [
     {
-      'minion': 'worm',
+      'type': 'worm',
       'positions': [
         {
           'x': 12,
           'y': 9
         },
+        {
+          'x': 14,
+          'y': 9
+        }
+      ]
+    },
+    {
+      'type': 'penguin',
+      'positions': [
         {
           'x': 14,
           'y': 9
