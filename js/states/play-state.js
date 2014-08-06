@@ -44,6 +44,7 @@ var PlayState = {
     this.load.image('life', '/img/images/life.png');
 
     this.load.spritesheet('lanternfish', '/img/sprites/lanternfish.png', 80, 80);
+    this.load.spritesheet('caterpillar', '/img/sprites/caterpillar.png', 48, 16);
     this.load.spritesheet('jellyfish', '/img/sprites/jellyfish.png', 32, 48);
     this.load.spritesheet('penguin', '/img/sprites/penguin.png', 32, 28);
     this.load.spritesheet('player', '/img/sprites/turtle.png', 32, 64);
@@ -295,6 +296,9 @@ var PlayState = {
           position = positions[j];
 
           switch (minionsEntry.type) {
+            case 'caterpillar':
+              minion = new Caterpillar(this.game, position.x, position.y);
+              break;
             case 'jellyfish':
               minion = new Jellyfish(this.game, position.x, position.y);
               break;

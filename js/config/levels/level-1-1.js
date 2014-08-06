@@ -83,6 +83,15 @@ var levelOneOne = {
       ]
     },
     {
+      'type': 'caterpillar',
+      'positions': [
+        {
+          'x': 12,
+          'y': 9
+        }
+      ]
+    },
+    {
       'type': 'penguin',
       'positions': [
         {

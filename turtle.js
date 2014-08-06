@@ -188,6 +188,15 @@ var levelOneOne = {
       ]
     },
     {
+      'type': 'caterpillar',
+      'positions': [
+        {
+          'x': 12,
+          'y': 9
+        }
+      ]
+    },
+    {
       'type': 'penguin',
       'positions': [
         {
@@ -429,6 +438,78 @@ var levelThreeOne = {
     },
   ]
 };
+
+var Caterpillar = (function() {
+  function Caterpillar(game, x, y) {
+    Phaser.Sprite.call(this, game, x * 32, y * 32, 'caterpillar');
+
+    this.hasHitPlayer = false;
+    this.walkVelocity = 80;
+
+    this.plop = game.add.audio('plop',1.75);
+
+    helper.addAnimationsToSprite(this, [
+      'default'
+    ], 4);
+    this.animations.play('default');
+
+    game.physics.enable(this, Phaser.Physics.ARCADE);
+    this.body.bounce.x = 1;
+    this.body.immovable = true;
+    this.body.velocity.x = -this.walkVelocity;
+    this.scale.x *= -1;
+
+    this.anchor.setTo(0.5, 1);
+
+    this.facing = this.body.facing;
+
+    game.add.existing(this);
+  }
+
+  Caterpillar.prototype = Object.create(Phaser.Sprite.prototype);
+  Caterpillar.prototype.constructor = Caterpillar;
+
+  Caterpillar.prototype.update = function() {
+    var LEFT,
+        RIGHT;
+
+    LEFT = Phaser.LEFT;
+    RIGHT = Phaser.RIGHT;
+
+    if (this.body.facing === LEFT && this.facing !== LEFT) {
+      this.facing = LEFT;
+      this.turnAround();
+    } else if (this.body.facing === RIGHT && this.facing !== RIGHT) {
+      this.facing = RIGHT;
+      this.turnAround();
+    }
+  };
+
+  Caterpillar.prototype.hit = function(sprite) {
+    var that;
+
+    if (!this.hasHitPlayer) {
+      sprite.takeDamage(1);
+      this.hasHitPlayer = true;
+      that = this;
+
+       setTimeout(function() {
+         that.hasHitPlayer = false;
+       }, 500);
+    }
+
+    if (this.body.touching.up) {
+      this.plop.play();
+      this.kill();
+    }
+  };
+
+  Caterpillar.prototype.turnAround = function() {
+    this.scale.x *= -1;
+  };
+
+  return Caterpillar;
+})();
 
 var Goody = (function() {
   function Goody(game, x, y, sprite, effects) {
@@ -1356,6 +1437,7 @@ var PlayState = {
     this.load.image('life', '/img/images/life.png');
 
     this.load.spritesheet('lanternfish', '/img/sprites/lanternfish.png', 80, 80);
+    this.load.spritesheet('caterpillar', '/img/sprites/caterpillar.png', 48, 16);
     this.load.spritesheet('jellyfish', '/img/sprites/jellyfish.png', 32, 48);
     this.load.spritesheet('penguin', '/img/sprites/penguin.png', 32, 28);
     this.load.spritesheet('player', '/img/sprites/turtle.png', 32, 64);
@@ -1607,6 +1689,9 @@ var PlayState = {
           position = positions[j];
 
           switch (minionsEntry.type) {
+            case 'caterpillar':
+              minion = new Caterpillar(this.game, position.x, position.y);
+              break;
             case 'jellyfish':
               minion = new Jellyfish(this.game, position.x, position.y);
               break;
@@ -1883,9 +1968,9 @@ var Config = (function() {
     this.goodies = goodies;
 
     this.levels = [
-      levelTwoOne,
       levelOneOne,
       levelOneTwo,
+      levelTwoOne,
       levelThreeOne
     ];
   }
