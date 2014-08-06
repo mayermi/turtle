@@ -10,6 +10,20 @@ var Helper = (function() {
     };
   }
 
+  Helper.prototype.addAnimationsToSprite = function(sprite, animations, framesPerAnimation) {
+    var firstFrame,
+        lastFrame,
+        framesRange;
+
+    for (var i = 0, l = animations.length; i < l; i += 1) {
+      firstFrame = framesPerAnimation * i;
+      lastFrame = firstFrame + framesPerAnimation;
+      framesRange = _.range(firstFrame, lastFrame);
+
+      sprite.animations.add(animations[i], framesRange, 12.5, true);
+    }
+  };
+
   Helper.prototype.addText = function(x, y, text, style) {
     var attribute,
         combinedStyle;
@@ -98,7 +112,7 @@ var levelOneOne = {
     'type': 'stork',
     'position': {
       'x': 58,
-      'y': 5
+      'y': 4
     }
   },
   'goal': {
@@ -234,6 +248,13 @@ var levelTwoOne = {
   'name': 'Under the sea',
   'backgroundMusic': 'sea',
   'type': 'sea',
+  'boss': {
+    'type': 'lanternfish',
+    'position': {
+      'x': 58,
+      'y': 5
+    }
+  },
   'goal': {
     'position': {
       'x': 64,
@@ -408,14 +429,62 @@ var Goody = (function() {
   return Goody;
 })();
 
+var Lanternfish = (function() {
+  function Lanternfish(game, x, y) {
+    var that;
+
+    that = this;
+
+    Phaser.Sprite.call(this, game, x * 32, y * 32, 'lanternfish');
+
+    this.hasHitPlayer = false;
+
+    this.plop = game.add.audio('plop', 1.75);
+
+    helper.addAnimationsToSprite(this, [
+      'default'
+    ], 6);
+
+    this.animations.play('default');
+
+    game.physics.enable(this, Phaser.Physics.ARCADE);
+    this.body.immovable = true;
+    this.body.bounce.y = 1;
+
+    setInterval(function() {
+      that.body.velocity.y = -200;
+    }, 1000);
+
+    game.add.existing(this);
+  }
+
+  Lanternfish.prototype = Object.create(Phaser.Sprite.prototype);
+  Lanternfish.prototype.constructor = Lanternfish;
+
+  Lanternfish.prototype.hit = function(sprite) {
+    var that;
+
+    if (!sprite.hasShell) {
+      if (!this.hasHitPlayer) {
+        sprite.takeDamage(1);
+        this.hasHitPlayer = true;
+
+        that = this;
+        setTimeout(function() {
+          that.hasHitPlayer = false;
+        }, 500);
+      }
+    } else if (this.body.touching.up) {
+      this.plop.play();
+      this.kill();
+    }
+  };
+
+  return Lanternfish;
+})();
+
 var Minion = (function() {
   function Minion(game, x, y, sprite) {
-    var animations,
-        firstFrame,
-        framesPerAnimation,
-        framesRange,
-        lastFrame;
-
     Phaser.Sprite.call(this, game, x * 32, y * 32, sprite);
 
     this.hasHitPlayer = false;
@@ -423,18 +492,9 @@ var Minion = (function() {
 
     this.plop = game.add.audio('plop',1.75);
 
-    animations = [
+    helper.addAnimationsToSprite(this, [
       'walk'
-    ];
-    framesPerAnimation = 4;
-
-    for (var i = 0, l = animations.length; i < l; i += 1) {
-      firstFrame = framesPerAnimation * i;
-      lastFrame = firstFrame + framesPerAnimation;
-      framesRange = _.range(firstFrame, lastFrame);
-
-      this.animations.add(animations[i], framesRange, 12.5, true);
-    }
+    ], 4);
 
     this.animations.play('walk');
 
@@ -499,10 +559,6 @@ var Minion = (function() {
 
 var Player = (function() {
   function Player(game, x, y, walkDrag, jumpVelocity, hasShell, isUnderWater, isSanta) {
-    var firstFrame,
-        framesRange,
-        lastFrame;
-
     Phaser.Sprite.call(this, game, x * 32, y * 32, 'player');
 
     this.wahoo = game.add.audio('wahoo', 0.3);
@@ -576,13 +632,7 @@ var Player = (function() {
     ];
     this.framesPerAnimation = 10;
 
-    for (var i = 0, l = this.animationNames.length; i < l; i += 1) {
-      firstFrame = this.framesPerAnimation * i;
-      lastFrame = firstFrame + this.framesPerAnimation;
-      framesRange = _.range(firstFrame, lastFrame);
-
-      this.animations.add(this.animationNames[i], framesRange, 12.5, true);
-    }
+    helper.addAnimationsToSprite(this, this.animationNames, this.framesPerAnimation);
 
     if (this.isSanta) {
       this.animations.play('walk-right-santa');
@@ -961,45 +1011,26 @@ var Player = (function() {
 })();
 
 var Stork = (function() {
-  function Stork(game, x, y, sprite) {
-    var animations,
-        firstFrame,
-        framesPerAnimation,
-        framesRange,
-        lastFrame;
-
-    Phaser.Sprite.call(this, game, x * 32, y * 32, sprite);
+  function Stork(game, x, y) {
+    Phaser.Sprite.call(this, game, x * 32, y * 32, 'stork');
 
     this.hasHitPlayer = false;
 
-    this.plop = game.add.audio('plop',1.75);
+    this.plop = game.add.audio('plop', 1.75);
 
-    animations = [
+    helper.addAnimationsToSprite(this, [
       'peck'
-    ];
-    framesPerAnimation = 8;
-
-    for (var i = 0, l = animations.length; i < l; i += 1) {
-      firstFrame = framesPerAnimation * i;
-      lastFrame = firstFrame + framesPerAnimation;
-      framesRange = _.range(firstFrame, lastFrame);
-
-      this.animations.add(animations[i], framesRange, 12.5, true);
-    }
-
+    ], 8);
     this.animations.play('peck');
 
     game.physics.enable(this, Phaser.Physics.ARCADE);
-    this.body.allowGravity = false;
     this.body.immovable = true;
-    this.body.bounce.setTo(1, 1);
 
     game.add.existing(this);
   }
 
   Stork.prototype = Object.create(Phaser.Sprite.prototype);
   Stork.prototype.constructor = Stork;
-
 
   Stork.prototype.hit = function(sprite) {
     if (!sprite.hasShell) {
@@ -1011,14 +1042,11 @@ var Stork = (function() {
         setTimeout( function() {
           that.hasHitPlayer = false;
         }, 500);
-      } 
-    } else {
-      if (this.body.touching.up) {
-        this.plop.play();
-        this.kill();
       }
+    } else if (this.body.touching.up) {
+      this.plop.play();
+      this.kill();
     }
-
   };
 
   return Stork;
@@ -1145,8 +1173,9 @@ var PlayState = {
     this.load.image('winter-tiles', '/img/tiles/winter.png');
     this.load.image('life', '/img/images/life.png');
 
+    this.load.spritesheet('lanternfish', '/img/sprites/lanternfish.png', 80, 80);
     this.load.spritesheet('player', '/img/sprites/turtle.png', 32, 64);
-    this.load.spritesheet('stork', '/img/sprites/stork.png', 144, 144);
+    this.load.spritesheet('stork', '/img/sprites/stork.png', 144, 132);
     this.load.spritesheet('worm', '/img/sprites/worm.png', 48, 16);
 
     this.load.spritesheet('forest-spritesheet', '/img/tiles/forest.png', 32, 32);
@@ -1180,8 +1209,9 @@ var PlayState = {
     lifeGroup = this.lifeGroup;
     playerHealth = this.player.health;
 
-    this.checkPlayerCollisions();
+    this.checkBossCollisions();
     this.checkMinionCollisions();
+    this.checkPlayerCollisions();
 
     if (playerHealth >= 0) {
      if (playerHealth < lifeGroup.length) {
@@ -1209,6 +1239,17 @@ var PlayState = {
 
     if (cursorKeys.right.isDown) {
       this.player.moveRight();
+    }
+  },
+
+  checkBossCollisions: function() {
+    if (this.boss) {
+      var arcade;
+
+      arcade = this.game.physics.arcade;
+
+      arcade.collide(this.boss, this.layer);
+      arcade.collide(this.boss, this.platforms);
     }
   },
 
@@ -1291,7 +1332,9 @@ var PlayState = {
   initializeBoss: function() {
     if (this.level.boss) {
       if (this.level.boss.type === 'stork') {
-        this.boss = new Stork(this.game, this.level.boss.position.x, this.level.boss.position.y, 'stork');
+        this.boss = new Stork(this.game, this.level.boss.position.x, this.level.boss.position.y);
+      } else if (this.level.boss.type === 'lanternfish') {
+        this.boss = new Lanternfish(this.game, this.level.boss.position.x, this.level.boss.position.y);
       }
     }
   },

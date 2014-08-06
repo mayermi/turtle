@@ -1,11 +1,5 @@
 var Minion = (function() {
   function Minion(game, x, y, sprite) {
-    var animations,
-        firstFrame,
-        framesPerAnimation,
-        framesRange,
-        lastFrame;
-
     Phaser.Sprite.call(this, game, x * 32, y * 32, sprite);
 
     this.hasHitPlayer = false;
@@ -13,18 +7,9 @@ var Minion = (function() {
 
     this.plop = game.add.audio('plop',1.75);
 
-    animations = [
+    helper.addAnimationsToSprite(this, [
       'walk'
-    ];
-    framesPerAnimation = 4;
-
-    for (var i = 0, l = animations.length; i < l; i += 1) {
-      firstFrame = framesPerAnimation * i;
-      lastFrame = firstFrame + framesPerAnimation;
-      framesRange = _.range(firstFrame, lastFrame);
-
-      this.animations.add(animations[i], framesRange, 12.5, true);
-    }
+    ], 4);
 
     this.animations.play('walk');
 

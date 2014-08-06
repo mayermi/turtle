@@ -1,9 +1,5 @@
 var Player = (function() {
   function Player(game, x, y, walkDrag, jumpVelocity, hasShell, isUnderWater, isSanta) {
-    var firstFrame,
-        framesRange,
-        lastFrame;
-
     Phaser.Sprite.call(this, game, x * 32, y * 32, 'player');
 
     this.wahoo = game.add.audio('wahoo', 0.3);
@@ -77,13 +73,7 @@ var Player = (function() {
     ];
     this.framesPerAnimation = 10;
 
-    for (var i = 0, l = this.animationNames.length; i < l; i += 1) {
-      firstFrame = this.framesPerAnimation * i;
-      lastFrame = firstFrame + this.framesPerAnimation;
-      framesRange = _.range(firstFrame, lastFrame);
-
-      this.animations.add(this.animationNames[i], framesRange, 12.5, true);
-    }
+    helper.addAnimationsToSprite(this, this.animationNames, this.framesPerAnimation);
 
     if (this.isSanta) {
       this.animations.play('walk-right-santa');

@@ -7,6 +7,20 @@ var Helper = (function() {
     };
   }
 
+  Helper.prototype.addAnimationsToSprite = function(sprite, animations, framesPerAnimation) {
+    var firstFrame,
+        lastFrame,
+        framesRange;
+
+    for (var i = 0, l = animations.length; i < l; i += 1) {
+      firstFrame = framesPerAnimation * i;
+      lastFrame = firstFrame + framesPerAnimation;
+      framesRange = _.range(firstFrame, lastFrame);
+
+      sprite.animations.add(animations[i], framesRange, 12.5, true);
+    }
+  };
+
   Helper.prototype.addText = function(x, y, text, style) {
     var attribute,
         combinedStyle;

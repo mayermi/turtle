@@ -3,6 +3,13 @@ var levelTwoOne = {
   'name': 'Under the sea',
   'backgroundMusic': 'sea',
   'type': 'sea',
+  'boss': {
+    'type': 'lanternfish',
+    'position': {
+      'x': 58,
+      'y': 5
+    }
+  },
   'goal': {
     'position': {
       'x': 64,

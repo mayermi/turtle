@@ -7,7 +7,7 @@ var levelOneOne = {
     'type': 'stork',
     'position': {
       'x': 58,
-      'y': 5
+      'y': 4
     }
   },
   'goal': {

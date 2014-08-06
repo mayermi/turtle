@@ -43,8 +43,9 @@ var PlayState = {
     this.load.image('winter-tiles', '/img/tiles/winter.png');
     this.load.image('life', '/img/images/life.png');
 
+    this.load.spritesheet('lanternfish', '/img/sprites/lanternfish.png', 80, 80);
     this.load.spritesheet('player', '/img/sprites/turtle.png', 32, 64);
-    this.load.spritesheet('stork', '/img/sprites/stork.png', 144, 144);
+    this.load.spritesheet('stork', '/img/sprites/stork.png', 144, 132);
     this.load.spritesheet('worm', '/img/sprites/worm.png', 48, 16);
 
     this.load.spritesheet('forest-spritesheet', '/img/tiles/forest.png', 32, 32);
@@ -78,8 +79,9 @@ var PlayState = {
     lifeGroup = this.lifeGroup;
     playerHealth = this.player.health;
 
-    this.checkPlayerCollisions();
+    this.checkBossCollisions();
     this.checkMinionCollisions();
+    this.checkPlayerCollisions();
 
     if (playerHealth >= 0) {
      if (playerHealth < lifeGroup.length) {
@@ -107,6 +109,17 @@ var PlayState = {
 
     if (cursorKeys.right.isDown) {
       this.player.moveRight();
+    }
+  },
+
+  checkBossCollisions: function() {
+    if (this.boss) {
+      var arcade;
+
+      arcade = this.game.physics.arcade;
+
+      arcade.collide(this.boss, this.layer);
+      arcade.collide(this.boss, this.platforms);
     }
   },
 
@@ -189,7 +202,9 @@ var PlayState = {
   initializeBoss: function() {
     if (this.level.boss) {
       if (this.level.boss.type === 'stork') {
-        this.boss = new Stork(this.game, this.level.boss.position.x, this.level.boss.position.y, 'stork');
+        this.boss = new Stork(this.game, this.level.boss.position.x, this.level.boss.position.y);
+      } else if (this.level.boss.type === 'lanternfish') {
+        this.boss = new Lanternfish(this.game, this.level.boss.position.x, this.level.boss.position.y);
       }
     }
   },
