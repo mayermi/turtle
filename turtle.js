@@ -3021,6 +3021,10 @@ var PlayState = {
       this.goodies.destroy();
     }
 
+    if (this.hazardousTerrain) {
+      this.hazardousTerrain.destroy();
+    }
+
     if (this.label) {
       this.label.destroy();
     }
