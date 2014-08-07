@@ -17,6 +17,7 @@ var Config = (function() {
     this.levels = [
       levelOneOne,
       levelOneTwo,
+      levelOneThree,
       levelTwoOne,
       levelTwoTwo,
       levelThreeOne,
