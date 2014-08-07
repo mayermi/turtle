@@ -68,6 +68,22 @@ var levelOneThree = {
       ]
     }
   ],
+  'hazardousWater': [
+    {
+      'start': {
+        'x': 8,
+        'y': 9
+      },
+      'length': 6
+    },
+    {
+      'start': {
+        'x': 61,
+        'y': 9
+      },
+      'length':18
+    }
+  ],
   'hazardousTerrain': [
     {
       'start': {

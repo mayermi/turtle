@@ -157,6 +157,15 @@ var levelOneOne = {
       ]
     }
   ],
+  'hazardousWater': [
+    {
+      'start': {
+        'x': 24,
+        'y': 9
+      },
+      'length': 2
+    }
+  ],
   'hazardousTerrain': [
     {
       'start': {
@@ -325,6 +334,29 @@ var levelOneTwo = {
           'y': 8
         }
       ]
+    }
+  ],
+  'hazardousWater': [
+    {
+      'start': {
+        'x': 62,
+        'y': 9
+      },
+      'length': 2
+    },
+    {
+      'start': {
+        'x': 67,
+        'y': 9
+      },
+      'length': 7
+    },
+    {
+      'start': {
+        'x': 65,
+        'y': 9
+      },
+      'length': 2
     }
   ],
   'hazardousTerrain': [
@@ -545,6 +577,22 @@ var levelOneThree = {
           'y': 5
         }
       ]
+    }
+  ],
+  'hazardousWater': [
+    {
+      'start': {
+        'x': 8,
+        'y': 9
+      },
+      'length': 6
+    },
+    {
+      'start': {
+        'x': 61,
+        'y': 9
+      },
+      'length':18
     }
   ],
   'hazardousTerrain': [
