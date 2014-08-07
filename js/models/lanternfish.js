@@ -33,19 +33,19 @@ var Lanternfish = (function() {
   Lanternfish.prototype.hit = function(sprite) {
     var that;
 
-    if (!sprite.hasShell) {
+    if (this.body.touching.up) {
+      this.plop.play();
+      this.kill();
+    } else {
       if (!this.hasHitPlayer) {
         sprite.takeDamage(1);
         this.hasHitPlayer = true;
-
         that = this;
+
         setTimeout(function() {
           that.hasHitPlayer = false;
         }, 500);
       }
-    } else if (this.body.touching.up) {
-      this.plop.play();
-      this.kill();
     }
   };
 

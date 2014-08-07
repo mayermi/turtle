@@ -175,30 +175,12 @@ var levelOneOne = {
   ],
   'minions': [
     {
-      'type': 'worm',
+      'minion': 'worm',
       'positions': [
         {
           'x': 12,
           'y': 9
         },
-        {
-          'x': 14,
-          'y': 9
-        }
-      ]
-    },
-    {
-      'type': 'caterpillar',
-      'positions': [
-        {
-          'x': 12,
-          'y': 9
-        }
-      ]
-    },
-    {
-      'type': 'penguin',
-      'positions': [
         {
           'x': 14,
           'y': 9
@@ -224,11 +206,7 @@ var levelOneOne = {
   ],
   'player': {
     'jumpVelocity' : -400,
-    'walkDrag' : 800,
-    'position': {
-      'x': 1,
-      'y': 7
-    }
+    'walkDrag' : 800
   },
   'physics': {
     'gravity' : 1200
@@ -513,19 +491,19 @@ var Caterpillar = (function() {
   Caterpillar.prototype.hit = function(sprite) {
     var that;
 
-    if (!this.hasHitPlayer) {
-      sprite.takeDamage(1);
-      this.hasHitPlayer = true;
-      that = this;
-
-       setTimeout(function() {
-         that.hasHitPlayer = false;
-       }, 500);
-    }
-
     if (this.body.touching.up) {
       this.plop.play();
       this.kill();
+    } else {
+      if (!this.hasHitPlayer) {
+        sprite.takeDamage(1);
+        this.hasHitPlayer = true;
+        that = this;
+
+        setTimeout(function() {
+          that.hasHitPlayer = false;
+        }, 500);
+      }
     }
   };
 
@@ -622,19 +600,19 @@ var Jellyfish = (function() {
   Jellyfish.prototype.hit = function(sprite) {
     var that;
 
-    if (!this.hasHitPlayer) {
-      sprite.takeDamage(1);
-      this.hasHitPlayer = true;
-      that = this;
-
-       setTimeout(function() {
-         that.hasHitPlayer = false;
-       }, 500);
-    }
-
     if (this.body.touching.up) {
       this.plop.play();
       this.kill();
+    } else {
+      if (!this.hasHitPlayer) {
+        sprite.takeDamage(1);
+        this.hasHitPlayer = true;
+        that = this;
+
+        setTimeout(function() {
+          that.hasHitPlayer = false;
+        }, 500);
+      }
     }
   };
 
@@ -680,19 +658,19 @@ var Lanternfish = (function() {
   Lanternfish.prototype.hit = function(sprite) {
     var that;
 
-    if (!sprite.hasShell) {
+    if (this.body.touching.up) {
+      this.plop.play();
+      this.kill();
+    } else {
       if (!this.hasHitPlayer) {
         sprite.takeDamage(1);
         this.hasHitPlayer = true;
-
         that = this;
+
         setTimeout(function() {
           that.hasHitPlayer = false;
         }, 500);
       }
-    } else if (this.body.touching.up) {
-      this.plop.play();
-      this.kill();
     }
   };
 
@@ -748,19 +726,19 @@ var Penguin = (function() {
   Penguin.prototype.hit = function(sprite) {
     var that;
 
-    if (!this.hasHitPlayer) {
-      sprite.takeDamage(1);
-      this.hasHitPlayer = true;
-      that = this;
-
-       setTimeout(function() {
-         that.hasHitPlayer = false;
-       }, 500);
-    }
-
     if (this.body.touching.up) {
       this.plop.play();
       this.kill();
+    } else {
+      if (!this.hasHitPlayer) {
+        sprite.takeDamage(1);
+        this.hasHitPlayer = true;
+        that = this;
+
+        setTimeout(function() {
+          that.hasHitPlayer = false;
+        }, 500);
+      }
     }
   };
 
@@ -1287,19 +1265,19 @@ var Pufferfish = (function() {
   Pufferfish.prototype.hit = function(sprite) {
     var that;
 
-    if (!this.hasHitPlayer) {
-      sprite.takeDamage(1);
-      this.hasHitPlayer = true;
-      that = this;
-
-       setTimeout(function() {
-         that.hasHitPlayer = false;
-       }, 500);
-    }
-
     if (this.body.touching.up) {
       this.plop.play();
       this.kill();
+    } else {
+      if (!this.hasHitPlayer) {
+        sprite.takeDamage(1);
+        this.hasHitPlayer = true;
+        that = this;
+
+        setTimeout(function() {
+          that.hasHitPlayer = false;
+        }, 500);
+      }
     }
   };
 
@@ -1401,19 +1379,19 @@ var Worm = (function() {
   Worm.prototype.hit = function(sprite) {
     var that;
 
-    if (!this.hasHitPlayer) {
-      sprite.takeDamage(1);
-      this.hasHitPlayer = true;
-      that = this;
-
-       setTimeout(function() {
-         that.hasHitPlayer = false;
-       }, 500);
-    }
-
     if (this.body.touching.up) {
       this.plop.play();
       this.kill();
+    } else {
+      if (!this.hasHitPlayer) {
+        sprite.takeDamage(1);
+        this.hasHitPlayer = true;
+        that = this;
+
+        setTimeout(function() {
+          that.hasHitPlayer = false;
+        }, 500);
+      }
     }
   };
 
@@ -1655,6 +1633,7 @@ var PlayState = {
 
       if (player.health <= 0) {
         setTimeout(function() {
+         that.fx.pause();
           game.state.start(game.state.current);
         }, 2000);
       }
@@ -1665,7 +1644,7 @@ var PlayState = {
 
       player.cheer();
 
-      that.fx.pause();
+      that.fx.stop();
       that.fx.play('final');
       that.showCompleteMessage();
       player.checkWorldBounds = true;
@@ -1697,6 +1676,7 @@ var PlayState = {
 
       if (player.health <= 0) {
         setTimeout(function() {
+          that.fx.pause();
           game.state.start(game.state.current);
         }, 2000);
       }
