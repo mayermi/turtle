@@ -819,24 +819,12 @@ var levelFourTwo = {
       'type': 'bubble',
       'positions': [
         {
-          'x': 37,
-          'y': 2
+          'x': 49,
+          'y': 0
         },
         {
-          'x': 82,
-          'y': 7
-        },
-        {
-          'x': 108,
-          'y': 8
-        },
-        {
-          'x': 118,
-          'y': 8
-        },
-        {
-          'x': 128,
-          'y': 8
+          'x': 125,
+          'y': 5
         }
       ]
     },
@@ -844,16 +832,8 @@ var levelFourTwo = {
       'type': 'chili',
       'positions': [
         {
-          'x': 10,
-          'y': 8
-        },
-        {
-          'x': 51,
-          'y': 9
-        },
-        {
-          'x': 64,
-          'y': 8
+          'x': 120,
+          'y': 2
         }
       ]
     },
@@ -861,11 +841,7 @@ var levelFourTwo = {
       'type': 'strawberry',
       'positions': [
         {
-          'x': 47,
-          'y': 1
-        },
-        {
-          'x': 104,
+          'x': 108,
           'y': 1
         }
       ]
