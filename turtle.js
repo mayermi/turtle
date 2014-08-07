@@ -1008,7 +1008,7 @@ var levelThreeOne = {
   'type': 'winter',
   'goal': {
     'position': {
-      'x': 64,
+      'x': 144,
       'y': 8,
     },
     'height': 8
@@ -1018,8 +1018,12 @@ var levelThreeOne = {
       'type': 'bubble',
       'positions': [
         {
-          'x': 41,
-          'y': 5
+          'x': 54,
+          'y': 8
+        },
+        {
+          'x': 130,
+          'y': 4
         }
       ]
     },
@@ -1027,8 +1031,8 @@ var levelThreeOne = {
       'type': 'candy',
       'positions': [
         {
-          'x': 7,
-          'y': 4
+          'x': 26,
+          'y': 2
         }
       ]
     },
@@ -1036,12 +1040,8 @@ var levelThreeOne = {
       'type': 'chili',
       'positions': [
         {
-          'x': 12,
-          'y': 5
-        },
-        {
-          'x': 14,
-          'y': 8
+          'x': 92,
+          'y': 1
         }
       ]
     },
@@ -1049,8 +1049,8 @@ var levelThreeOne = {
       'type': 'ice',
       'positions': [
         {
-          'x': 16,
-          'y': 5
+          'x': 54,
+          'y': 4
         }
       ]
     },
@@ -1058,10 +1058,163 @@ var levelThreeOne = {
       'type': 'strawberry',
       'positions': [
         {
-          'x': 16,
+          'x': 41,
+          'y': 8
+        },
+        {
+          'x': 118,
           'y': 8
         }
       ]
+    }
+  ],
+  'hazardousTerrain': [
+    {
+      'start': {
+        'x': 19,
+        'y': 8
+      },
+      'length': 1
+    },
+    {
+      'start': {
+        'x': 81,
+        'y': 8
+      },
+      'length': 3
+    }
+  ],
+  'hazardousWater': [
+    {
+      'start': {
+        'x': 47,
+        'y': 9
+      },
+      'length': 2
+    },
+    {
+      'start': {
+        'x': 68,
+        'y': 9
+      },
+      'length': 2
+    },
+    {
+      'start': {
+        'x': 74,
+        'y': 9
+      },
+      'length': 3
+    },
+    {
+      'start': {
+        'x': 85,
+        'y': 7
+      },
+      'length': 8
+    },
+    {
+      'start': {
+        'x': 129,
+        'y': 9
+      },
+      'length': 3
+    }
+  ],
+  'minions': [
+    {
+      'type': 'penguin',
+      'positions': [
+        {
+          'x': 14,
+          'y': 8
+        },
+        {
+          'x': 53,
+          'y': 8
+        },
+        {
+          'x': 55,
+          'y': 8
+        },
+        {
+          'x': 96,
+          'y': 8
+        },
+        {
+          'x': 104,
+          'y': 8
+        },
+        {
+          'x': 122,
+          'y': 8
+        }
+      ]
+    }
+  ],
+  'platforms': [
+    {
+      'start': {
+        'x': 18,
+        'y': 4
+      },
+      'length': 4
+    },
+    {
+      'start': {
+        'x': 25,
+        'y': 3
+      },
+      'length': 4
+    },
+    {
+      'start': {
+        'x': 52,
+        'y': 5
+      },
+      'length': 5
+    },
+    {
+      'start': {
+        'x': 85,
+        'y': 5
+      },
+      'length': 2
+    },
+    {
+      'start': {
+        'x': 87,
+        'y': 3
+      },
+      'length': 3
+    },
+    {
+      'start': {
+        'x': 91,
+        'y': 3
+      },
+      'length': 3
+    },
+    {
+      'start': {
+        'x': 95,
+        'y': 4
+      },
+      'length': 3
+    },
+    {
+      'start': {
+        'x': 108,
+        'y': 6
+      },
+      'length': 3
+    },
+    {
+      'start': {
+        'x': 129,
+        'y': 5
+      },
+      'length': 3
     }
   ],
   'player': {
@@ -1075,16 +1228,7 @@ var levelThreeOne = {
   },
   'physics': {
     'gravity' : 1200
-  },
-  'slidingTerrain': [
-    {
-      'start': {
-        'x': 25,
-        'y': 9
-      },
-      'length': 12
-    },
-  ]
+  }
 };
 
 var levelFourOne = {
@@ -1914,7 +2058,7 @@ var Penguin = (function() {
     Phaser.Sprite.call(this, game, x * 32, y * 32, 'penguin');
 
     this.hasHitPlayer = false;
-    this.walkVelocity = 150;
+    this.walkVelocity = 80;
 
     this.plop = game.add.audio('plop', 1.75);
 
@@ -2001,6 +2145,7 @@ var Player = (function() {
     this.isCheering = false;
     this.isDying = false;
     this.isInHazardousTerrain = false;
+    this.isInHazardousWater = false;
     this.isOnSlidingTerrain = false;
     this.isSanta = false;
     this.isUnderWater = false;
@@ -2272,6 +2417,22 @@ var Player = (function() {
     }
   };
 
+  Player.prototype.enterHazardousWater = function() {
+    if (!this.isInHazardousWater) {
+      this.isInHazardousWater = true;
+      this.takeDamage(1);
+
+      this.setDamageInterval();
+    }
+  };
+
+  Player.prototype.leaveHazardousWater = function() {
+    if (this.isInHazardousWater) {
+      this.isInHazardousWater = false;
+
+      this.clearDamageInterval();
+    }
+  };
   Player.prototype.clearDamageInterval = function() {
     clearInterval(this.damageInterval);
   };
@@ -2858,6 +3019,7 @@ var PlayState = {
   goal: null,
   goodies: null,
   hazardousTerrain: null,
+  hazardousWater: null,
   isLevelComplete: null,
   isShowingCompleteMessage: null,
   levelNameLabel: null,
@@ -3024,6 +3186,21 @@ var PlayState = {
       this.player.leaveHazardousTerrain();
     }
 
+    var inHazardousWater = arcade.overlap(this.player, this.hazardousWater, function(player) {
+      player.enterHazardousWater();
+
+      if (player.health <= 0) {
+        setTimeout(function() {
+          that.fx.pause();
+          game.state.start(game.state.current);
+        }, 2000);
+      }
+    });
+
+    if (!inHazardousWater) {
+      this.player.leaveHazardousWater();
+    }
+
     arcade.collide(this.player, this.layer, function(player) {
       player.resetSlide();
     });
@@ -3051,6 +3228,7 @@ var PlayState = {
   initializeBeforePlayer: function() {
     this.initializeGoal();
     this.initializeHazardousTerrain();
+    this.initializeHazardousWater();
     this.initializePhysics();
     this.initializePlatforms();
     this.initializeSlidingTerrain();
@@ -3216,6 +3394,36 @@ var PlayState = {
     }
   },
 
+  initializeHazardousWater: function() {
+    if (this.level.hazardousWater) {
+      var entry,
+          terrain,
+          terrainStart;
+
+      this.hazardousWater = this.game.add.group();
+      this.hazardousWater.enableBody = true;
+      this.hazardousWater.physicsBodyType = Phaser.Physics.ARCADE;
+
+      for (var i = 0, l = this.level.hazardousWater.length; i < l; i += 1) {
+        entry = this.level.hazardousWater[i];
+
+        terrainStart = entry.start;
+
+        for (var j = 0; j < entry.length; j += 1) {
+          terrain = this.hazardousWater.create((terrainStart.x + j) * 32, terrainStart.y * 32, this.level.type + '-spritesheet', 15);
+
+          this.game.physics.enable(terrain, Phaser.Physics.ARCADE);
+
+          terrain.body.allowGravity = false;
+          terrain.body.checkCollision.left = false;
+          terrain.body.checkCollision.right = false;
+          terrain.body.checkCollision.down = false;
+          terrain.body.immovable = true;
+        }
+      }
+    }
+  },
+
   initializeHealthBar: function() {
     this.lifeGroup = game.add.group();
     this.lifeGroup.fixedToCamera = true;
@@ -3280,7 +3488,7 @@ var PlayState = {
           if (j > 0) {
             tileIndex = 5;
           }
-          if (j === k) {
+          if (j + 1 === k) {
             tileIndex = 6;
           }
 
@@ -3364,6 +3572,10 @@ var PlayState = {
 
     if (this.hazardousTerrain) {
       this.hazardousTerrain.destroy();
+    }
+
+    if (this.hazardousWater) {
+      this.hazardousWater.destroy();
     }
 
     if (this.label) {
