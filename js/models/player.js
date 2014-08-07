@@ -18,6 +18,7 @@ var Player = (function() {
     this.isCheering = false;
     this.isDying = false;
     this.isInHazardousTerrain = false;
+    this.isInHazardousWater = false;
     this.isOnSlidingTerrain = false;
     this.isSanta = false;
     this.isUnderWater = false;
@@ -289,6 +290,22 @@ var Player = (function() {
     }
   };
 
+  Player.prototype.enterHazardousWater = function() {
+    if (!this.isInHazardousWater) {
+      this.isInHazardousWater = true;
+      this.takeDamage(1);
+
+      this.setDamageInterval();
+    }
+  };
+
+  Player.prototype.leaveHazardousWater = function() {
+    if (this.isInHazardousWater) {
+      this.isInHazardousWater = false;
+
+      this.clearDamageInterval();
+    }
+  };
   Player.prototype.clearDamageInterval = function() {
     clearInterval(this.damageInterval);
   };

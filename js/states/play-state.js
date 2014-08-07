@@ -5,6 +5,7 @@ var PlayState = {
   goal: null,
   goodies: null,
   hazardousTerrain: null,
+  hazardousWater: null,
   isLevelComplete: null,
   isShowingCompleteMessage: null,
   levelNameLabel: null,
@@ -171,6 +172,21 @@ var PlayState = {
       this.player.leaveHazardousTerrain();
     }
 
+    var inHazardousWater = arcade.overlap(this.player, this.hazardousWater, function(player) {
+      player.enterHazardousWater();
+
+      if (player.health <= 0) {
+        setTimeout(function() {
+          that.fx.pause();
+          game.state.start(game.state.current);
+        }, 2000);
+      }
+    });
+
+    if (!inHazardousWater) {
+      this.player.leaveHazardousWater();
+    }
+
     arcade.collide(this.player, this.layer, function(player) {
       player.resetSlide();
     });
@@ -198,6 +214,7 @@ var PlayState = {
   initializeBeforePlayer: function() {
     this.initializeGoal();
     this.initializeHazardousTerrain();
+    this.initializeHazardousWater();
     this.initializePhysics();
     this.initializePlatforms();
     this.initializeSlidingTerrain();
@@ -363,6 +380,36 @@ var PlayState = {
     }
   },
 
+  initializeHazardousWater: function() {
+    if (this.level.hazardousWater) {
+      var entry,
+          terrain,
+          terrainStart;
+
+      this.hazardousWater = this.game.add.group();
+      this.hazardousWater.enableBody = true;
+      this.hazardousWater.physicsBodyType = Phaser.Physics.ARCADE;
+
+      for (var i = 0, l = this.level.hazardousWater.length; i < l; i += 1) {
+        entry = this.level.hazardousWater[i];
+
+        terrainStart = entry.start;
+
+        for (var j = 0; j < entry.length; j += 1) {
+          terrain = this.hazardousWater.create((terrainStart.x + j) * 32, terrainStart.y * 32, this.level.type + '-spritesheet', 15);
+
+          this.game.physics.enable(terrain, Phaser.Physics.ARCADE);
+
+          terrain.body.allowGravity = false;
+          terrain.body.checkCollision.left = false;
+          terrain.body.checkCollision.right = false;
+          terrain.body.checkCollision.down = false;
+          terrain.body.immovable = true;
+        }
+      }
+    }
+  },
+
   initializeHealthBar: function() {
     this.lifeGroup = game.add.group();
     this.lifeGroup.fixedToCamera = true;
@@ -427,7 +474,7 @@ var PlayState = {
           if (j > 0) {
             tileIndex = 5;
           }
-          if (j === k) {
+          if (j + 1 === k) {
             tileIndex = 6;
           }
 
@@ -511,6 +558,10 @@ var PlayState = {
 
     if (this.hazardousTerrain) {
       this.hazardousTerrain.destroy();
+    }
+
+    if (this.hazardousWater) {
+      this.hazardousWater.destroy();
     }
 
     if (this.label) {
