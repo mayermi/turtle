@@ -3,16 +3,9 @@ var levelTwoOne = {
   'name': 'Under the sea',
   'backgroundMusic': 'sea',
   'type': 'sea',
-  'boss': {
-    'type': 'lanternfish',
-    'position': {
-      'x': 58,
-      'y': 5
-    }
-  },
   'goal': {
     'position': {
-      'x': 64,
+      'x': 144,
       'y': 8,
     },
     'height': 8
@@ -22,8 +15,8 @@ var levelTwoOne = {
       'type': 'bubble',
       'positions': [
         {
-          'x': 41,
-          'y': 5
+          'x': 68,
+          'y': 6
         }
       ]
     },
@@ -31,8 +24,12 @@ var levelTwoOne = {
       'type': 'candy',
       'positions': [
         {
-          'x': 10,
-          'y': 4
+          'x': 78,
+          'y': 1
+        },
+        {
+          'x': 92,
+          'y': 5
         }
       ]
     },
@@ -40,12 +37,8 @@ var levelTwoOne = {
       'type': 'chili',
       'positions': [
         {
-          'x': 12,
-          'y': 5
-        },
-        {
-          'x': 14,
-          'y': 8
+          'x': 42,
+          'y': 1
         }
       ]
     },
@@ -53,8 +46,12 @@ var levelTwoOne = {
       'type': 'ice',
       'positions': [
         {
-          'x': 16,
-          'y': 5
+          'x': 60,
+          'y': 1
+        },
+        {
+          'x': 104,
+          'y': 1
         }
       ]
     },
@@ -62,7 +59,11 @@ var levelTwoOne = {
       'type': 'strawberry',
       'positions': [
         {
-          'x': 16,
+          'x': 44,
+          'y': 1
+        },
+        {
+          'x': 113,
           'y': 8
         }
       ]
@@ -73,12 +74,20 @@ var levelTwoOne = {
       'type': 'jellyfish',
       'positions': [
         {
-          'x': 12,
-          'y': 9
+          'x': 90,
+          'y': 7
         },
         {
-          'x': 14,
-          'y': 9
+          'x': 105,
+          'y': 7
+        },
+        {
+          'x': 130,
+          'y': 7
+        },
+        {
+          'x': 135,
+          'y': 7
         }
       ]
     },
@@ -87,7 +96,23 @@ var levelTwoOne = {
       'positions': [
         {
           'x': 40,
-          'y': 7
+          'y': 9
+        },
+        {
+          'x': 60,
+          'y': 8
+        },
+        {
+          'x': 78,
+          'y': 5
+        },
+        {
+          'x': 110,
+          'y': 1
+        },
+        {
+          'x': 113,
+          'y': 1
         }
       ]
     }

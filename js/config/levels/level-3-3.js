@@ -6,7 +6,7 @@ var levelThreeThree = {
   'boss': {
     'type': 'polarbaer',
     'position': {
-      'x': 145,
+      'x': 140,
       'y': 2
     }
   },
