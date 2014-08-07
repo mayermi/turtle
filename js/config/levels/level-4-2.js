@@ -151,22 +151,22 @@ var levelFourTwo = {
   'platforms': [
     {
       'start': {
-        'x': 35,
+        'x': 19,
         'y': 5
       },
       'length': 3
     },
     {
       'start': {
-        'x': 46,
-        'y': 3
+        'x': 22,
+        'y': 4
       },
-      'length': 3
+      'length': 2
     },
     {
       'start': {
-        'x': 104,
-        'y': 2
+        'x': 119,
+        'y': 3
       },
       'length': 2
     }
