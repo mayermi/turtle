@@ -26,6 +26,7 @@ var PreloadState = {
     this.load.spritesheet('jellyfish', '/img/sprites/jellyfish.png', 32, 48);
     this.load.spritesheet('penguin', '/img/sprites/penguin.png', 32, 28);
     this.load.spritesheet('player', '/img/sprites/turtle.png', 32, 64);
+    this.load.spritesheet('polarbaer', '/img/sprites/polarbaer.png', 72, 72);
     this.load.spritesheet('pufferfish', '/img/sprites/pufferfish.png', 32, 32);
     this.load.spritesheet('scorpion', '/img/sprites/scorpion.png', 32, 18);
     this.load.spritesheet('snake', '/img/sprites/snake.png', 82, 80);

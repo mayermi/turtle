@@ -17,6 +17,7 @@ var PlayState = {
   backgroundMusic: null,
   platforms: null,
   player: null,
+  polarbaer: null,
   slidingTerrain: null,
   snake: null,
   stork: null,
@@ -242,6 +243,8 @@ var PlayState = {
         this.boss = new Lanternfish(this.game, this.level.boss.position.x, this.level.boss.position.y);
       } else if (this.level.boss.type === 'snake') {
         this.boss = new Snake(this.game, this.level.boss.position.x, this.level.boss.position.y);
+      } else if (this.level.boss.type === 'polarbaer') {
+        this.boss = new Polarbaer(this.game, this.level.boss.position.x, this.level.boss.position.y);
       }
     }
   },

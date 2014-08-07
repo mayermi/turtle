@@ -1714,6 +1714,13 @@ var levelThreeThree = {
   'name': 'Winter Wonderland',
   'backgroundMusic': 'ice',
   'type': 'winter',
+  'boss': {
+    'type': 'polarbaer',
+    'position': {
+      'x': 145,
+      'y': 2
+    }
+  },
   'goal': {
     'position': {
       'x': 144,
@@ -1739,30 +1746,21 @@ var levelThreeThree = {
       'type': 'candy',
       'positions': [
         {
-          'x': 7,
-          'y': 4
-        }
+          'x': 30,
+          'y': 8
+        },
+        {
+          'x': 104,
+          'y': 1
+        },
       ]
     },
     {
       'type': 'chili',
       'positions': [
         {
-          'x': 12,
-          'y': 5
-        },
-        {
-          'x': 14,
-          'y': 8
-        }
-      ]
-    },
-    {
-      'type': 'ice',
-      'positions': [
-        {
-          'x': 16,
-          'y': 5
+          'x': 50,
+          'y': 3
         }
       ]
     },
@@ -1770,10 +1768,190 @@ var levelThreeThree = {
       'type': 'strawberry',
       'positions': [
         {
-          'x': 16,
+          'x': 41,
+          'y': 1
+        },
+        {
+          'x': 124,
+          'y': 8
+        },
+      ]
+    }
+  ],
+  'hazardousWater': [
+    {
+      'start': {
+        'x': 22,
+        'y': 9
+      },
+      'length': 4
+    },
+    {
+      'start': {
+        'x': 35,
+        'y': 9
+      },
+      'length': 3
+    },
+    {
+      'start': {
+        'x': 64,
+        'y': 9
+      },
+      'length': 3
+    }
+  ],
+  'hazardousTerrain': [
+    {
+      'start': {
+        'x': 32,
+        'y': 8
+      },
+      'length': 1
+    },
+    {
+      'start': {
+        'x': 72,
+        'y': 5
+      },
+      'length': 1
+    },
+    {
+      'start': {
+        'x': 86,
+        'y': 8
+      },
+      'length': 1
+    },
+    {
+      'start': {
+        'x': 92,
+        'y': 8
+      },
+      'length': 2
+    },
+    {
+      'start': {
+        'x': 100,
+        'y': 7
+      },
+      'length': 1
+    }
+  ],
+  'minions': [
+    {
+      'type': 'penguin',
+      'positions': [
+        {
+          'x': 15,
+          'y': 8
+        },
+        {
+          'x': 50,
+          'y': 5
+        },
+        {
+          'x': 52,
+          'y': 5
+        },
+        {
+          'x': 53,
+          'y': 5
+        },
+        {
+          'x': 70,
+          'y': 5
+        },
+        {
+          'x': 100,
+          'y': 5
+        },
+        {
+          'x': 102,
+          'y': 5
+        },
+        {
+          'x': 105,
+          'y': 5
+        },
+        {
+          'x': 120,
+          'y': 8
+        },
+        {
+          'x': 117,
+          'y': 8
+        },
+        {
+          'x': 124,
           'y': 8
         }
       ]
+    }
+  ],
+  'platforms': [
+    {
+      'start': {
+        'x': 19,
+        'y': 6
+      },
+      'length': 2
+    },
+    {
+      'start': {
+        'x': 22,
+        'y': 4
+      },
+      'length': 2
+    },
+    {
+      'start': {
+        'x': 27,
+        'y': 3
+      },
+      'length': 4
+    },
+    {
+      'start': {
+        'x': 36,
+        'y': 3
+      },
+      'length': 2
+    },
+    {
+      'start': {
+        'x': 40,
+        'y': 3
+      },
+      'length': 2
+    },
+    {
+      'start': {
+        'x': 85,
+        'y': 4
+      },
+      'length': 2
+    },
+    {
+      'start': {
+        'x': 90,
+        'y': 3
+      },
+      'length': 2
+    },
+    {
+      'start': {
+        'x': 95,
+        'y': 3
+      },
+      'length': 3
+    },
+    {
+      'start': {
+        'x': 103,
+        'y': 3
+      },
+      'length': 2
     }
   ],
   'player': {
@@ -1791,11 +1969,32 @@ var levelThreeThree = {
   'slidingTerrain': [
     {
       'start': {
-        'x': 25,
+        'x': 19,
         'y': 9
       },
-      'length': 12
+      'length': 3
     },
+    {
+      'start': {
+        'x': 26,
+        'y': 9
+      },
+      'length': 9
+    },
+    {
+      'start': {
+        'x': 74,
+        'y': 9
+      },
+      'length': 6
+    },
+    {
+      'start': {
+        'x': 83,
+        'y': 9
+      },
+      'length': 13
+    }
   ]
 };
 var levelFourOne = {
@@ -3160,6 +3359,48 @@ var Player = (function() {
   return Player;
 })();
 
+var Polarbaer = (function() {
+  function Polarbaer(game, x, y) {
+    Phaser.Sprite.call(this, game, x * 32, y * 32, 'polarbaer');
+
+    this.hasHitPlayer = false;
+
+    this.plop = game.add.audio('plop', 1.75);
+
+    helper.addAnimationsToSprite(this, [
+      'rawr'
+    ], 9);
+    this.animations.play('rawr');
+
+    game.physics.enable(this, Phaser.Physics.ARCADE);
+    this.body.immovable = true;
+
+    game.add.existing(this);
+  }
+
+  Polarbaer.prototype = Object.create(Phaser.Sprite.prototype);
+  Polarbaer.prototype.constructor = Polarbaer;
+
+  Polarbaer.prototype.hit = function(sprite) {
+    if (!sprite.hasShell) {
+      if (!this.hasHitPlayer) {
+        sprite.takeDamage(1);
+        this.hasHitPlayer = true;
+        var that = this;
+
+        setTimeout( function() {
+          that.hasHitPlayer = false;
+        }, 500);
+      }
+    } else if (this.body.touching.up) {
+      this.plop.play();
+      this.kill();
+    }
+  };
+
+  return Polarbaer;
+})();
+
 var Pufferfish = (function() {
   function Pufferfish(game, x, y) {
     var that;
@@ -3608,6 +3849,7 @@ var PlayState = {
   backgroundMusic: null,
   platforms: null,
   player: null,
+  polarbaer: null,
   slidingTerrain: null,
   snake: null,
   stork: null,
@@ -3833,6 +4075,8 @@ var PlayState = {
         this.boss = new Lanternfish(this.game, this.level.boss.position.x, this.level.boss.position.y);
       } else if (this.level.boss.type === 'snake') {
         this.boss = new Snake(this.game, this.level.boss.position.x, this.level.boss.position.y);
+      } else if (this.level.boss.type === 'polarbaer') {
+        this.boss = new Polarbaer(this.game, this.level.boss.position.x, this.level.boss.position.y);
       }
     }
   },
@@ -4288,6 +4532,7 @@ var PreloadState = {
     this.load.spritesheet('jellyfish', '/img/sprites/jellyfish.png', 32, 48);
     this.load.spritesheet('penguin', '/img/sprites/penguin.png', 32, 28);
     this.load.spritesheet('player', '/img/sprites/turtle.png', 32, 64);
+    this.load.spritesheet('polarbaer', '/img/sprites/polarbaer.png', 72, 72);
     this.load.spritesheet('pufferfish', '/img/sprites/pufferfish.png', 32, 32);
     this.load.spritesheet('scorpion', '/img/sprites/scorpion.png', 32, 18);
     this.load.spritesheet('snake', '/img/sprites/snake.png', 82, 80);
