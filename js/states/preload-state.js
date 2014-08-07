@@ -26,6 +26,7 @@ var PreloadState = {
     this.load.spritesheet('jellyfish', '/img/sprites/jellyfish.png', 32, 48);
     this.load.spritesheet('penguin', '/img/sprites/penguin.png', 32, 28);
     this.load.spritesheet('player', '/img/sprites/turtle.png', 32, 64);
+    this.load.spritesheet('polarbaer', '/img/sprites/polarbaer.png', 72, 72);
     this.load.spritesheet('pufferfish', '/img/sprites/pufferfish.png', 32, 32);
     this.load.spritesheet('scorpion', '/img/sprites/scorpion.png', 32, 18);
     this.load.spritesheet('snake', '/img/sprites/snake.png', 82, 80);
@@ -45,7 +46,7 @@ var PreloadState = {
     this.load.tilemap('2-3-tilemap', '/img/tiles/2-3.json', null, Phaser.Tilemap.TILED_JSON);
     this.load.tilemap('3-1-tilemap', '/img/tiles/3-1.json', null, Phaser.Tilemap.TILED_JSON);
     this.load.tilemap('3-2-tilemap', '/img/tiles/3-2.json', null, Phaser.Tilemap.TILED_JSON);
-
+    this.load.tilemap('3-3-tilemap', '/img/tiles/3-3.json', null, Phaser.Tilemap.TILED_JSON);
     this.load.tilemap('4-1-tilemap', '/img/tiles/4-1.json', null, Phaser.Tilemap.TILED_JSON);
     this.load.tilemap('4-2-tilemap', '/img/tiles/4-2.json', null, Phaser.Tilemap.TILED_JSON);
     this.load.tilemap('4-3-tilemap', '/img/tiles/4-3.json', null, Phaser.Tilemap.TILED_JSON);

@@ -23,6 +23,7 @@ var Config = (function() {
       levelTwoThree,
       levelThreeOne,
       levelThreeTwo,
+      levelThreeThree,
       levelFourOne,
       levelFourTwo,
       levelFourThree
