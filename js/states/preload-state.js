@@ -7,6 +7,7 @@ var PreloadState = {
     game.load.audio('aua', 'music/aua.mp3');
     game.load.audio('backgroundmusic', 'music/backgroundmusic.mp3');
     game.load.audio('dring', 'music/dring.mp3');
+    game.load.audio('dying', 'music/dying.mp3');
     game.load.audio('gameover', 'music/gameover.mp3');
     game.load.audio('gulp', 'music/gulp.mp3');
     game.load.audio('menu', 'music/menu.mp3');
