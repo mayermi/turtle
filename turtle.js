@@ -613,7 +613,7 @@ var levelFourOne = {
           'y': 2
         },
         {
-          'x': 81,
+          'x': 82,
           'y': 7
         },
         {
@@ -651,7 +651,7 @@ var levelFourOne = {
       'goody': 'strawberry',
       'positions': [
         {
-          'x': 46,
+          'x': 47,
           'y': 1
         },
         {
@@ -659,6 +659,87 @@ var levelFourOne = {
           'y': 1
         }
       ]
+    }
+  ],
+  'hazardousWater': [
+    {
+      'start': {
+        'x': 40,
+        'y': 9
+      },
+      'length': 4
+    },
+    {
+      'start': {
+        'x': 62,
+        'y': 9
+      },
+      'length': 2
+    },
+    {
+      'start': {
+        'x': 66,
+        'y': 9
+      },
+      'length': 2
+    }
+  ],
+  'hazardousTerrain': [
+    {
+      'start': {
+        'x': 12,
+        'y': 9
+      },
+      'length': 5
+    },
+    {
+      'start': {
+        'x': 70,
+        'y': 9
+      },
+      'length': 2
+    },
+    {
+      'start': {
+        'x': 73,
+        'y': 9
+      },
+      'length': 7
+    },
+    {
+      'start': {
+        'x': 80,
+        'y': 8
+      },
+      'length': 1
+    },
+    {
+      'start': {
+        'x': 81,
+        'y': 5
+      },
+      'length': 1
+    },
+    {
+      'start': {
+        'x': 84,
+        'y': 6
+      },
+      'length': 1
+    },
+    {
+      'start': {
+        'x': 85,
+        'y': 8
+      },
+      'length': 3
+    },
+    {
+      'start': {
+        'x': 90,
+        'y': 8
+      },
+      'length': 4
     }
   ],
   'minions': [
@@ -702,7 +783,7 @@ var levelFourOne = {
     },
     {
       'start': {
-        'x': 44,
+        'x': 46,
         'y': 3
       },
       'length': 3
