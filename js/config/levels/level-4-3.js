@@ -3,6 +3,13 @@ var levelFourThree = {
   'name': 'U can\'t remember your name',
   'backgroundMusic': 'desert',
   'type': 'desert',
+  'boss': {
+    'type': 'snake',
+    'position': {
+      'x': 130,
+      'y': 2
+    }
+  },
   'goal': {
     'position': {
       'x': 144,
@@ -129,15 +136,15 @@ var levelFourThree = {
   'platforms': [
     {
       'start': {
-        'x': 11,
-        'y': 5
+        'x': 8,
+        'y': 8
       },
-      'length': 3
+      'length': 2
     },
     {
       'start': {
-        'x': 14,
-        'y': 4
+        'x': 11,
+        'y': 5
       },
       'length': 2
     },
@@ -150,6 +157,7 @@ var levelFourThree = {
     }
   ],
   'player': {
+    'hasShell': true,
     'jumpVelocity' : -400,
     'walkDrag' : 800,
     'position': {

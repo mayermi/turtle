@@ -17,6 +17,7 @@ var PlayState = {
   platforms: null,
   player: null,
   slidingTerrain: null,
+  snake: null,
   stork: null,
   tilemap: null,
 
@@ -222,6 +223,8 @@ var PlayState = {
         this.boss = new Stork(this.game, this.level.boss.position.x, this.level.boss.position.y);
       } else if (this.level.boss.type === 'lanternfish') {
         this.boss = new Lanternfish(this.game, this.level.boss.position.x, this.level.boss.position.y);
+      } else if (this.level.boss.type === 'snake') {
+        this.boss = new Snake(this.game, this.level.boss.position.x, this.level.boss.position.y);
       }
     }
   },

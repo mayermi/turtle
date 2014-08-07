@@ -1465,6 +1465,13 @@ var levelFourThree = {
   'name': 'U can\'t remember your name',
   'backgroundMusic': 'desert',
   'type': 'desert',
+  'boss': {
+    'type': 'snake',
+    'position': {
+      'x': 130,
+      'y': 2
+    }
+  },
   'goal': {
     'position': {
       'x': 144,
@@ -1591,15 +1598,15 @@ var levelFourThree = {
   'platforms': [
     {
       'start': {
-        'x': 11,
-        'y': 5
+        'x': 8,
+        'y': 8
       },
-      'length': 3
+      'length': 2
     },
     {
       'start': {
-        'x': 14,
-        'y': 4
+        'x': 11,
+        'y': 5
       },
       'length': 2
     },
@@ -1612,6 +1619,7 @@ var levelFourThree = {
     }
   ],
   'player': {
+    'hasShell': true,
     'jumpVelocity' : -400,
     'walkDrag' : 800,
     'position': {
@@ -2463,6 +2471,48 @@ var Pufferfish = (function() {
   return Pufferfish;
 })();
 
+var Snake = (function() {
+  function Snake(game, x, y) {
+    Phaser.Sprite.call(this, game, x * 32, y * 32, 'snake');
+
+    this.hasHitPlayer = false;
+
+    this.plop = game.add.audio('plop', 1.75);
+
+    helper.addAnimationsToSprite(this, [
+      'slither'
+    ], 15);
+    this.animations.play('slither');
+
+    game.physics.enable(this, Phaser.Physics.ARCADE);
+    this.body.immovable = true;
+
+    game.add.existing(this);
+  }
+
+  Snake.prototype = Object.create(Phaser.Sprite.prototype);
+  Snake.prototype.constructor = Snake;
+
+  Snake.prototype.hit = function(sprite) {
+    if (!sprite.hasShell) {
+      if (!this.hasHitPlayer) {
+        sprite.takeDamage(1);
+        this.hasHitPlayer = true;
+        var that = this;
+
+        setTimeout( function() {
+          that.hasHitPlayer = false;
+        }, 500);
+      }
+    } else if (this.body.touching.up) {
+      this.plop.play();
+      this.kill();
+    }
+  };
+
+  return Snake;
+})();
+
 var Stork = (function() {
   function Stork(game, x, y) {
     Phaser.Sprite.call(this, game, x * 32, y * 32, 'stork');
@@ -2705,6 +2755,7 @@ var PlayState = {
   platforms: null,
   player: null,
   slidingTerrain: null,
+  snake: null,
   stork: null,
   tilemap: null,
 
@@ -2910,6 +2961,8 @@ var PlayState = {
         this.boss = new Stork(this.game, this.level.boss.position.x, this.level.boss.position.y);
       } else if (this.level.boss.type === 'lanternfish') {
         this.boss = new Lanternfish(this.game, this.level.boss.position.x, this.level.boss.position.y);
+      } else if (this.level.boss.type === 'snake') {
+        this.boss = new Snake(this.game, this.level.boss.position.x, this.level.boss.position.y);
       }
     }
   },
@@ -3330,6 +3383,7 @@ var PreloadState = {
     this.load.spritesheet('penguin', '/img/sprites/penguin.png', 32, 28);
     this.load.spritesheet('player', '/img/sprites/turtle.png', 32, 64);
     this.load.spritesheet('pufferfish', '/img/sprites/pufferfish.png', 32, 32);
+    this.load.spritesheet('snake', '/img/sprites/snake.png', 82, 80);
     this.load.spritesheet('stork', '/img/sprites/stork.png', 144, 132);
     this.load.spritesheet('worm', '/img/sprites/worm.png', 48, 16);
 
