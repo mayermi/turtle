@@ -54,96 +54,53 @@ var levelFourThree = {
   'hazardousWater': [
     {
       'start': {
-        'x': 28,
-        'y': 9
-      },
-      'length': 4
-    },
-    {
-      'start': {
-        'x': 63,
-        'y': 9
-      },
-      'length': 9
-    },
-    {
-      'start': {
-        'x': 75,
+        'x': 25,
         'y': 9
       },
       'length': 3
     },
     {
       'start': {
-        'x': 80,
+        'x': 60,
+        'y': 9
+      },
+      'length': 5
+    },
+    {
+      'start': {
+        'x': 71,
+        'y': 9
+      },
+      'length': 7
+    },
+    {
+      'start': {
+        'x': 81,
         'y': 9
       },
       'length': 6
     },
     {
       'start': {
-        'x': 122,
+        'x': 90,
         'y': 9
-      },
-      'length': 13
-    }
-  ],
-  'hazardousTerrain': [
-    {
-      'start': {
-        'x': 48,
-        'y': 7
-      },
-      'length': 1
-    },
-    {
-      'start': {
-        'x': 49,
-        'y': 8
-      },
-      'length': 3
-    },
-    {
-      'start': {
-        'x': 55,
-        'y': 8
-      },
-      'length': 5
-    },
-    {
-      'start': {
-        'x': 88,
-        'y': 8
       },
       'length': 4
     },
     {
       'start': {
-        'x': 94,
-        'y': 8
-      },
-      'length': 3
-    },
-    {
-      'start': {
-        'x': 97,
-        'y': 6
+        'x': 95,
+        'y': 9
       },
       'length': 1
-    },
+    }
+  ],
+  'hazardousTerrain': [
     {
       'start': {
-        'x': 100,
-        'y': 7
-      },
-      'length': 1
-    },
-    {
-      'start': {
-        'x': 101,
+        'x': 96,
         'y': 8
-      },
-      'length': 3
+      }
     }
   ],
   'minions': [
@@ -160,6 +117,10 @@ var levelFourThree = {
         },
         {
           'x': 49,
+          'y': 8
+        },
+        {
+          'x': 109,
           'y': 8
         }
       ]
@@ -186,22 +147,6 @@ var levelFourThree = {
         'y': 3
       },
       'length': 2
-    }
-  ],
-  'slidingTerrain': [
-    {
-      'start': {
-        'x': 10,
-        'y': 9
-      },
-      'length': 18
-    },
-    {
-      'start': {
-        'x': 70,
-        'y': 6
-      },
-      'length': 5
     }
   ],
   'player': {
