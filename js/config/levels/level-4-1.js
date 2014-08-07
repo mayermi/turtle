@@ -12,7 +12,7 @@ var levelFourOne = {
   },
   'goodies': [
     {
-      'goody': 'bubble',
+      'type': 'bubble',
       'positions': [
         {
           'x': 37,
@@ -37,7 +37,7 @@ var levelFourOne = {
       ]
     },
     {
-      'goody': 'chili',
+      'type': 'chili',
       'positions': [
         {
           'x': 10,
@@ -54,7 +54,7 @@ var levelFourOne = {
       ]
     },
     {
-      'goody': 'strawberry',
+      'type': 'strawberry',
       'positions': [
         {
           'x': 47,
