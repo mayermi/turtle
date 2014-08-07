@@ -75,6 +75,13 @@ var levelFourTwo = {
         'y': 9
       },
       'length': 6
+    },
+    {
+      'start': {
+        'x': 122,
+        'y': 9
+      },
+      'length': 13
     }
   ],
   'hazardousTerrain': [
