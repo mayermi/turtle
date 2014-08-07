@@ -3,7 +3,7 @@ var Penguin = (function() {
     Phaser.Sprite.call(this, game, x * 32, y * 32, 'penguin');
 
     this.hasHitPlayer = false;
-    this.walkVelocity = 150;
+    this.walkVelocity = 80;
 
     this.plop = game.add.audio('plop', 1.75);
 
