@@ -28,6 +28,10 @@ var levelFourTwo = {
       'type': 'chili',
       'positions': [
         {
+          'x': 15,
+          'y': 3
+        },
+        {
           'x': 120,
           'y': 2
         }
@@ -46,75 +50,89 @@ var levelFourTwo = {
   'hazardousWater': [
     {
       'start': {
-        'x': 39,
+        'x': 28,
         'y': 9
       },
       'length': 4
     },
     {
       'start': {
-        'x': 61,
+        'x': 63,
         'y': 9
       },
-      'length': 2
+      'length': 9
     },
     {
       'start': {
-        'x': 65,
+        'x': 75,
         'y': 9
       },
-      'length': 2
+      'length': 3
+    },
+    {
+      'start': {
+        'x': 80,
+        'y': 9
+      },
+      'length': 6
     }
   ],
   'hazardousTerrain': [
     {
       'start': {
-        'x': 11,
-        'y': 9
-      },
-      'length': 5
-    },
-    {
-      'start': {
-        'x': 69,
-        'y': 8
-      },
-      'length': 2
-    },
-    {
-      'start': {
-        'x': 72,
-        'y': 8
-      },
-      'length': 7
-    },
-    {
-      'start': {
-        'x': 80,
-        'y': 5
+        'x': 48,
+        'y': 7
       },
       'length': 1
     },
     {
       'start': {
-        'x': 83,
-        'y': 6
-      },
-      'length': 1
-    },
-    {
-      'start': {
-        'x': 84,
+        'x': 49,
         'y': 8
       },
       'length': 3
     },
     {
       'start': {
-        'x': 89,
+        'x': 55,
+        'y': 8
+      },
+      'length': 5
+    },
+    {
+      'start': {
+        'x': 88,
         'y': 8
       },
       'length': 4
+    },
+    {
+      'start': {
+        'x': 94,
+        'y': 8
+      },
+      'length': 3
+    },
+    {
+      'start': {
+        'x': 97,
+        'y': 6
+      },
+      'length': 1
+    },
+    {
+      'start': {
+        'x': 100,
+        'y': 7
+      },
+      'length': 1
+    },
+    {
+      'start': {
+        'x': 101,
+        'y': 8
+      },
+      'length': 3
     }
   ],
   'minions': [
@@ -122,28 +140,12 @@ var levelFourTwo = {
       'type': 'worm',
       'positions': [
         {
-          'x': 96,
+          'x': 40,
           'y': 8
         },
         {
-          'x': 99,
-          'y': 8
-        },
-        {
-          'x': 103,
-          'y': 8
-        },
-        {
-          'x': 108,
-          'y': 8
-        },
-        {
-          'x': 117,
-          'y': 8
-        },
-        {
-          'x': 127,
-          'y': 8
+          'x': 106,
+          'y': 5
         }
       ]
     }
@@ -151,14 +153,14 @@ var levelFourTwo = {
   'platforms': [
     {
       'start': {
-        'x': 19,
+        'x': 11,
         'y': 5
       },
       'length': 3
     },
     {
       'start': {
-        'x': 22,
+        'x': 14,
         'y': 4
       },
       'length': 2
@@ -169,6 +171,22 @@ var levelFourTwo = {
         'y': 3
       },
       'length': 2
+    }
+  ],
+  'slidingTerrain': [
+    {
+      'start': {
+        'x': 10,
+        'y': 9
+      },
+      'length': 18
+    },
+    {
+      'start': {
+        'x': 70,
+        'y': 6
+      },
+      'length': 5
     }
   ],
   'player': {
