@@ -19,6 +19,10 @@ var levelFourOne = {
           'y': 2
         },
         {
+          'x': 81,
+          'y': 7
+        },
+        {
           'x': 108,
           'y': 8
         },
@@ -61,6 +65,29 @@ var levelFourOne = {
           'y': 1
         }
       ]
+    }
+  ],
+  'platforms': [
+    {
+      'start': {
+        'x': 35,
+        'y': 5
+      },
+      'length': 3
+    },
+    {
+      'start': {
+        'x': 44,
+        'y': 3
+      },
+      'length': 3
+    },
+    {
+      'start': {
+        'x': 104,
+        'y': 2
+      },
+      'length': 2
     }
   ],
   'player': {
