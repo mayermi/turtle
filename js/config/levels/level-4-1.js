@@ -143,7 +143,7 @@ var levelFourOne = {
   ],
   'minions': [
     {
-      'type': 'worm',
+      'type': 'scorpion',
       'positions': [
         {
           'x': 96,
@@ -196,6 +196,7 @@ var levelFourOne = {
     }
   ],
   'player': {
+    'hasShell': true,
     'jumpVelocity' : -400,
     'walkDrag' : 800,
     'position': {

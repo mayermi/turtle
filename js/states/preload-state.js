@@ -28,6 +28,8 @@ var PreloadState = {
     this.load.spritesheet('penguin', '/img/sprites/penguin.png', 32, 28);
     this.load.spritesheet('player', '/img/sprites/turtle.png', 32, 64);
     this.load.spritesheet('pufferfish', '/img/sprites/pufferfish.png', 32, 32);
+    this.load.spritesheet('scorpion', '/img/sprites/scorpion.png', 32, 18);
+    this.load.spritesheet('snake', '/img/sprites/snake.png', 82, 80);
     this.load.spritesheet('stork', '/img/sprites/stork.png', 144, 132);
     this.load.spritesheet('worm', '/img/sprites/worm.png', 48, 16);
 
@@ -45,6 +47,7 @@ var PreloadState = {
 
     this.load.tilemap('4-1-tilemap', '/img/tiles/4-1.json', null, Phaser.Tilemap.TILED_JSON);
     this.load.tilemap('4-2-tilemap', '/img/tiles/4-2.json', null, Phaser.Tilemap.TILED_JSON);
+    this.load.tilemap('4-3-tilemap', '/img/tiles/4-3.json', null, Phaser.Tilemap.TILED_JSON);
 
   },
   create: function() {
