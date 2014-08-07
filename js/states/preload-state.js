@@ -43,6 +43,7 @@ var PreloadState = {
     this.load.tilemap('1-3-tilemap', '/img/tiles/1-3.json', null, Phaser.Tilemap.TILED_JSON);
     this.load.tilemap('2-1-tilemap', '/img/tiles/2-1.json', null, Phaser.Tilemap.TILED_JSON);
     this.load.tilemap('2-2-tilemap', '/img/tiles/2-2.json', null, Phaser.Tilemap.TILED_JSON);
+    this.load.tilemap('2-3-tilemap', '/img/tiles/2-3.json', null, Phaser.Tilemap.TILED_JSON);
     this.load.tilemap('3-1-tilemap', '/img/tiles/3-1.json', null, Phaser.Tilemap.TILED_JSON);
     this.load.tilemap('3-2-tilemap', '/img/tiles/3-2.json', null, Phaser.Tilemap.TILED_JSON);
 
