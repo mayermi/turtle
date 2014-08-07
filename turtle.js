@@ -3389,9 +3389,12 @@ var GameCompleteState = {
   create: function() {
     var game,
         menuLabel,
-        player;
+        player,
+        restartLabel,
+        that;
 
     game = this.game;
+    that = this;
 
     this.fx = game.add.audio('gameover');
     this.fx.addMarker('gameover', 0, 24, 1, true);
@@ -3400,18 +3403,25 @@ var GameCompleteState = {
     this.stage.backgroundColor = config.colors.gray;
 
     helper.addText(4, 4, 'GAME COMPLETE', { fontSize: 32, fill: config.colors.red });
-    helper.addText(4, 9, 'You are done. Good job!\nBut that also means the game is over.\n\nToo bad.');
+    helper.addText(4, 9, 'That. Was. AWESOME!');
 
     player = new Player(this.game, 7, 8, 0);
     player.animations.play('cheer');
 
     menuLabel = helper.addText(0.5, 1, '← Menu');
     menuLabel.inputEnabled = true;
-
-    var that = this;
     menuLabel.events.onInputUp.add(function() {
       that.fx.pause('gameover');
       game.state.start('menu');
+    });
+
+    restartLabel = helper.addText(8, 28, '→ I WANT TO GO AGAIN!');
+    restartLabel.inputEnabled = true;
+    restartLabel.events.onInputUp.add(function() {
+      that.fx.pause('gameover');
+
+      localStorage.setItem('turtle', JSON.stringify({ currentLevel: 0 }));
+      game.state.start('play');
     });
   }
 };
@@ -4162,7 +4172,6 @@ var PlayState = {
 };
 
 var PreloadState = {
-
   preload: function() {
     this.ready = false;
 
@@ -4215,14 +4224,13 @@ var PreloadState = {
     this.load.tilemap('4-3-tilemap', '/img/tiles/4-3.json', null, Phaser.Tilemap.TILED_JSON);
 
   },
-  create: function() {
-  },
+
   update: function() {
     if(!!this.ready) {
-      // this.game.state.start('menu');
-      this.game.state.start('play');
+      this.game.state.start('menu');
     }
   },
+
   onLoadComplete: function() {
     this.ready = true;
   }

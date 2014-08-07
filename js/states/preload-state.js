@@ -1,5 +1,4 @@
 var PreloadState = {
-
   preload: function() {
     this.ready = false;
 
@@ -52,14 +51,13 @@ var PreloadState = {
     this.load.tilemap('4-3-tilemap', '/img/tiles/4-3.json', null, Phaser.Tilemap.TILED_JSON);
 
   },
-  create: function() {
-  },
+
   update: function() {
     if(!!this.ready) {
-      // this.game.state.start('menu');
-      this.game.state.start('play');
+      this.game.state.start('menu');
     }
   },
+
   onLoadComplete: function() {
     this.ready = true;
   }
