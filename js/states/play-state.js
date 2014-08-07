@@ -274,7 +274,7 @@ var PlayState = {
         for (var j = 0, k = positions.length; j < k; j += 1) {
           position = positions[j];
 
-          this.goodies.add(new Goody(this.game, position.x, position.y, goodiesEntry.goody));
+          this.goodies.add(new Goody(this.game, position.x, position.y, goodiesEntry.type));
         }
       }
     }

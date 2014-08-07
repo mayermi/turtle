@@ -19,7 +19,7 @@ var levelOneOne = {
   },
   'goodies': [
     {
-      'goody': 'bubble',
+      'type': 'bubble',
       'positions': [
         {
           'x': 41,
@@ -28,7 +28,7 @@ var levelOneOne = {
       ]
     },
     {
-      'goody': 'candy',
+      'type': 'candy',
       'positions': [
         {
           'x': 7,
@@ -37,7 +37,7 @@ var levelOneOne = {
       ]
     },
     {
-      'goody': 'chili',
+      'type': 'chili',
       'positions': [
         {
           'x': 12,
@@ -50,7 +50,7 @@ var levelOneOne = {
       ]
     },
     {
-      'goody': 'ice',
+      'type': 'ice',
       'positions': [
         {
           'x': 16,
@@ -59,7 +59,7 @@ var levelOneOne = {
       ]
     },
     {
-      'goody': 'strawberry',
+      'type': 'strawberry',
       'positions': [
         {
           'x': 16,

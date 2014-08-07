@@ -12,7 +12,7 @@ var levelTwoTwo = {
   },
   'goodies': [
     {
-      'goody': 'bubble',
+      'type': 'bubble',
       'positions': [
         {
           'x': 12,
@@ -29,7 +29,7 @@ var levelTwoTwo = {
       ]
     },
     {
-      'goody': 'candy',
+      'type': 'candy',
       'positions': [
         {
           'x': 33,
@@ -42,7 +42,7 @@ var levelTwoTwo = {
       ]
     },
     {
-      'goody': 'chili',
+      'type': 'chili',
       'positions': [
         {
           'x': 8,
@@ -75,7 +75,7 @@ var levelTwoTwo = {
       ]
     },
     {
-      'goody': 'ice',
+      'type': 'ice',
       'positions': [
         {
           'x': 50,

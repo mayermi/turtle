@@ -124,7 +124,7 @@ var levelOneOne = {
   },
   'goodies': [
     {
-      'goody': 'bubble',
+      'type': 'bubble',
       'positions': [
         {
           'x': 41,
@@ -133,7 +133,7 @@ var levelOneOne = {
       ]
     },
     {
-      'goody': 'candy',
+      'type': 'candy',
       'positions': [
         {
           'x': 7,
@@ -142,7 +142,7 @@ var levelOneOne = {
       ]
     },
     {
-      'goody': 'chili',
+      'type': 'chili',
       'positions': [
         {
           'x': 12,
@@ -155,7 +155,7 @@ var levelOneOne = {
       ]
     },
     {
-      'goody': 'ice',
+      'type': 'ice',
       'positions': [
         {
           'x': 16,
@@ -164,7 +164,7 @@ var levelOneOne = {
       ]
     },
     {
-      'goody': 'strawberry',
+      'type': 'strawberry',
       'positions': [
         {
           'x': 16,
@@ -272,7 +272,7 @@ var levelTwoOne = {
   },
   'goodies': [
     {
-      'goody': 'bubble',
+      'type': 'bubble',
       'positions': [
         {
           'x': 41,
@@ -281,7 +281,7 @@ var levelTwoOne = {
       ]
     },
     {
-      'goody': 'candy',
+      'type': 'candy',
       'positions': [
         {
           'x': 10,
@@ -290,7 +290,7 @@ var levelTwoOne = {
       ]
     },
     {
-      'goody': 'chili',
+      'type': 'chili',
       'positions': [
         {
           'x': 12,
@@ -303,7 +303,7 @@ var levelTwoOne = {
       ]
     },
     {
-      'goody': 'ice',
+      'type': 'ice',
       'positions': [
         {
           'x': 16,
@@ -312,7 +312,7 @@ var levelTwoOne = {
       ]
     },
     {
-      'goody': 'strawberry',
+      'type': 'strawberry',
       'positions': [
         {
           'x': 16,
@@ -374,7 +374,7 @@ var levelTwoTwo = {
   },
   'goodies': [
     {
-      'goody': 'bubble',
+      'type': 'bubble',
       'positions': [
         {
           'x': 12,
@@ -391,7 +391,7 @@ var levelTwoTwo = {
       ]
     },
     {
-      'goody': 'candy',
+      'type': 'candy',
       'positions': [
         {
           'x': 33,
@@ -404,7 +404,7 @@ var levelTwoTwo = {
       ]
     },
     {
-      'goody': 'chili',
+      'type': 'chili',
       'positions': [
         {
           'x': 8,
@@ -437,7 +437,7 @@ var levelTwoTwo = {
       ]
     },
     {
-      'goody': 'ice',
+      'type': 'ice',
       'positions': [
         {
           'x': 50,
@@ -520,7 +520,7 @@ var levelThreeOne = {
   },
   'goodies': [
     {
-      'goody': 'bubble',
+      'type': 'bubble',
       'positions': [
         {
           'x': 41,
@@ -529,7 +529,7 @@ var levelThreeOne = {
       ]
     },
     {
-      'goody': 'candy',
+      'type': 'candy',
       'positions': [
         {
           'x': 7,
@@ -538,7 +538,7 @@ var levelThreeOne = {
       ]
     },
     {
-      'goody': 'chili',
+      'type': 'chili',
       'positions': [
         {
           'x': 12,
@@ -551,7 +551,7 @@ var levelThreeOne = {
       ]
     },
     {
-      'goody': 'ice',
+      'type': 'ice',
       'positions': [
         {
           'x': 16,
@@ -560,7 +560,7 @@ var levelThreeOne = {
       ]
     },
     {
-      'goody': 'strawberry',
+      'type': 'strawberry',
       'positions': [
         {
           'x': 16,
@@ -1931,7 +1931,7 @@ var PlayState = {
         for (var j = 0, k = positions.length; j < k; j += 1) {
           position = positions[j];
 
-          this.goodies.add(new Goody(this.game, position.x, position.y, goodiesEntry.goody));
+          this.goodies.add(new Goody(this.game, position.x, position.y, goodiesEntry.type));
         }
       }
     }
