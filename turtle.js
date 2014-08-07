@@ -592,6 +592,31 @@ var levelThreeOne = {
   ]
 };
 
+var levelFourOne = {
+  'id': '4-1',
+  'name': 'Horse with no name',
+  'backgroundMusic': 'desert',
+  'type': 'desert',
+  'goal': {
+    'position': {
+      'x': 64,
+      'y': 8,
+    },
+    'height': 8
+  },
+  'player': {
+    'jumpVelocity' : -400,
+    'walkDrag' : 800,
+    'position': {
+      'x': 1,
+      'y': 7
+    }
+  },
+  'physics': {
+    'gravity' : 1200
+  }
+};
+
 var Caterpillar = (function() {
   function Caterpillar(game, x, y) {
     Phaser.Sprite.call(this, game, x * 32, y * 32, 'caterpillar');
@@ -2276,6 +2301,7 @@ var PreloadState = {
     game.load.audio('whoop', 'music/whoop.mp3');
     game.load.audio('woo', 'music/woo.mp3');
 
+    this.load.image('desert-tiles', '/img/tiles/desert.png');
     this.load.image('forest-tiles', '/img/tiles/forest.png');
     this.load.image('sea-tiles', '/img/tiles/sea.png');
     this.load.image('winter-tiles', '/img/tiles/winter.png');
@@ -2290,6 +2316,7 @@ var PreloadState = {
     this.load.spritesheet('stork', '/img/sprites/stork.png', 144, 132);
     this.load.spritesheet('worm', '/img/sprites/worm.png', 48, 16);
 
+    this.load.spritesheet('desert-spritesheet', '/img/tiles/desert.png', 32, 32);
     this.load.spritesheet('forest-spritesheet', '/img/tiles/forest.png', 32, 32);
     this.load.spritesheet('sea-spritesheet', '/img/tiles/sea.png', 32, 32);
     this.load.spritesheet('winter-spritesheet', '/img/tiles/winter.png', 32, 32);
@@ -2299,6 +2326,8 @@ var PreloadState = {
     this.load.tilemap('2-1-tilemap', '/img/tiles/2-1.json', null, Phaser.Tilemap.TILED_JSON);
     this.load.tilemap('2-2-tilemap', '/img/tiles/2-2.json', null, Phaser.Tilemap.TILED_JSON);
     this.load.tilemap('3-1-tilemap', '/img/tiles/3-1.json', null, Phaser.Tilemap.TILED_JSON);
+
+    this.load.tilemap('4-1-tilemap', '/img/tiles/4-1.json', null, Phaser.Tilemap.TILED_JSON);
 
   },
   create: function() {
@@ -2335,7 +2364,8 @@ var Config = (function() {
       levelOneTwo,
       levelTwoOne,
       levelTwoTwo,
-      levelThreeOne
+      levelThreeOne,
+      levelFourOne
     ];
   }
 
