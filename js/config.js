@@ -19,7 +19,8 @@ var Config = (function() {
       levelOneTwo,
       levelTwoOne,
       levelTwoTwo,
-      levelThreeOne
+      levelThreeOne,
+      levelFourOne
     ];
   }
 

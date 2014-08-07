@@ -592,6 +592,216 @@ var levelThreeOne = {
   ]
 };
 
+var levelFourOne = {
+  'id': '4-1',
+  'name': 'Horse with no name',
+  'backgroundMusic': 'desert',
+  'type': 'desert',
+  'goal': {
+    'position': {
+      'x': 144,
+      'y': 8,
+    },
+    'height': 8
+  },
+  'goodies': [
+    {
+      'type': 'bubble',
+      'positions': [
+        {
+          'x': 37,
+          'y': 2
+        },
+        {
+          'x': 82,
+          'y': 7
+        },
+        {
+          'x': 108,
+          'y': 8
+        },
+        {
+          'x': 118,
+          'y': 8
+        },
+        {
+          'x': 128,
+          'y': 8
+        }
+      ]
+    },
+    {
+      'type': 'chili',
+      'positions': [
+        {
+          'x': 10,
+          'y': 8
+        },
+        {
+          'x': 51,
+          'y': 9
+        },
+        {
+          'x': 64,
+          'y': 8
+        }
+      ]
+    },
+    {
+      'type': 'strawberry',
+      'positions': [
+        {
+          'x': 47,
+          'y': 1
+        },
+        {
+          'x': 104,
+          'y': 1
+        }
+      ]
+    }
+  ],
+  'hazardousWater': [
+    {
+      'start': {
+        'x': 39,
+        'y': 9
+      },
+      'length': 4
+    },
+    {
+      'start': {
+        'x': 61,
+        'y': 9
+      },
+      'length': 2
+    },
+    {
+      'start': {
+        'x': 65,
+        'y': 9
+      },
+      'length': 2
+    }
+  ],
+  'hazardousTerrain': [
+    {
+      'start': {
+        'x': 11,
+        'y': 9
+      },
+      'length': 5
+    },
+    {
+      'start': {
+        'x': 69,
+        'y': 8
+      },
+      'length': 2
+    },
+    {
+      'start': {
+        'x': 72,
+        'y': 8
+      },
+      'length': 7
+    },
+    {
+      'start': {
+        'x': 80,
+        'y': 5
+      },
+      'length': 1
+    },
+    {
+      'start': {
+        'x': 83,
+        'y': 6
+      },
+      'length': 1
+    },
+    {
+      'start': {
+        'x': 84,
+        'y': 8
+      },
+      'length': 3
+    },
+    {
+      'start': {
+        'x': 89,
+        'y': 8
+      },
+      'length': 4
+    }
+  ],
+  'minions': [
+    {
+      'type': 'worm',
+      'positions': [
+        {
+          'x': 96,
+          'y': 8
+        },
+        {
+          'x': 99,
+          'y': 8
+        },
+        {
+          'x': 103,
+          'y': 8
+        },
+        {
+          'x': 108,
+          'y': 8
+        },
+        {
+          'x': 117,
+          'y': 8
+        },
+        {
+          'x': 127,
+          'y': 8
+        }
+      ]
+    }
+  ],
+  'platforms': [
+    {
+      'start': {
+        'x': 35,
+        'y': 5
+      },
+      'length': 3
+    },
+    {
+      'start': {
+        'x': 46,
+        'y': 3
+      },
+      'length': 3
+    },
+    {
+      'start': {
+        'x': 104,
+        'y': 2
+      },
+      'length': 2
+    }
+  ],
+  'player': {
+    'jumpVelocity' : -400,
+    'walkDrag' : 800,
+    'position': {
+      'x': 1,
+      'y': 7
+    }
+  },
+  'physics': {
+    'gravity' : 1200
+  }
+};
+
 var Caterpillar = (function() {
   function Caterpillar(game, x, y) {
     Phaser.Sprite.call(this, game, x * 32, y * 32, 'caterpillar');
@@ -2276,6 +2486,7 @@ var PreloadState = {
     game.load.audio('whoop', 'music/whoop.mp3');
     game.load.audio('woo', 'music/woo.mp3');
 
+    this.load.image('desert-tiles', '/img/tiles/desert.png');
     this.load.image('forest-tiles', '/img/tiles/forest.png');
     this.load.image('sea-tiles', '/img/tiles/sea.png');
     this.load.image('winter-tiles', '/img/tiles/winter.png');
@@ -2290,6 +2501,7 @@ var PreloadState = {
     this.load.spritesheet('stork', '/img/sprites/stork.png', 144, 132);
     this.load.spritesheet('worm', '/img/sprites/worm.png', 48, 16);
 
+    this.load.spritesheet('desert-spritesheet', '/img/tiles/desert.png', 32, 32);
     this.load.spritesheet('forest-spritesheet', '/img/tiles/forest.png', 32, 32);
     this.load.spritesheet('sea-spritesheet', '/img/tiles/sea.png', 32, 32);
     this.load.spritesheet('winter-spritesheet', '/img/tiles/winter.png', 32, 32);
@@ -2299,6 +2511,8 @@ var PreloadState = {
     this.load.tilemap('2-1-tilemap', '/img/tiles/2-1.json', null, Phaser.Tilemap.TILED_JSON);
     this.load.tilemap('2-2-tilemap', '/img/tiles/2-2.json', null, Phaser.Tilemap.TILED_JSON);
     this.load.tilemap('3-1-tilemap', '/img/tiles/3-1.json', null, Phaser.Tilemap.TILED_JSON);
+
+    this.load.tilemap('4-1-tilemap', '/img/tiles/4-1.json', null, Phaser.Tilemap.TILED_JSON);
 
   },
   create: function() {
@@ -2335,7 +2549,8 @@ var Config = (function() {
       levelOneTwo,
       levelTwoOne,
       levelTwoTwo,
-      levelThreeOne
+      levelThreeOne,
+      levelFourOne
     ];
   }
 
