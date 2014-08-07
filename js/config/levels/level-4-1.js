@@ -5,7 +5,7 @@ var levelFourOne = {
   'type': 'desert',
   'goal': {
     'position': {
-      'x': 64,
+      'x': 144,
       'y': 8,
     },
     'height': 8
