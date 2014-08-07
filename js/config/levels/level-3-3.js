@@ -5,7 +5,7 @@ var levelThreeThree = {
   'type': 'winter',
   'goal': {
     'position': {
-      'x': 64,
+      'x': 144,
       'y': 8,
     },
     'height': 8
@@ -15,9 +15,13 @@ var levelThreeThree = {
       'type': 'bubble',
       'positions': [
         {
-          'x': 41,
-          'y': 5
-        }
+          'x': 21,
+          'y': 8
+        },
+        {
+          'x': 96,
+          'y': 1
+        },
       ]
     },
     {
