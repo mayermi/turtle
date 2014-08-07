@@ -3,36 +3,20 @@ var levelOneOne = {
   'name': 'Welcome to the world',
   'backgroundMusic': 'happy',
   'type': 'forest',
-  'boss': {
-    'type': 'stork',
-    'position': {
-      'x': 58,
-      'y': 4
-    }
-  },
   'goal': {
     'position': {
-      'x': 64,
+      'x': 144,
       'y': 8,
     },
     'height': 8
   },
   'goodies': [
     {
-      'type': 'bubble',
-      'positions': [
-        {
-          'x': 41,
-          'y': 5
-        }
-      ]
-    },
-    {
       'type': 'candy',
       'positions': [
         {
-          'x': 7,
-          'y': 4
+          'x': 39,
+          'y': 8
         }
       ]
     },
@@ -40,21 +24,21 @@ var levelOneOne = {
       'type': 'chili',
       'positions': [
         {
-          'x': 12,
-          'y': 5
+          'x': 80,
+          'y': 6
         },
         {
-          'x': 14,
-          'y': 8
+          'x': 114,
+          'y': 4
         }
       ]
     },
     {
-      'type': 'ice',
+      'type': 'salad',
       'positions': [
         {
-          'x': 16,
-          'y': 5
+          'x': 54,
+          'y': 4
         }
       ]
     },
@@ -62,23 +46,49 @@ var levelOneOne = {
       'type': 'strawberry',
       'positions': [
         {
-          'x': 16,
-          'y': 8
+          'x': 10,
+          'y': 6
         }
       ]
     }
   ],
+  'hazardousTerrain': [
+    {
+      'start': {
+        'x': 36,
+        'y': 8
+      },
+      'length': 1
+    }
+  ],
   'minions': [
     {
-      'minion': 'worm',
+      'type': 'caterpillar',
       'positions': [
         {
-          'x': 12,
-          'y': 9
+          'x': 68,
+          'y': 8
         },
         {
-          'x': 14,
-          'y': 9
+          'x': 72,
+          'y': 8
+        },
+        {
+          'x': 76,
+          'y': 8
+        },
+        {
+          'x': 100,
+          'y': 8
+        }
+      ]
+    },
+    {
+      'type': 'worm',
+      'positions': [
+        {
+          'x': 125,
+          'y': 8
         }
       ]
     }
@@ -86,17 +96,59 @@ var levelOneOne = {
   'platforms': [
     {
       'start': {
-        'x': 5,
+        'x': 9,
         'y': 7
+      },
+      'length': 3
+    },
+    {
+      'start': {
+        'x': 49,
+        'y': 6
       },
       'length': 4
     },
     {
       'start': {
-        'x': 16,
-        'y': 4
+        'x': 53,
+        'y': 5
+      },
+      'length': 3
+    },
+    {
+      'start': {
+        'x': 56,
+        'y': 6
+      },
+      'length': 3
+    },
+    {
+      'start': {
+        'x': 67,
+        'y': 7
       },
       'length': 2
+    },
+    {
+      'start': {
+        'x': 108,
+        'y': 7
+      },
+      'length': 2
+    },
+    {
+      'start': {
+        'x': 110,
+        'y': 6
+      },
+      'length': 3
+    },
+    {
+      'start': {
+        'x': 113,
+        'y': 5
+      },
+      'length': 3
     }
   ],
   'player': {
@@ -109,14 +161,5 @@ var levelOneOne = {
   },
   'physics': {
     'gravity' : 1200
-  },
-  'slidingTerrain': [
-    {
-      'start': {
-        'x': 25,
-        'y': 9
-      },
-      'length': 12
-    },
-  ]
+  }
 };
