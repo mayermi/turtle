@@ -45,6 +45,7 @@ var PreloadState = {
 
     this.load.tilemap('4-1-tilemap', '/img/tiles/4-1.json', null, Phaser.Tilemap.TILED_JSON);
     this.load.tilemap('4-2-tilemap', '/img/tiles/4-2.json', null, Phaser.Tilemap.TILED_JSON);
+    this.load.tilemap('4-3-tilemap', '/img/tiles/4-3.json', null, Phaser.Tilemap.TILED_JSON);
 
   },
   create: function() {
