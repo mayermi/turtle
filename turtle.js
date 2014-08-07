@@ -638,7 +638,7 @@ var levelFourOne = {
           'y': 8
         },
         {
-          'x': 49,
+          'x': 51,
           'y': 9
         },
         {
@@ -664,21 +664,21 @@ var levelFourOne = {
   'hazardousWater': [
     {
       'start': {
-        'x': 40,
+        'x': 39,
         'y': 9
       },
       'length': 4
     },
     {
       'start': {
-        'x': 62,
+        'x': 61,
         'y': 9
       },
       'length': 2
     },
     {
       'start': {
-        'x': 66,
+        'x': 65,
         'y': 9
       },
       'length': 2
@@ -687,56 +687,49 @@ var levelFourOne = {
   'hazardousTerrain': [
     {
       'start': {
-        'x': 12,
+        'x': 11,
         'y': 9
       },
       'length': 5
     },
     {
       'start': {
-        'x': 70,
-        'y': 9
+        'x': 69,
+        'y': 8
       },
       'length': 2
     },
     {
       'start': {
-        'x': 73,
-        'y': 9
+        'x': 72,
+        'y': 8
       },
       'length': 7
     },
     {
       'start': {
         'x': 80,
-        'y': 8
-      },
-      'length': 1
-    },
-    {
-      'start': {
-        'x': 81,
         'y': 5
       },
       'length': 1
     },
     {
       'start': {
-        'x': 84,
+        'x': 83,
         'y': 6
       },
       'length': 1
     },
     {
       'start': {
-        'x': 85,
+        'x': 84,
         'y': 8
       },
       'length': 3
     },
     {
       'start': {
-        'x': 90,
+        'x': 89,
         'y': 8
       },
       'length': 4
