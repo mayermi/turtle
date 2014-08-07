@@ -2682,6 +2682,13 @@ var PlayState = {
 
     var inHazardousTerrain = arcade.overlap(this.player, this.hazardousTerrain, function(player) {
       player.enterHazardousTerrain();
+
+      if (player.health <= 0) {
+        setTimeout(function() {
+          that.fx.pause();
+          game.state.start(game.state.current);
+        }, 2000);
+      }
     });
 
     if (!inHazardousTerrain) {
