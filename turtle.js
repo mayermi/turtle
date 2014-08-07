@@ -4583,6 +4583,13 @@ var PreloadState = {
 
   },
 
+  create: function() {
+    game.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL;
+    game.scale.setShowAll();
+    game.scale.refresh();
+
+  },
+
   update: function() {
     if(!!this.ready) {
       this.game.state.start('menu');
@@ -4636,7 +4643,7 @@ var config,
 
 config = new Config();
 
-game = new Phaser.Game(480, 320, Phaser.AUTO, 'turtle');
+game = new Phaser.Game(480, 320, Phaser.AUTO, 'turtle', null, false, false);
 
 helper = new Helper(game);
 

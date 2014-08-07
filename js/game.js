@@ -5,7 +5,7 @@ var config,
 
 config = new Config();
 
-game = new Phaser.Game(480, 320, Phaser.AUTO, 'turtle');
+game = new Phaser.Game(480, 320, Phaser.AUTO, 'turtle', null, false, false);
 
 helper = new Helper(game);
 

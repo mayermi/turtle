@@ -53,6 +53,13 @@ var PreloadState = {
 
   },
 
+  create: function() {
+    game.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL;
+    game.scale.setShowAll();
+    game.scale.refresh();
+
+  },
+
   update: function() {
     if(!!this.ready) {
       this.game.state.start('menu');
