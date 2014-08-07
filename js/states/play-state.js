@@ -17,7 +17,6 @@ var PlayState = {
   backgroundMusic: null,
   platforms: null,
   player: null,
-  polarbaer: null,
   slidingTerrain: null,
   snake: null,
   stork: null,
