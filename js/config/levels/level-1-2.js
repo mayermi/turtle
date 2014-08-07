@@ -56,6 +56,29 @@ var levelOneTwo = {
       ]
     }
   ],
+  'hazardousWater': [
+    {
+      'start': {
+        'x': 62,
+        'y': 9
+      },
+      'length': 2
+    },
+    {
+      'start': {
+        'x': 67,
+        'y': 9
+      },
+      'length': 7
+    },
+    {
+      'start': {
+        'x': 65,
+        'y': 9
+      },
+      'length': 2
+    }
+  ],
   'hazardousTerrain': [
     {
       'start': {
