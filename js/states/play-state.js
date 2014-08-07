@@ -4,6 +4,7 @@ var PlayState = {
   fx: null,
   goal: null,
   goodies: null,
+  hazardousTerrain: null,
   isLevelComplete: null,
   isShowingCompleteMessage: null,
   levelNameLabel: null,
@@ -154,6 +155,14 @@ var PlayState = {
       }
     });
 
+    var inHazardousTerrain = arcade.overlap(this.player, this.hazardousTerrain, function(player) {
+      player.enterHazardousTerrain();
+    });
+
+    if (!inHazardousTerrain) {
+      this.player.leaveHazardousTerrain();
+    }
+
     arcade.collide(this.player, this.layer, function(player) {
       player.resetSlide();
     });
@@ -180,6 +189,7 @@ var PlayState = {
 
   initializeBeforePlayer: function() {
     this.initializeGoal();
+    this.initializeHazardousTerrain();
     this.initializePhysics();
     this.initializePlatforms();
     this.initializeSlidingTerrain();
@@ -305,6 +315,36 @@ var PlayState = {
           }
 
           this.minions.add(minion);
+        }
+      }
+    }
+  },
+
+  initializeHazardousTerrain: function() {
+    if (this.level.hazardousTerrain) {
+      var entry,
+          terrain,
+          terrainStart;
+
+      this.hazardousTerrain = this.game.add.group();
+      this.hazardousTerrain.enableBody = true;
+      this.hazardousTerrain.physicsBodyType = Phaser.Physics.ARCADE;
+
+      for (var i = 0, l = this.level.hazardousTerrain.length; i < l; i += 1) {
+        entry = this.level.hazardousTerrain[i];
+
+        terrainStart = entry.start;
+
+        for (var j = 0; j < entry.length; j += 1) {
+          terrain = this.hazardousTerrain.create((terrainStart.x + j) * 32, terrainStart.y * 32, this.level.type + '-spritesheet', 14);
+
+          this.game.physics.enable(terrain, Phaser.Physics.ARCADE);
+
+          terrain.body.allowGravity = false;
+          terrain.body.checkCollision.left = false;
+          terrain.body.checkCollision.right = false;
+          terrain.body.checkCollision.down = false;
+          terrain.body.immovable = true;
         }
       }
     }
@@ -529,12 +569,6 @@ var PlayState = {
     });
 
     this.tilemap.setCollision([9, 10]);
-    this.tilemap.setTileIndexCallback([9, 10], function() {
-      this.player.hitGround();
-      return true;
-    }, this);
-
-    this.tilemap.setTileIndexCallback(3, this.player.fallIntoHazardousTerrain, this.player);
 
     this.initializeAfterPlayer();
   },

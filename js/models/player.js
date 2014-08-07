@@ -9,7 +9,7 @@ var Player = (function() {
     this.woo = game.add.audio('woo', 0.3);
 
 
-    this.auInterval = null;
+    this.damageInterval = null;
     this.currentJumpCount = 0;
     this.deathAnimation = null;
     this.facing = Phaser.RIGHT;
@@ -272,41 +272,35 @@ var Player = (function() {
     }
   };
 
-  Player.prototype.hitGround = function() {
+  Player.prototype.enterHazardousTerrain = function() {
+    if (!this.isInHazardousTerrain) {
+      this.isInHazardousTerrain = true;
+      this.takeDamage(1);
+
+      this.setDamageInterval();
+    }
+  };
+
+  Player.prototype.leaveHazardousTerrain = function() {
     if (this.isInHazardousTerrain) {
-      if (!this.body.blocked.left && !this.body.blocked.right && !this.body.blocked.down){
-        this.isInHazardousTerrain = false;
-        this.au();
-      }
+      this.isInHazardousTerrain = false;
+
+      this.clearDamageInterval();
     }
   };
 
-  Player.prototype.fallIntoHazardousTerrain = function() {
-    if (this.alive){
-      if (!this.isInHazardousTerrain) {
-        if (this.body.blocked.down) {
-          this.takeDamage(1);
-          this.isInHazardousTerrain = true;
-          this.au();
-        }
-      }
-    }
+  Player.prototype.clearDamageInterval = function() {
+    clearInterval(this.damageInterval);
   };
 
-  Player.prototype.au = function() {
+  Player.prototype.setDamageInterval = function() {
     var that;
 
     that = this;
 
-    if (this.isInHazardousTerrain) {
-      this.auInterval = setInterval(function() {
-        if (that.alive) {
-          that.takeDamage(1);
-        }
-      }, 1000);
-    } else {
-      clearInterval(this.auInterval);
-    }
+    this.damageInterval = setInterval(function() {
+      that.takeDamage(1);
+    }, 1000);
   };
 
   Player.prototype.takeDamage = function(hits) {

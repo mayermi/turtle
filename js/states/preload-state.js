@@ -4,7 +4,7 @@ var PreloadState = {
     this.ready = false;
 
     this.load.onLoadComplete.addOnce(this.onLoadComplete, this);
-      
+
     game.load.audio('aua', 'music/aua.mp3');
     game.load.audio('backgroundmusic', 'music/backgroundmusic.mp3');
     game.load.audio('dring', 'music/dring.mp3');
@@ -37,6 +37,7 @@ var PreloadState = {
     this.load.tilemap('1-1-tilemap', '/img/tiles/1-1.json', null, Phaser.Tilemap.TILED_JSON);
     this.load.tilemap('1-2-tilemap', '/img/tiles/1-2.json', null, Phaser.Tilemap.TILED_JSON);
     this.load.tilemap('2-1-tilemap', '/img/tiles/2-1.json', null, Phaser.Tilemap.TILED_JSON);
+    this.load.tilemap('2-2-tilemap', '/img/tiles/2-2.json', null, Phaser.Tilemap.TILED_JSON);
     this.load.tilemap('3-1-tilemap', '/img/tiles/3-1.json', null, Phaser.Tilemap.TILED_JSON);
 
   },
@@ -44,7 +45,8 @@ var PreloadState = {
   },
   update: function() {
     if(!!this.ready) {
-      this.game.state.start('menu');
+      // this.game.state.start('menu');
+      this.game.state.start('play');
     }
   },
   onLoadComplete: function() {

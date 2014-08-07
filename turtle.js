@@ -356,6 +356,152 @@ var levelTwoOne = {
   }
 };
 
+var levelTwoTwo = {
+  'id': '2-2',
+  'name': 'Message in a bottle',
+  'backgroundMusic': 'sea',
+  'type': 'sea',
+  'goal': {
+    'position': {
+      'x': 144,
+      'y': 8,
+    },
+    'height': 8
+  },
+  'goodies': [
+    {
+      'goody': 'bubble',
+      'positions': [
+        {
+          'x': 12,
+          'y': 7
+        },
+        {
+          'x': 76,
+          'y': 1
+        },
+        {
+          'x': 102,
+          'y': 2
+        }
+      ]
+    },
+    {
+      'goody': 'candy',
+      'positions': [
+        {
+          'x': 33,
+          'y': 8
+        },
+        {
+          'x': 83,
+          'y': 1
+        }
+      ]
+    },
+    {
+      'goody': 'chili',
+      'positions': [
+        {
+          'x': 8,
+          'y': 4
+        },
+        {
+          'x': 23,
+          'y': 8
+        },
+        {
+          'x': 36,
+          'y': 1
+        },
+        {
+          'x': 65,
+          'y': 8
+        },
+        {
+          'x': 69,
+          'y': 7
+        },
+        {
+          'x': 76,
+          'y': 8
+        },
+        {
+          'x': 110,
+          'y': 3
+        }
+      ]
+    },
+    {
+      'goody': 'ice',
+      'positions': [
+        {
+          'x': 50,
+          'y': 8
+        },
+        {
+          'x': 91,
+          'y': 2
+        },
+        {
+          'x': 116,
+          'y': 2
+        }
+      ]
+    }
+  ],
+  'hazardousTerrain': [
+    {
+      'start': {
+        'x': 17,
+        'y': 2
+      },
+      'length': 2
+    },
+    {
+      'start': {
+        'x': 31,
+        'y': 6
+      },
+      'length': 1
+    },
+    {
+      'start': {
+        'x': 52,
+        'y': 2
+      },
+      'length': 2
+    },
+    {
+      'start': {
+        'x': 107,
+        'y': 8
+      },
+      'length': 2
+    },
+    {
+      'start': {
+        'x': 114,
+        'y': 8
+      },
+      'length': 2
+    }
+  ],
+  'player': {
+    'hasShell': true,
+    'isUnderWater': true,
+    'jumpVelocity' : -200,
+    'walkDrag' : 800,
+    'position': {
+      'x': 1,
+      'y': 7
+    }
+  },
+  'physics': {
+    'gravity' : 400
+  }
+};
+
 var levelThreeOne = {
   'id': '3-1',
   'name': 'Winter Wonderland',
@@ -760,7 +906,7 @@ var Player = (function() {
     this.woo = game.add.audio('woo', 0.3);
 
 
-    this.auInterval = null;
+    this.damageInterval = null;
     this.currentJumpCount = 0;
     this.deathAnimation = null;
     this.facing = Phaser.RIGHT;
@@ -1023,41 +1169,35 @@ var Player = (function() {
     }
   };
 
-  Player.prototype.hitGround = function() {
+  Player.prototype.enterHazardousTerrain = function() {
+    if (!this.isInHazardousTerrain) {
+      this.isInHazardousTerrain = true;
+      this.takeDamage(1);
+
+      this.setDamageInterval();
+    }
+  };
+
+  Player.prototype.leaveHazardousTerrain = function() {
     if (this.isInHazardousTerrain) {
-      if (!this.body.blocked.left && !this.body.blocked.right && !this.body.blocked.down){
-        this.isInHazardousTerrain = false;
-        this.au();
-      }
+      this.isInHazardousTerrain = false;
+
+      this.clearDamageInterval();
     }
   };
 
-  Player.prototype.fallIntoHazardousTerrain = function() {
-    if (this.alive){
-      if (!this.isInHazardousTerrain) {
-        if (this.body.blocked.down) {
-          this.takeDamage(1);
-          this.isInHazardousTerrain = true;
-          this.au();
-        }
-      }
-    }
+  Player.prototype.clearDamageInterval = function() {
+    clearInterval(this.damageInterval);
   };
 
-  Player.prototype.au = function() {
+  Player.prototype.setDamageInterval = function() {
     var that;
 
     that = this;
 
-    if (this.isInHazardousTerrain) {
-      this.auInterval = setInterval(function() {
-        if (that.alive) {
-          that.takeDamage(1);
-        }
-      }, 1000);
-    } else {
-      clearInterval(this.auInterval);
-    }
+    this.damageInterval = setInterval(function() {
+      that.takeDamage(1);
+    }, 1000);
   };
 
   Player.prototype.takeDamage = function(hits) {
@@ -1517,6 +1657,7 @@ var PlayState = {
   fx: null,
   goal: null,
   goodies: null,
+  hazardousTerrain: null,
   isLevelComplete: null,
   isShowingCompleteMessage: null,
   levelNameLabel: null,
@@ -1667,6 +1808,14 @@ var PlayState = {
       }
     });
 
+    var inHazardousTerrain = arcade.overlap(this.player, this.hazardousTerrain, function(player) {
+      player.enterHazardousTerrain();
+    });
+
+    if (!inHazardousTerrain) {
+      this.player.leaveHazardousTerrain();
+    }
+
     arcade.collide(this.player, this.layer, function(player) {
       player.resetSlide();
     });
@@ -1693,6 +1842,7 @@ var PlayState = {
 
   initializeBeforePlayer: function() {
     this.initializeGoal();
+    this.initializeHazardousTerrain();
     this.initializePhysics();
     this.initializePlatforms();
     this.initializeSlidingTerrain();
@@ -1818,6 +1968,36 @@ var PlayState = {
           }
 
           this.minions.add(minion);
+        }
+      }
+    }
+  },
+
+  initializeHazardousTerrain: function() {
+    if (this.level.hazardousTerrain) {
+      var entry,
+          terrain,
+          terrainStart;
+
+      this.hazardousTerrain = this.game.add.group();
+      this.hazardousTerrain.enableBody = true;
+      this.hazardousTerrain.physicsBodyType = Phaser.Physics.ARCADE;
+
+      for (var i = 0, l = this.level.hazardousTerrain.length; i < l; i += 1) {
+        entry = this.level.hazardousTerrain[i];
+
+        terrainStart = entry.start;
+
+        for (var j = 0; j < entry.length; j += 1) {
+          terrain = this.hazardousTerrain.create((terrainStart.x + j) * 32, terrainStart.y * 32, this.level.type + '-spritesheet', 14);
+
+          this.game.physics.enable(terrain, Phaser.Physics.ARCADE);
+
+          terrain.body.allowGravity = false;
+          terrain.body.checkCollision.left = false;
+          terrain.body.checkCollision.right = false;
+          terrain.body.checkCollision.down = false;
+          terrain.body.immovable = true;
         }
       }
     }
@@ -2042,12 +2222,6 @@ var PlayState = {
     });
 
     this.tilemap.setCollision([9, 10]);
-    this.tilemap.setTileIndexCallback([9, 10], function() {
-      this.player.hitGround();
-      return true;
-    }, this);
-
-    this.tilemap.setTileIndexCallback(3, this.player.fallIntoHazardousTerrain, this.player);
 
     this.initializeAfterPlayer();
   },
@@ -2086,7 +2260,7 @@ var PreloadState = {
     this.ready = false;
 
     this.load.onLoadComplete.addOnce(this.onLoadComplete, this);
-      
+
     game.load.audio('aua', 'music/aua.mp3');
     game.load.audio('backgroundmusic', 'music/backgroundmusic.mp3');
     game.load.audio('dring', 'music/dring.mp3');
@@ -2119,6 +2293,7 @@ var PreloadState = {
     this.load.tilemap('1-1-tilemap', '/img/tiles/1-1.json', null, Phaser.Tilemap.TILED_JSON);
     this.load.tilemap('1-2-tilemap', '/img/tiles/1-2.json', null, Phaser.Tilemap.TILED_JSON);
     this.load.tilemap('2-1-tilemap', '/img/tiles/2-1.json', null, Phaser.Tilemap.TILED_JSON);
+    this.load.tilemap('2-2-tilemap', '/img/tiles/2-2.json', null, Phaser.Tilemap.TILED_JSON);
     this.load.tilemap('3-1-tilemap', '/img/tiles/3-1.json', null, Phaser.Tilemap.TILED_JSON);
 
   },
@@ -2126,13 +2301,15 @@ var PreloadState = {
   },
   update: function() {
     if(!!this.ready) {
-      this.game.state.start('menu');
+      // this.game.state.start('menu');
+      this.game.state.start('play');
     }
   },
   onLoadComplete: function() {
     this.ready = true;
   }
 };
+
 var Config = (function() {
   function Config() {
     this.colors = {
@@ -2153,6 +2330,7 @@ var Config = (function() {
       levelOneOne,
       levelOneTwo,
       levelTwoOne,
+      levelTwoTwo,
       levelThreeOne
     ];
   }
