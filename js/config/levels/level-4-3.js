@@ -112,7 +112,7 @@ var levelFourThree = {
   ],
   'minions': [
     {
-      'type': 'worm',
+      'type': 'scorpion',
       'positions': [
         {
           'x': 19,
@@ -145,13 +145,6 @@ var levelFourThree = {
       'start': {
         'x': 11,
         'y': 5
-      },
-      'length': 2
-    },
-    {
-      'start': {
-        'x': 119,
-        'y': 3
       },
       'length': 2
     }

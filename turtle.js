@@ -1184,7 +1184,7 @@ var levelFourOne = {
   ],
   'minions': [
     {
-      'type': 'worm',
+      'type': 'scorpion',
       'positions': [
         {
           'x': 96,
@@ -1237,6 +1237,7 @@ var levelFourOne = {
     }
   ],
   'player': {
+    'hasShell': true,
     'jumpVelocity' : -400,
     'walkDrag' : 800,
     'position': {
@@ -1395,7 +1396,7 @@ var levelFourTwo = {
   ],
   'minions': [
     {
-      'type': 'worm',
+      'type': 'scorpion',
       'positions': [
         {
           'x': 40,
@@ -1448,6 +1449,7 @@ var levelFourTwo = {
     }
   ],
   'player': {
+    'hasShell': true,
     'jumpVelocity' : -400,
     'walkDrag' : 800,
     'position': {
@@ -1574,7 +1576,7 @@ var levelFourThree = {
   ],
   'minions': [
     {
-      'type': 'worm',
+      'type': 'scorpion',
       'positions': [
         {
           'x': 19,
@@ -1607,13 +1609,6 @@ var levelFourThree = {
       'start': {
         'x': 11,
         'y': 5
-      },
-      'length': 2
-    },
-    {
-      'start': {
-        'x': 119,
-        'y': 3
       },
       'length': 2
     }
@@ -2471,6 +2466,78 @@ var Pufferfish = (function() {
   return Pufferfish;
 })();
 
+var Scorpion = (function() {
+  function Scorpion(game, x, y) {
+    Phaser.Sprite.call(this, game, x * 32, y * 32, 'scorpion');
+
+    this.hasHitPlayer = false;
+    this.walkVelocity = 120;
+
+    this.plop = game.add.audio('plop',1.75);
+
+    helper.addAnimationsToSprite(this, [
+      'default'
+    ], 4);
+    this.animations.play('default');
+
+    game.physics.enable(this, Phaser.Physics.ARCADE);
+    this.body.bounce.x = 1;
+    this.body.immovable = true;
+    this.body.velocity.x = -this.walkVelocity;
+    this.scale.x *= -1;
+
+    this.anchor.setTo(0.5, 1);
+
+    this.facing = this.body.facing;
+
+    game.add.existing(this);
+  }
+
+  Scorpion.prototype = Object.create(Phaser.Sprite.prototype);
+  Scorpion.prototype.constructor = Scorpion;
+
+  Scorpion.prototype.update = function() {
+    var LEFT,
+        RIGHT;
+
+    LEFT = Phaser.LEFT;
+    RIGHT = Phaser.RIGHT;
+
+    if (this.body.facing === LEFT && this.facing !== LEFT) {
+      this.facing = LEFT;
+      this.turnAround();
+    } else if (this.body.facing === RIGHT && this.facing !== RIGHT) {
+      this.facing = RIGHT;
+      this.turnAround();
+    }
+  };
+
+  Scorpion.prototype.hit = function(sprite) {
+    var that;
+
+    if (this.body.touching.up) {
+      this.plop.play();
+      this.kill();
+    } else {
+      if (!this.hasHitPlayer) {
+        sprite.takeDamage(1);
+        this.hasHitPlayer = true;
+        that = this;
+
+        setTimeout(function() {
+          that.hasHitPlayer = false;
+        }, 500);
+      }
+    }
+  };
+
+  Scorpion.prototype.turnAround = function() {
+    this.scale.x *= -1;
+  };
+
+  return Scorpion;
+})();
+
 var Snake = (function() {
   function Snake(game, x, y) {
     Phaser.Sprite.call(this, game, x * 32, y * 32, 'snake');
@@ -3057,6 +3124,9 @@ var PlayState = {
             case 'pufferfish':
               minion = new Pufferfish(this.game, position.x, position.y);
               break;
+            case 'scorpion':
+              minion = new Scorpion(this.game, position.x, position.y);
+              break;
             case 'worm':
               minion = new Worm(this.game, position.x, position.y);
               break;
@@ -3383,6 +3453,7 @@ var PreloadState = {
     this.load.spritesheet('penguin', '/img/sprites/penguin.png', 32, 28);
     this.load.spritesheet('player', '/img/sprites/turtle.png', 32, 64);
     this.load.spritesheet('pufferfish', '/img/sprites/pufferfish.png', 32, 32);
+    this.load.spritesheet('scorpion', '/img/sprites/scorpion.png', 32, 18);
     this.load.spritesheet('snake', '/img/sprites/snake.png', 82, 80);
     this.load.spritesheet('stork', '/img/sprites/stork.png', 144, 132);
     this.load.spritesheet('worm', '/img/sprites/worm.png', 48, 16);

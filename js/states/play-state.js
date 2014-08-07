@@ -319,6 +319,9 @@ var PlayState = {
             case 'pufferfish':
               minion = new Pufferfish(this.game, position.x, position.y);
               break;
+            case 'scorpion':
+              minion = new Scorpion(this.game, position.x, position.y);
+              break;
             case 'worm':
               minion = new Worm(this.game, position.x, position.y);
               break;
