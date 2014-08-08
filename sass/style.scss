@@ -37,7 +37,12 @@
   }
 }
 
+article {
+  margin-bottom: 1.2em;
+}
+
 body {
+  color: $color-neutral-lightest;
   font-family: $font-family-branding;
   font-size: 62.5%;
 }
@@ -54,30 +59,80 @@ h6 {
 
 h1 {
   color: $color-brand;
+  font-size: 4.8em;
+  line-height: 1.5em; // 48px
+}
+
+h2 {
+  font-size: 3.2em;
+  line-height: 1.5em; // 36px
+  margin-bottom: 0.375em; // 12px
+}
+
+h3 {
   font-size: 2.4em;
   line-height: 1.5em; // 36px
-  margin-bottom: 0.5em; // 12px
 }
 
 header {
   @extend %responsive-container;
+
+  margin-bottom: 2.4em;
+
+  > p {
+    color: $color-neutral-lightest;
+    font-size: 2.4em;
+    line-height: 1.5em; // 36px
+    margin-bottom: 0;
+  }
 }
 
 html {
-  background: $color-neutral-lightest;
+  background: $color-brand-darkest;
+}
+
+li {
+  font-size: 1.6em;
+  line-height: 1.5em; // 24px
+}
+
+main {
+  @extend %responsive-container;
+
+  @media (#{ $query-medium }) {
+    overflow: hidden;
+  }
 }
 
 p {
-  font-size: 2.4em;
-  line-height: 1.5em; // 36px;
+  font-size: 1.6em;
+  line-height: 1.5em; // 24px
+  margin: 0;
 }
 
 section {
-  @extend %responsive-container;
+  margin-bottom: 2.4em;
+
+  @media (#{ $query-medium }) {
+    @include grid(1, 2);
+
+    float: left;
+
+    &:nth-of-type(2) {
+      float: right;
+    }
+  }
+}
+
+ul {
+  list-style-position: inside;
+  margin: 0 0 1.2em;
+  padding: 0;
 }
 
 #turtle {
   background: $color-brand-darkest;
+  margin-bottom: 2.4em;
 
   > canvas {
     margin: 0 auto;
