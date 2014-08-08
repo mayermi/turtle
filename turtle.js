@@ -2235,7 +2235,7 @@ var levelFourOne = {
 
 var levelFourTwo = {
   'id': '4-2',
-  'name': 'U can\'t remember your name',
+  'name': 'This was never a good idea',
   'backgroundMusic': 'desert',
   'type': 'desert',
   'goal': {
@@ -2288,7 +2288,7 @@ var levelFourTwo = {
         'x': 28,
         'y': 9
       },
-      'length': 4
+      'length': 9
     },
     {
       'start': {

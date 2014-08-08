@@ -32,12 +32,12 @@
     {
       "firstgid": 1,
       "image": "/img/tiles/desert.png",
-      "imageheight": 134,
-      "imagewidth": 134,
+      "imageheight": 128,
+      "imagewidth": 128,
       "margin": 0,
       "name": "desert-tiles",
       "properties": {},
-      "spacing": 2,
+      "spacing": 0,
       "tileheight": 32,
       "tilewidth": 32
     }
