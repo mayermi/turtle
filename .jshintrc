@@ -2,7 +2,7 @@
   "bitwise": true,
   "browser": true,
   "curly": true,
-  "devel": true,
+  "devel": false,
   "eqeqeq": true,
   "esnext": true,
   /*"expr": true,*/
@@ -13,11 +13,8 @@
     "Phaser": true
   },
   "immed": true,
-  "jquery": true,
   "latedef": true,
-
   "loopfunc": true,
-
   "newcap": true,
   "noarg": true,
   "noempty": true,
