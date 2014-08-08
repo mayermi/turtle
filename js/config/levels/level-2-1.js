@@ -123,8 +123,8 @@ var levelTwoOne = {
     'jumpVelocity' : -200,
     'walkDrag' : 800,
     'position': {
-      'x': 1,
-      'y': 7
+      'x': 2,
+      'y': 3
     }
   },
   'physics': {

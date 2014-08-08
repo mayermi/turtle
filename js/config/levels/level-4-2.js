@@ -1,6 +1,6 @@
 var levelFourTwo = {
   'id': '4-2',
-  'name': 'This was never a good idea',
+  'name': 'Afraid of heights',
   'backgroundMusic': 'desert',
   'type': 'desert',
   'goal': {
