@@ -4651,7 +4651,7 @@ var config,
 
 config = new Config();
 
-game = new Phaser.Game(480, 320, Phaser.AUTO, 'turtle', null, false, false);
+game = new Phaser.Game(2880, 320, Phaser.AUTO, 'turtle', null, false, false);
 
 helper = new Helper(game);
 
@@ -4668,6 +4668,7 @@ for (var key in states) {
     game.state.add(key, states[key]);
   }
 }
+
 
 game.state.start('preload');
 }).call(this);
