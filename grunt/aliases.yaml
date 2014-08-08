@@ -9,7 +9,7 @@ css:
 js:
   - concat
   - jshint
-  # - uglify
+  - uglify
 default:
   - compile
   - connect
