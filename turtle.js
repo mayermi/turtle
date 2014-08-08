@@ -4584,6 +4584,8 @@ var PreloadState = {
   },
 
   create: function() {
+    game.scale.maxWidth = 960;
+    game.scale.maxHeight = 640;
     game.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL;
     game.scale.setShowAll();
     game.scale.refresh();
