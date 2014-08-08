@@ -37,6 +37,14 @@
   }
 }
 
+a {
+  color: $color-link;
+
+  &:visited {
+    color: $color-link-visited;
+  }
+}
+
 article {
   margin-bottom: 1.2em;
 }
@@ -61,6 +69,7 @@ h1 {
   color: $color-brand;
   font-size: 4.8em;
   line-height: 1.5em; // 48px
+  text-transform: uppercase;
 }
 
 h2 {
