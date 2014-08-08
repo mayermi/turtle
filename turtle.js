@@ -3861,6 +3861,7 @@ var PlayState = {
   fx: null,
   goal: null,
   goodies: null,
+  hasRestartedLevel: null,
   hazardousTerrain: null,
   hazardousWater: null,
   isLevelComplete: null,
@@ -3880,6 +3881,8 @@ var PlayState = {
   tilemap: null,
 
   preload: function() {
+    console.log('preload');
+    this.hasRestartedLevel = false;
     var goodies,
         goody;
 
@@ -3892,6 +3895,8 @@ var PlayState = {
   },
 
   create: function() {
+    console.log('hasRestartedLevel', this.hasRestartedLevel);
+
     this.fx = game.add.audio('backgroundmusic');
     this.fx.addMarker('happy', 0, 16, 1, true);
     this.fx.addMarker('sea', 18, 16, 1, true);
@@ -3979,10 +3984,7 @@ var PlayState = {
       boss.hit(player);
 
       if (player.health <= 0) {
-        setTimeout(function() {
-          that.fx.pause();
-          game.state.start(game.state.current);
-        }, 2000);
+        that.restartLevel();
       }
     });
 
@@ -4018,10 +4020,7 @@ var PlayState = {
       player.enterHazardousTerrain();
 
       if (player.health <= 0) {
-        setTimeout(function() {
-          that.fx.pause();
-          game.state.start(game.state.current);
-        }, 2000);
+        that.restartLevel();
       }
     });
 
@@ -4033,10 +4032,7 @@ var PlayState = {
       player.enterHazardousWater();
 
       if (player.health <= 0) {
-        setTimeout(function() {
-          that.fx.pause();
-          game.state.start(game.state.current);
-        }, 2000);
+        that.restartLevel();
       }
     });
 
@@ -4052,10 +4048,7 @@ var PlayState = {
       minion.hit(player);
 
       if (player.health <= 0) {
-        setTimeout(function() {
-          that.fx.pause();
-          game.state.start(game.state.current);
-        }, 2000);
+        that.restartLevel();
       }
     });
 
@@ -4391,6 +4384,21 @@ var PlayState = {
 
   initializeTitle: function() {
     this.levelNameLabel = helper.addText(1, 4, this.level.id + ': ' + this.level.name, { fill: config.colors.gray });
+  },
+
+  restartLevel: function() {
+    var that;
+
+    that = this;
+
+    if (!this.hasRestartedLevel) {
+      setTimeout(function() {
+        that.fx.pause();
+        game.state.restart();
+      }, 2000);
+
+      this.hasRestartedLevel = true;
+    }
   },
 
   startLevel: function() {
