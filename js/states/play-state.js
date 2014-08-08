@@ -41,11 +41,13 @@ var PlayState = {
     console.log('hasRestartedLevel', this.hasRestartedLevel);
 
     this.fx = game.add.audio('backgroundmusic');
-    this.fx.addMarker('happy', 0, 16, 1, true);
-    this.fx.addMarker('sea', 18, 16, 1, true);
-    this.fx.addMarker('ice', 36, 12, 1, true);
-    this.fx.addMarker('desert', 52, 8, 1, true);
+    this.fx.addMarker('happy', 0, 16, 3, true);
+    this.fx.addMarker('sea', 18, 16, 2, true);
+    this.fx.addMarker('ice', 70, 16, 2.5, true);
+    this.fx.addMarker('desert', 52, 8, 2.5, true);
     this.fx.addMarker('final', 63.5, 7, 1, false);
+
+    this.dying = game.add.audio('dying', 0.3);
 
     if (!localStorage.getItem('turtle')) {
       localStorage.setItem('turtle', JSON.stringify({ currentLevel: 0 }));
@@ -173,7 +175,7 @@ var PlayState = {
 
     var inHazardousWater = arcade.overlap(this.player, this.hazardousWater, function(player) {
       player.enterHazardousWater();
-
+    
       if (player.health <= 0) {
         that.restartLevel();
       }
@@ -189,7 +191,7 @@ var PlayState = {
 
     arcade.collide(this.player, this.minions, function(player, minion) {
       minion.hit(player);
-
+    
       if (player.health <= 0) {
         that.restartLevel();
       }
@@ -536,7 +538,8 @@ var PlayState = {
 
     if (!this.hasRestartedLevel) {
       setTimeout(function() {
-        that.fx.pause();
+        that.fx.pause()
+        that.dying.play();
         game.state.restart();
       }, 2000);
 
@@ -608,7 +611,6 @@ var PlayState = {
     this.level = config.levels[currentLevel];
 
     this.stage.backgroundColor = config.colors.lightBlue;
-    this.fx.stop();
     this.fx.play(this.level.backgroundMusic, true);
 
     this.tilemap = this.game.add.tilemap(this.level.id + '-tilemap');
