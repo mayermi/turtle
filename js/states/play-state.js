@@ -123,7 +123,7 @@ var PlayState = {
 
       if (player.health <= 0) {
         setTimeout(function() {
-         that.fx.pause();
+          that.fx.pause();
           game.state.start(game.state.current);
         }, 2000);
       }
