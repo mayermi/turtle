@@ -538,7 +538,7 @@ var PlayState = {
 
     if (!this.hasRestartedLevel) {
       setTimeout(function() {
-        that.fx.pause()
+        that.fx.pause();
         that.dying.play();
         game.state.restart();
       }, 2000);
