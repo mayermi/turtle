@@ -99,7 +99,7 @@ var levelFourThree = {
         'x': 95,
         'y': 9
       },
-      'length': 1
+      'length': 2
     }
   ],
   'hazardousTerrain': [

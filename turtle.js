@@ -2546,7 +2546,7 @@ var levelFourThree = {
         'x': 95,
         'y': 9
       },
-      'length': 1
+      'length': 2
     }
   ],
   'hazardousTerrain': [
@@ -3941,7 +3941,7 @@ var PlayState = {
     this.fx.addMarker('sea', 18, 16, 0.8, true);
     this.fx.addMarker('ice', 70, 16, 1, true);
     this.fx.addMarker('desert', 52, 8, 0.9, true);
-    this.fx.addMarker('final', 63.5, 7, 1, false);
+    this.fx.addMarker('final', 63.5, 6, 1, false);
 
     this.dying = game.add.audio('dying', 0.5);
 
