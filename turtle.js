@@ -871,8 +871,8 @@ var levelTwoOne = {
     'jumpVelocity' : -200,
     'walkDrag' : 800,
     'position': {
-      'x': 1,
-      'y': 7
+      'x': 2,
+      'y': 3
     }
   },
   'physics': {
@@ -2235,7 +2235,7 @@ var levelFourOne = {
 
 var levelFourTwo = {
   'id': '4-2',
-  'name': 'This was never a good idea',
+  'name': 'Afraid of heights',
   'backgroundMusic': 'desert',
   'type': 'desert',
   'goal': {
