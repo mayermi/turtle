@@ -2920,7 +2920,7 @@ var Player = (function() {
   function Player(game, x, y, walkDrag, jumpVelocity, hasShell, isUnderWater, isSanta) {
     Phaser.Sprite.call(this, game, x * 32, y * 32, 'player');
 
-    this.aua = game.add.audio('aua', 0.3);
+    this.aua = game.add.audio('aua', 0.7);
     this.gulp = game.add.audio('gulp', 0.3);
     this.wahoo = game.add.audio('wahoo', 0.3);
     this.whoop = game.add.audio('whoop', 0.3);
@@ -3937,13 +3937,13 @@ var PlayState = {
 
   create: function() {
     this.fx = game.add.audio('backgroundmusic');
-    this.fx.addMarker('happy', 0, 16, 3, true);
-    this.fx.addMarker('sea', 18, 16, 2, true);
-    this.fx.addMarker('ice', 70, 16, 2.5, true);
-    this.fx.addMarker('desert', 52, 8, 2.5, true);
+    this.fx.addMarker('happy', 0, 16, 1, true);
+    this.fx.addMarker('sea', 18, 16, 0.8, true);
+    this.fx.addMarker('ice', 70, 16, 1, true);
+    this.fx.addMarker('desert', 52, 8, 0.9, true);
     this.fx.addMarker('final', 63.5, 7, 1, false);
 
-    this.dying = game.add.audio('dying', 0.3);
+    this.dying = game.add.audio('dying', 0.5);
 
     if (!localStorage.getItem('turtle')) {
       localStorage.setItem('turtle', JSON.stringify({ currentLevel: 0 }));
@@ -4433,11 +4433,11 @@ var PlayState = {
     that = this;
 
     if (!this.hasRestartedLevel) {
+      that.fx.pause();
+      that.dying.play();
       setTimeout(function() {
-        that.fx.pause();
-        that.dying.play();
         game.state.restart();
-      }, 2000);
+      }, 3100);
 
       this.hasRestartedLevel = true;
     }

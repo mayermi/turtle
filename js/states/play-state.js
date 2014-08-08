@@ -80,13 +80,13 @@ var PlayState = {
 
   create: function() {
     this.fx = game.add.audio('backgroundmusic');
-    this.fx.addMarker('happy', 0, 16, 3, true);
-    this.fx.addMarker('sea', 18, 16, 2, true);
-    this.fx.addMarker('ice', 70, 16, 2.5, true);
-    this.fx.addMarker('desert', 52, 8, 2.5, true);
+    this.fx.addMarker('happy', 0, 16, 1, true);
+    this.fx.addMarker('sea', 18, 16, 0.8, true);
+    this.fx.addMarker('ice', 70, 16, 1, true);
+    this.fx.addMarker('desert', 52, 8, 0.9, true);
     this.fx.addMarker('final', 63.5, 7, 1, false);
 
-    this.dying = game.add.audio('dying', 0.3);
+    this.dying = game.add.audio('dying', 0.5);
 
     if (!localStorage.getItem('turtle')) {
       localStorage.setItem('turtle', JSON.stringify({ currentLevel: 0 }));
@@ -576,11 +576,11 @@ var PlayState = {
     that = this;
 
     if (!this.hasRestartedLevel) {
+      that.fx.pause();
+      that.dying.play();
       setTimeout(function() {
-        that.fx.pause();
-        that.dying.play();
         game.state.restart();
-      }, 2000);
+      }, 3100);
 
       this.hasRestartedLevel = true;
     }
