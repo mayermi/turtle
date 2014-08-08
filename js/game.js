@@ -22,5 +22,4 @@ for (var key in states) {
     game.state.add(key, states[key]);
   }
 }
-
 game.state.start('preload');
