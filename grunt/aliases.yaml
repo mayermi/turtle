@@ -1,3 +1,7 @@
+build:
+  - compile
+  - clean
+  - copy
 compile:
   - css
   - js

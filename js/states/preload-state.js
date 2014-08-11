@@ -6,7 +6,7 @@ var PreloadState = {
 
     game.load.audio('menu', 'music/menu.mp3');
 
-    game.load.spritesheet('player', '/img/sprites/turtle.png', 32, 64);
+    game.load.spritesheet('player', 'img/sprites/turtle.png', 32, 64);
   },
 
   create: function() {
